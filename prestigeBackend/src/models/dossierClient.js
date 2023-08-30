@@ -1,7 +1,8 @@
+//dossier.Client.js
 import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 
-export const Dossier = sequelize.define("Dossier", {
+export const DossierClient = sequelize.define("DossierClient", {
 
     docType : DataTypes.STRING,
     id : DataTypes.STRING,
@@ -9,35 +10,35 @@ export const Dossier = sequelize.define("Dossier", {
 
 
 // Relation : Un client a plusieurs dossiers
-Client.hasMany(Dossier);
+Client.hasMany(DossierClient);
 
 // Relation : Un dossier appartient à un client
-Dossier.belongsTo(Client);
+DossierClient.belongsTo(Client);
 
 // Relation : Une société immobilière (AdCom) a plusieurs dossiers
-AdCom.hasMany(Dossier);
+AdCom.hasMany(DossierClient);
 
 // Relation : Un dossier appartient à une société immobilière (AdCom)
-Dossier.belongsTo(AdCom);
+DossierClient.belongsTo(AdCom);
 
 // Relation : Un partenaire appartient à plusieurs dossiers et un dossier a plusieurs partenaires (relation plusieurs-à-plusieurs)
-Partner.belongsToMany(Dossier, { through: 'PartenDossier' });
-Dossier.belongsToMany(Partner, { through: 'PartenDossier' });
+Partner.belongsToMany(DossierClient, { through: 'PartenDossier' });
+DossierClient.belongsToMany(Partner, { through: 'PartenDossier' });
 
 // Relation : Un type "AchatRevente" a plusieurs dossiers
-AchatRevente.hasMany(Dossier);
+AchatRevente.hasMany(DossierClient);
 
 // Relation : Un dossier appartient à un type "AchatRevente"
-Dossier.belongsTo(AchatRevente);
+DossierClient.belongsTo(AchatRevente);
 
 // Relation : Un type "Construction" a plusieurs dossiers
-Construction.hasMany(Dossier);
+Construction.hasMany(DossierClient);
 
 // Relation : Un dossier appartient à un type "Construction"
-Dossier.belongsTo(Construction);
+DossierClient.belongsTo(Construction);
 
 // Relation : Un type "Amo" a plusieurs dossiers
-Amo.hasMany(Dossier);
+Amo.hasMany(DossierClient);
 
 // Relation : Un dossier appartient à un type "Amo"
-Dossier.belongsTo(Amo);
+DossierClient.belongsTo(Amo);

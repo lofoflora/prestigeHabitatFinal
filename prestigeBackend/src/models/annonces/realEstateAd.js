@@ -1,3 +1,4 @@
+//annonces.js
 import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 import { AdCom } from "../users/admin_commercial.js";

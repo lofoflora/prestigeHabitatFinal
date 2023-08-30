@@ -1,4 +1,4 @@
-
+//avis.js
 import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 import { Client } from "./users/client.js";
