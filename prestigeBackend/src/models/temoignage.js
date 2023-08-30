@@ -1,6 +1,7 @@
 
 import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
+import { Client } from "./users/client.js";
 
 
 export const Avis = sequelize.define("Avis", {
@@ -12,5 +13,8 @@ export const Avis = sequelize.define("Avis", {
 
 });
 
+// Relation : Un client a plusieurs avis
 Client.hasMany(Avis);
+
+// Relation : Un avis appartient à un client
 Avis.belongsTo(Client);
