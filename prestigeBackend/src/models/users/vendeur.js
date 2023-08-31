@@ -1,13 +1,11 @@
-//partner.js
 import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 
-export const Partner = sequelize.define("Partner", {
+export const vendeur = sequelize.define("vendeur", {
  userType : {
   type: DataTypes.STRING,
-  defaultValue: 'partner' // Définissez la valeur par défaut ici
+  defaultValue: 'vendeur' // Définissez la valeur par défaut ici
 },
- entreprise:DataTypes.STRING,
  title : DataTypes.STRING,
  firstName: DataTypes.STRING,
  lastName: DataTypes.STRING,

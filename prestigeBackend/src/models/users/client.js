@@ -24,6 +24,6 @@ export const Client = sequelize.define("Client", {
  streetName: DataTypes.STRING,
  adresseComplement:DataTypes.STRING,
  city: DataTypes.STRING,
-
+ note:DataTypes.STRING
 
 });
