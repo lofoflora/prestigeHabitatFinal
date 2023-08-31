@@ -3,7 +3,10 @@ import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 
 export const Client = sequelize.define("Client", {
- userType : DataTypes.STRING,
+ userType : {
+  type: DataTypes.STRING,
+  defaultValue: 'client' // Définissez la valeur par défaut ici
+},
  title : DataTypes.STRING,
  firstName: DataTypes.STRING,
  lastName: DataTypes.STRING,
