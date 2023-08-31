@@ -6,7 +6,7 @@ import { Client } from "./users/client.js";
 
 export const Avis = sequelize.define("Avis", {
 
-    id:DataTypes.STRING,
+  
     avis:DataTypes.STRING,
     date:DataTypes.STRING,
     

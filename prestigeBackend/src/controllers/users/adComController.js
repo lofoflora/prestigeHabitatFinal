@@ -1,4 +1,5 @@
-import { AdCom } from '../models/adCom.js';
+import { AdCom } from "../../models/users/adCom.js";
+
 
 // Créer un nouvel utilisateur (admin ou commercial)
 export const createAdCom = async (req, res) => {
@@ -73,10 +74,6 @@ export const deleteAdCom = async (req, res) => {
   const id = req.params.id;
   try {
     const userType = req.body.userType;
-
-    if (userType !== 'admin') {
-      return res.status(403).json({ message: 'Seuls les admins peuvent supprimer un utilisateur.' });
-    }
 
     const deleted = await AdCom.destroy({
       where: { id: id }

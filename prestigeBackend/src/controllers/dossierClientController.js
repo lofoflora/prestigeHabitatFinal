@@ -1,5 +1,7 @@
 //dossierClientController.js
-import { DossierClient } from '../models/dossierClient.js';
+
+import { DossierClient } from "../models/dossierClient.js";
+
 
 // Créer un nouveau dossier client (accessible par les clients, partenaires et AdCom)
 export const createDossierClient = async (req, res) => {

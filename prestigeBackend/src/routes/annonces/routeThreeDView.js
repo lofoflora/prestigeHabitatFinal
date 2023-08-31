@@ -1,5 +1,5 @@
 import express from 'express';
-import { createThreeDView, getAllThreeDViews, getThreeDViewById, deleteThreeDView } from '../controllers/threeDViewController.js';
+import { createThreeDView, getAllThreeDViews, getThreeDViewById, deleteThreeDView } from '../../controllers/annonces/threeDViewController.js';
 
 const threeDViewRouter = express.Router();
 

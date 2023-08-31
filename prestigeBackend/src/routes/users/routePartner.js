@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPartner, getAllPartners, getPartnerById, updatePartner, deletePartner } from '../controllers/partnerController.js';
+import { createPartner, getAllPartners, getPartnerById, updatePartner, deletePartner } from '../../controllers/users/partnerController.js';
 
 const partnerRouter = express.Router();
 

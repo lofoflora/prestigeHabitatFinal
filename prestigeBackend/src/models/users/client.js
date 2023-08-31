@@ -4,11 +4,17 @@ import { sequelize } from "../../configs/db.config.js";
 
 export const Client = sequelize.define("Client", {
  userType : DataTypes.STRING,
- id : DataTypes.STRING,
  title : DataTypes.STRING,
  firstName: DataTypes.STRING,
  lastName: DataTypes.STRING,
- email: DataTypes.STRING,
+ email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true,
+    },
+  },
  phoneNumber:DataTypes.STRING,
  password: DataTypes.STRING,
  streetNumber: DataTypes.STRING,

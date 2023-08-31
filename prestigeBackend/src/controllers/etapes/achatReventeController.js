@@ -1,4 +1,5 @@
-import { AchatRevente } from '../models/achatRevente.js';
+import { AchatRevente } from "../../models/etapes/achatRevente.js";
+
 
 // Créer un nouveau type "AchatRevente"
 export const createAchatRevente = async (req, res) => {

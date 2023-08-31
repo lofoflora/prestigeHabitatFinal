@@ -3,7 +3,7 @@ import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 
 export const construction = sequelize.define("construction", {
-    id: DataTypes.STRING,
+ 
     implantationChantierStatus: DataTypes.STRING,
     implantationChantierStartDate: DataTypes.DATE,
     implantationChantierEndDate: DataTypes.DATE,

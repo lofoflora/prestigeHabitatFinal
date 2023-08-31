@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDossierClient, getAllDossiersClients, getDossierClientById, updateDossierClient, deleteDossierClient } from '../controllers/dossierClientController.js';
+import { createDossierClient, getAllDossiersClients, getDossierClientById, updateDossierClient, deleteDossierClient } from '../../controllers/dossierClientController.js';
 
 const dossierClientRouter = express.Router();
 

@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
-import { RealEstateAd } from "./realEstateAd.js";
+
 
 export const Image = sequelize.define("image", {
   filename: {

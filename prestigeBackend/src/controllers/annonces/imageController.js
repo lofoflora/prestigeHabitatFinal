@@ -1,4 +1,5 @@
-import { Image } from '../models/image.js';
+import { Image } from "../../models/annonces/image.js";
+
 
 // Créer une nouvelle image pour une annonce immobilière
 export const createImage = async (req, res) => {

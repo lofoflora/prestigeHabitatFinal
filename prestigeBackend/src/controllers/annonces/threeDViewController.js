@@ -1,4 +1,5 @@
-import { ThreeDView } from '../models/threeDView.js';
+import { ThreeDView } from "../../models/annonces/ThreeDView.js";
+
 
 // Créer une nouvelle vue 3D pour une annonce immobilière
 export const createThreeDView = async (req, res) => {

@@ -1,6 +1,6 @@
 // routeVente.js
 import express from 'express';
-import { createVente, getAllVente, getVenteById, deleteVente } from '../controllers/venteController.js';
+import { createVente, getAllVente, getVenteById, deleteVente } from '../../controllers/etapes/venteController.js';
 
 const venteRouter = express.Router();
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createImage, getAllImages, getImageById, deleteImage } from '../controllers/imageController.js';
+import { createImage, getAllImages, getImageById, deleteImage } from '../../controllers/annonces/imageController.js';
 
 const imageRouter = express.Router();
 

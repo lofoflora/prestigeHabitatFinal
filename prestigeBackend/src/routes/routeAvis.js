@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAvis, getAllAvis, getAvisById, updateAvis, deleteAvis } from '../controllers/avisController.js';
+import { createAvis, getAllAvis, getAvisById, updateAvis, deleteAvis } from '../../controllers/avisController.js';
 
 const avisRouter = express.Router();
 

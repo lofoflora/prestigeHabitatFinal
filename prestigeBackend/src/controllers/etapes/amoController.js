@@ -1,4 +1,5 @@
-import { Amo } from '../models/amo.js';
+import { Amo } from "../../models/etapes/amo.js";
+
 
 // Créer un nouveau type "Amo"
 export const createAmo = async (req, res) => {

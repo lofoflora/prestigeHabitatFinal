@@ -1,10 +1,12 @@
 //constructionController.js
-import { Construction } from '../models/construction.js';
+
+import { construction } from "../../models/etapes/construction.js";
+
 
 // Créer un nouveau type "Construction"
 export const createConstruction = async (req, res) => {
   try {
-    const type = await Construction.create(req.body);
+    const type = await construction.create(req.body);
     res.status(201).json(type);
   } catch (error) {
     console.error(error);

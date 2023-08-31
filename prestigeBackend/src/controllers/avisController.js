@@ -1,4 +1,5 @@
-import { Avis } from '../models/avis.js';
+import { Avis } from "../models/avis.js";
+
 
 // Créer un nouvel avis (accessible par les clients et les partenaires)
 export const createAvis = async (req, res) => {

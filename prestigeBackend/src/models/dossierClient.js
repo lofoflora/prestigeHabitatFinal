@@ -5,7 +5,7 @@ import { sequelize } from "../../configs/db.config.js";
 export const DossierClient = sequelize.define("DossierClient", {
 
     docType : DataTypes.STRING,
-    id : DataTypes.STRING,
+   
 });
 
 

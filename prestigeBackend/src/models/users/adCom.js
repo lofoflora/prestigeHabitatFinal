@@ -10,10 +10,7 @@ export const AdCom = sequelize.define('AdCom', {
       isIn: [['commercial', 'admin']],
     },
   },
-  id: {
-    type: DataTypes.STRING,
-    primaryKey: true,
-  },
+
   title: DataTypes.STRING,
   firstName: DataTypes.STRING,
   lastName: DataTypes.STRING,

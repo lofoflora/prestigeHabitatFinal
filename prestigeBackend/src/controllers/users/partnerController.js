@@ -1,4 +1,6 @@
-import { Partner } from '../models/partner.js';
+import { Partner } from "../../models/users/partner.js";
+
+
 
 // Créer un nouveau partenaire (accessible par les partenaires et les admins)
 export const createPartner = async (req, res) => {

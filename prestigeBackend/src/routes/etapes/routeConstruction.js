@@ -1,5 +1,5 @@
 import express from 'express';
-import { createConstruction, getAllConstruction, getConstructionById, deleteConstruction } from '../controllers/constructionController.js';
+import { createConstruction, getAllConstruction, getConstructionById, deleteConstruction } from '../../controllers/etapes/constructionController.js';
 
 const constructionRouter = express.Router();
 

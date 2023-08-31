@@ -1,9 +1,10 @@
-import { Vente } from '../models/vente.js';
+import { vente } from "../../models/etapes/vente.js";
+
 
 // Créer une nouvelle entité "Vente"
 export const createVente = async (req, res) => {
   try {
-    const vente = await Vente.create(req.body);
+    const vente = await vente.create(req.body);
     res.status(201).json(vente);
   } catch (error) {
     console.error(error);

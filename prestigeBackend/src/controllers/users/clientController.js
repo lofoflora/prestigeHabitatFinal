@@ -1,4 +1,5 @@
-import { Client } from '../models/client.js';
+import { Client } from "../../models/users/client.js";
+
 
 // Créer un nouveau client (accessible par les clients et les admins)
 export const createClient = async (req, res) => {

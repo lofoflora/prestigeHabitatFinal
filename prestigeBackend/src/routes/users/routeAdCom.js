@@ -1,23 +1,22 @@
-//routeAdCom.js
 import express from 'express';
-//import * as adComController from '../controllers/adComController.js';
-import { createAdCom, getAllAdComs, getAdComById, updateAdCom, deleteAdCom } from '../controllers/users/adComController.js';
+import { createAdCom, getAllAdComs, getAdComById, updateAdCom, deleteAdCom } from '../../controllers/users/adComController.js';
 
-export const router = express.Router();
+export const adComRouter = express.Router();
 
-// Créer une nouvelle annonce commerciale (accessible uniquement par les admins)
-router.post('/', createAdCom);
+// Créer un nouvel utilisateur adCom (accessible uniquement par les administrateurs)
+adComRouter.post('/', createAdCom);
 
-// Obtenir toutes les annonces commerciales (accessible par les commerciaux et les admins)
-router.get('/', getAllAdComs);
+// Obtenir tous les utilisateurs adCom (accessible par les utilisateurs commerciaux et les administrateurs)
+adComRouter.get('/', getAllAdComs);
 
-// Obtenir une annonce commerciale par son ID (accessible par les commerciaux et les admins)
-router.get('/:id', getAdComById);
+// Obtenir un utilisateur adCom par son ID (accessible par les utilisateurs commerciaux et les administrateurs)
+adComRouter.get('/:id', getAdComById);
 
-// Mettre à jour une annonce commerciale (accessible uniquement par les admins)
-router.put('/:id', updateAdCom);
+// Mettre à jour un utilisateur adCom (accessible uniquement par les administrateurs)
+adComRouter.put('/:id', updateAdCom);
 
-// Supprimer une annonce commerciale (accessible uniquement par les admins)
-router.delete('/:id', deleteAdCom);
+// Supprimer un utilisateur adCom (accessible uniquement par les administrateurs)
+adComRouter.delete('/:id', deleteAdCom);
 
-export default router;
+export default adComRouter;
+

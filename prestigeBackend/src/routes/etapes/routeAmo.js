@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAmo, getAllAmo, getAmoById, deleteAmo } from '../controllers/amoController.js';
+import { createAmo, getAllAmo, getAmoById, deleteAmo } from '../../controllers/etapes/amoController.js';
 
 const amoRouter = express.Router();
 

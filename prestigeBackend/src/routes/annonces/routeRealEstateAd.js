@@ -1,5 +1,5 @@
 import express from 'express';
-import { createRealEstateAd, getAllRealEstateAds, getRealEstateAdById, updateRealEstateAd, deleteRealEstateAd } from '../controllers/realEstateAd.js';
+import { createRealEstateAd, getAllRealEstateAds, getRealEstateAdById, updateRealEstateAd, deleteRealEstateAd } from '../../controllers/annonces/realEstateAdController.js';
 
 const realEstateAdRouter = express.Router();
 
