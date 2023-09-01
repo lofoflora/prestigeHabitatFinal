@@ -34,11 +34,6 @@ AdCom.hasMany(Client);
 // Relation : Une client immobilière appartient à un AdCom
 Client.belongsTo(AdCom);
 
-// Relation : Un adcom immobilière a plusieurs vendeurs
-AdCom.hasMany(vendeur);
-
-// Définit la relation entre vendeur et adcom (un vendeur appartient à un adcom)
-vendeur.belongsTo(AdCom);
 
 // Relation : Un partenaire appartient à plusieurs adcom et un adcom a plusieurs partenaires (relation plusieurs-à-plusieurs)
 // AdCom.belongsToMany(Partner, { through: 'AdCom' });
