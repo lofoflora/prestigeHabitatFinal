@@ -1,19 +1,71 @@
+/* App.css */
+
+/* Styles pour le texte "Bienvenue chez Prestige Habitat" */
+.welcome-container {
+  position: relative;
+  z-index: 2; /* Élévation du conteneur du texte pour qu'il apparaisse au-dessus de la barre de navigation */
+}
+
+/* Styles pour le texte "Bienvenue chez Prestige Habitat" */
+.welcome-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--title-color);
+  text-shadow: var(--title-shadow-size) var(--title-shadow-size) var(--title-shadow-blur) var(--title-shadow-color);
+  padding: 1rem;
+  text-decoration: none; /* Supprimer le soulignement du texte */
+}
+
+/* Modifier les styles pour la barre de navigation */
+.custom-navbar {
+  color: var(--text-color); /* Couleur de texte blanc */
+  font-weight: bold; /* Texte en gras */
+  border: 2px solid var(--title-color); /* Contour doré de 2px d'épaisseur */
+  border-radius: 20px; /* Angles arrondis de 20px */
+  background-color: var(--background-color); /* Fond de la barre de navigation noir anthracite */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); /* Contour doré de 10px d'épaisseur */
+  min-height: 60px; /* Ajustement de la hauteur de la barre de navigation */
+  margin-bottom: 10px; /* Marge en bas pour séparer la barre du contenu */
+}
+
+.custom-navbar .nav-link,
+.custom-navbar .dropdown-item {
+  color: var(--title-color); /* Couleur de texte dorée */
+  border: 2px solid var(--title-color); /* Contour doré pour les boutons */
+  border-radius: 20px; /* Coins arrondis de 20px pour les boutons */
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .dropdown-item:hover {
+  background-color: var(--title-color); /* Couleur de fond dorée au survol */
+  color: var(--background-color); /* Couleur de texte noir anthracite au survol */
+}
+
+.custom-navbar .dropdown-menu {
+  background-color: var(--background-color); /* Fond noir anthracite pour la liste déroulante */
+}
+
+/* Définir les styles pour le contenu principal */
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  position: relative; /* Position relative pour pouvoir positionner le texte "Bienvenue chez Prestige Habitat" en absolu */
 }
 
+/* Définir les styles pour le logo */
 .logo {
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -33,10 +85,558 @@
   }
 }
 
+/* Définir les styles pour les cartes */
 .card {
   padding: 2em;
 }
 
+/* Définir les styles pour le texte "Read the docs" */
 .read-the-docs {
   color: #888;
+}
+
+/* Définir les styles pour les titres avec effet 3D */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--title-color);
+  text-shadow: var(--title-shadow-size) var(--title-shadow-size) var(--title-shadow-blur) var(--title-shadow-color);
+}
+
+/* Définir les styles pour le fond noir anthracite */
+:root {
+  --background-color: #222222; /* Noir anthracite */
+  --text-color: #ffffff; /* Blanc */
+  --title-color: #ffd700; /* Doré */
+
+  /* Polices */
+  --main-font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  /* Tailles de police */
+  --base-font-size: 16px;
+  --title-font-size: 24px;
+
+  /* Effet 3D pour les titres */
+  --title-shadow-color: rgba(255, 215, 0, 0.8); /* Doré avec transparence */
+  --title-shadow-size: 2px;
+  --title-shadow-blur: 5px;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--main-font-family);
+  font-size: var(--base-font-size);
+  line-height: 1.5;
+}
+
+/* Ajuster le positionnement du texte sous la barre de navigation */
+.text-under-navbar {
+  margin-top: 10px; /* Vous pouvez ajuster cette valeur selon votre préférence */
+  text-align: left; /* Aligner le texte à gauche */
+}
+
+/* Réduire la hauteur de la barre de navigation lorsqu'elle est dépliée sur les petits écrans */
+@media (max-width: 767px) {
+  .navbar-toggler {
+    display: block;
+  }
+  .navbar-collapse {
+    display: block; /* Remplacez cette valeur par 'block' ou 'none' selon votre besoin */
+  }
+}
+
+.auth-buttons {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.auth-buttons button {
+  margin-left: 0.5rem;
+}
+
+/* Styles pour le formulaire d'inscription */
+.auth-form {
+  background-color: #343a40; /* Fond noir anthracite */
+  padding: 20px;
+  border-radius: 5px;
+  text-align: left; /* Aligner le texte à gauche */
+  margin: 0 auto; /* Centrer le formulaire horizontalement */
+}
+
+.auth-form h2 {
+  color: #ffd700; /* Couleur dorée pour le titre */
+}
+
+.auth-form label {
+  color: white; /* Couleur de texte blanche */
+  display: block;
+  margin-top: 10px;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="number"] {
+  /* Styles pour les champs de saisie (Surface min, Budget max et Localisation) */
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
+  color: white; /* Couleur de texte blanche */
+  margin-top: 5px;
+}
+
+
+.auth-form select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ffd700; /* Contour doré pour le menu déroulant */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour le menu déroulant */
+  color: white; /* Couleur de texte blanche */
+  margin-top: 5px;
+}
+
+.auth-form div {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  color: white; /* Couleur de texte blanche */
+}
+
+.auth-form input[type="radio"],
+.auth-form input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Styles pour les boutons */
+.custom-button {
+  cursor: pointer;
+  min-height: initial;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid var(--title-color);
+  background: var(--background-color);
+  color: #909294; /* Couleur de texte gris */
+  font-weight: bold;
+}
+
+.custom-button:hover {
+  background-color: #f5d142;
+}
+/* Styles pour le header */
+header {
+  position: relative;
+}
+
+/* Styles pour le formulaire de connexion */
+.login-form {
+  position: absolute;
+  top: 2px; /* Ajuster la distance depuis le haut de la page */
+  left: 490px; /* Ajuster la distance depuis la droite de la page */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 5px;
+  width: 300px; /* Réduire la largeur du formulaire */
+}
+
+
+
+
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
+  color: white; /* Couleur de texte blanche */
+  margin-top: 5px;
+}
+
+.login-form button[type="submit"] {
+  cursor: pointer;
+  min-height: initial;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid #ffd700; /* Contour doré pour le bouton de soumission */
+  background-color: #222222; /* Fond noir anthracite pour le bouton de soumission */
+  color: #ffd700; /* Couleur de texte dorée */
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.login-form button[type="submit"]:hover {
+  background-color: #f5d142; /* Fond doré au survol */
+  color: #222222; /* Couleur de texte noire au survol */
+}
+
+.login-form div {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  color: white; /* Couleur de texte blanche */
+}
+
+.login-form label {
+  color: white; /* Couleur de texte blanche */
+  display: block;
+  margin-top: 10px;
+}
+
+.login-form div a {
+  text-decoration: underline; /* Soulignement pour les liens */
+  margin-left: 5px; /* Marge à gauche pour les liens */
+  color: #ffd700; /* Couleur dorée pour les liens */
+}
+
+.textelarge{
+  font-size: 20px;
+  line-height: 2;
+}
+
+.text-bold-italic-underline {
+  font-weight: bold;
+  font-style: italic;
+  text-decoration: underline;
+  color: #ffd700;
+}
+ .textPrestige{
+  font-weight: bold;
+  color: #ffd700;
+
+ }
+ .form-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+/* Ajouter des styles pour les boutons de nombre de WC et salles de bain */
+.button-group button {
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 2px solid #ffd700; /* Contour doré pour les boutons */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les boutons */
+  color: #ffffff; /* Couleur de texte blanche */
+  margin-right: 5px;
+}
+
+/* Styler les boutons actifs */
+.button-active {
+  background-color: #ffd700; /* Fond doré pour les boutons actifs */
+  color: #222222; /* Couleur de texte noire pour les boutons actifs */
+}
+
+/* Styler les boutons inactifs */
+.button-inactive {
+  background-color: #222222; /* Fond noir anthracite pour les boutons inactifs */
+  color: #ffffff; /* Couleur de texte blanche pour les boutons inactifs */
+}
+/* Styles pour les boutons de sélection */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.checkbox-group label {
+  color: #ffd700; /* Couleur dorée pour les libellés */
+}
+
+.checkbox-group button {
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 2px solid #ffd700; /* Contour doré pour les boutons */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les boutons */
+  color: #ffffff; /* Couleur de texte blanche */
+}
+
+/* Styler les boutons actifs */
+.checkbox-group button.selected {
+  background-color: #ffd700; /* Fond doré pour les boutons actifs */
+  color: #222222; /* Couleur de texte noire pour les boutons actifs */
+}
+
+/* Styles pour le bouton de recherche */
+.search-button {
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid #ffd700; /* Contour doré pour le bouton de recherche */
+  background-color: #222222; /* Fond noir anthracite pour le bouton de recherche */
+  color: #ffd700; /* Couleur de texte dorée pour le bouton de recherche */
+  font-weight: bold;
+}
+
+.search-button:hover {
+  background-color: #f5d142; /* Fond doré au survol du bouton de recherche */
+  color: #222222; /* Couleur de texte noire au survol du bouton de recherche */
+}
+/* Ajoutez ces styles CSS à votre fichier de styles */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.toggle-switch:before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input[type="checkbox"]:checked + .toggle-switch {
+  background-color: #f5d142;;
+}
+
+input[type="checkbox"]:checked + .toggle-switch:before {
+  transform: translateX(20px);
+}
+.auth-form 
+.input-group input[type="number"] 
+.input-group input[type="text"]{
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
+  color: white; /* Couleur de texte blanche */
+  margin-top: 5px;
+}
+/* Style pour les champs de saisie */
+
+.auth-form input{
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
+  color: white; /* Couleur de texte blanche */
+  margin-top: 5px;
+}
+
+/* Style pour les cases à cocher (toggle switch) */
+.auth-form input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Style pour le bouton toggle switch */
+.auth-form .toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  background-color: #bdbdbd; /* Couleur de fond par défaut */
+  border-radius: 15px;
+  transition: background-color 0.3s;
+}
+
+/* Style pour le bouton toggle switch lorsque la case est cochée */
+.auth-form input[type="checkbox"]:checked + .toggle-switch {
+  background-color: #ffd700; /* Couleur de fond lorsque la case est cochée */
+}
+
+/* Style pour les boutons de sélection (propertyType, purchaseType, etc.) */
+.auth-form .checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.auth-form .checkbox-group label {
+  margin-right: 10px;
+  color: white;
+}
+
+.auth-form .checkbox-group button {
+  background-color: #343a40;
+  border: 2px solid #ffd700;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-form .checkbox-group button.selected {
+  background-color: #ffd700;
+  color: #343a40;
+}
+.auth-form label{
+  margin-top: '20px'
+}
+/* Styles pour la barre de recherche */
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #343a40; /* Fond noir anthracite */
+  padding: 20px;
+  border-radius: 5px;
+  text-align: left; /* Aligner le texte à gauche */
+  margin: 0 auto; /* Centrer la barre de recherche horizontalement */
+}
+
+/* Styles pour la liste déroulante (Select) */
+.search-bar select {
+  width: 200px; /* Largeur de la liste déroulante */
+  padding: 8px;
+  border: 2px solid #ffd700; /* Contour doré pour la liste déroulante */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour la liste déroulante */
+  color: white; /* Couleur de texte blanche */
+  margin-right: 10px; /* Marge à droite pour séparer les éléments */
+}
+
+/* Styles pour les champs de saisie (Surface min et Budget max) */
+.search-bar input[type="number"] {
+  width: 120px; /* Largeur des champs de saisie */
+  padding: 8px;
+  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border-radius: 5px; /* Coins arrondis de 5px */
+  background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
+  color: white; /* Couleur de texte blanche */
+  margin-right: 10px; /* Marge à droite pour séparer les éléments */
+}
+
+/* Styles pour les boutons (Rechercher et Plus d'options) */
+.search-bar button {
+  cursor: pointer;
+  min-height: initial;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid #ffd700; /* Contour doré pour les boutons */
+  background-color: #222222; /* Fond noir anthracite pour les boutons */
+  color: #ffd700; /* Couleur de texte dorée pour les boutons */
+  font-weight: bold;
+}
+
+/* Styles pour le bouton Plus d'options lorsqu'il est étendu */
+.search-bar .btn-options-expanded {
+  background-color: #f5d142; /* Fond doré pour le bouton étendu */
+  color: #222222; /* Couleur de texte noire pour le bouton étendu */
+}
+.login-form {
+  background-color: #444;
+  padding: 20px;
+  border-radius: 8px; /* Ajoute des coins arrondis de 8px */
+  width: 10%; /* Ajustez la largeur souhaitée ici */
+}
+
+.carousel-container {
+  width: 80%;
+  margin: 0 auto;
+  perspective: 1000px; /* Ajustez la valeur de perspective selon vos préférences */
+}
+
+.slick-slide {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.slick-center {
+  transform: scale(1.4) translateY(40px) rotateX(20deg); /* Ajustez les valeurs selon vos préférences */
+  z-index: 2; /* Met l'image centrale au premier plan */
+}
+
+.slick-slide:not(.slick-center) {
+  transform: scale(0.8) translateY(-80px) rotateX(-30deg); /* Ajustez les valeurs selon vos préférences */
+  z-index: 1; /* Met les autres images en arrière-plan */
+  opacity: 0.8; /* Réduire légèrement l'opacité des images en arrière-plan */
+}
+
+.slick-prev,
+.slick-next {
+  z-index: 3; /* Met les flèches de navigation au-dessus des images */
+}
+
+/* Réinitialisation des styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* Styles pour la case à cocher */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.checkbox-container input {
+  display: none; /* Cacher la case à cocher par défaut */
+}
+
+.checkmark {
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #ffd700;
+  border-radius: 5px;
+  display: inline-block; /* Afficher la case à cocher */
+  vertical-align: middle; /* Ajuster l'alignement vertical */
+  margin-right: 8px; /* Espace entre la case et le texte */
+  cursor: pointer;
+}
+
+
+.checkbox-container:hover .checkmark {
+  border-color: #ffd700;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #ffd700;
+}
+.user-greeting {
+  color: white;
+  font-weight: bold;
+  margin-right: 10px;
 }

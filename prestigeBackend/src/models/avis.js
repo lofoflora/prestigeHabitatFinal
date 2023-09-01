@@ -8,7 +8,7 @@ export const Avis = sequelize.define("Avis", {
 
   
     avis:DataTypes.STRING,
-    date:DataTypes.STRING,
+    date:DataTypes.DATE,
     
 
 });
