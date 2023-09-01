@@ -1,5 +1,5 @@
 import express from 'express';
-import { createAchatRevente, getAllAchatRevente, getAchatReventeById, deleteAchatRevente } from '../../controllers/etapes/achatReventeController.js';
+import { createAchatRevente, getAllAchatRevente, getAchatReventeById, deleteAchatRevente } from '../../controllers/services/achatReventeController.js';
 
 const achatReventeRouter = express.Router();
 

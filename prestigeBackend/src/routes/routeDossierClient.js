@@ -1,5 +1,5 @@
 import express from 'express';
-import { createDossierClient, getAllDossiersClients, getDossierClientById, updateDossierClient, deleteDossierClient } from '../../controllers/dossierClientController.js';
+import { createDossierClient, getAllDossiersClients, getDossierClientById, updateDossierClient, deleteDossierClient,findServicesByDossierClientId } from '../controllers/dossierClientController.js';
 
 const dossierClientRouter = express.Router();
 
@@ -17,5 +17,10 @@ dossierClientRouter.put('/:id', updateDossierClient);
 
 // Supprimer un dossier client (accessible par les clients, partenaires et AdCom)
 dossierClientRouter.delete('/:id', deleteDossierClient);
+
+// afficher les service du dossier par sont Id
+dossierClientRouter.get('/:id/services', findServicesByDossierClientId);
+
+
 
 export default dossierClientRouter;

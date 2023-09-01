@@ -1,4 +1,4 @@
-import { AchatRevente } from "../../models/etapes/achatRevente.js";
+import { AchatRevente } from "../../models/services/achatRevente.js";
 
 
 // Créer un nouveau type "AchatRevente"

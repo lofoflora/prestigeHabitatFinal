@@ -1,4 +1,4 @@
-import { Amo } from "../../models/etapes/amo.js";
+import { Amo } from "../../models/services/amo.js";
 
 
 // Créer un nouveau type "Amo"

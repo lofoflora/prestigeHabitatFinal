@@ -1,6 +1,6 @@
 //constructionController.js
 
-import { construction } from "../../models/etapes/construction.js";
+import { construction } from "../../models/services/construction.js";
 
 
 // Créer un nouveau type "Construction"

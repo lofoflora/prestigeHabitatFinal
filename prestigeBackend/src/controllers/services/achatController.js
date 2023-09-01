@@ -1,4 +1,4 @@
-import { Achat } from '../models/achat.model.js';
+import { Achat } from "../../models/services/achat.js";
 
 // Créer un nouvel achat
 export const createAchat = async (req, res) => {

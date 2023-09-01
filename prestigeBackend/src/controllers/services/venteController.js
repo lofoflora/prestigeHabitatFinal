@@ -1,4 +1,4 @@
-import { vente } from "../../models/etapes/vente.js";
+import { vente } from "../../models/services/vente.js";
 
 
 // Créer une nouvelle entité "Vente"
