@@ -1,11 +1,18 @@
 import { Partner } from "../../models/users/partner.js";
-
+import bcrypt from 'bcrypt';
 
 
 // Créer un nouveau partenaire (accessible par les partenaires et les admins)
 export const createPartner = async (req, res) => {
   try {
-    const partner = await Partner.create(req.body);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    
+    const partner = await Partner.create({
+      ...req.body,
+      password: hashedPassword
+    });
+    
     res.status(201).json(partner);
   } catch (error) {
     console.error(error);

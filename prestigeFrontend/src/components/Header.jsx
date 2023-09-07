@@ -1,13 +1,16 @@
 // header.jsx
 import React, { useState, useEffect, useRef } from 'react'; // Importez useRef depuis React
 import { useLocation } from 'react-router-dom'; // Importez useLocation depuis react-router-dom
+import { useUser } from './UserContext';
 import { useNavigate } from 'react-router-dom';
+
 
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import LoginForm from './formulaires/LoginForm'; // Assurez-vous d'importer votre composant LoginForm
+
 
 function CustomNavbar() {
   const [navExpanded, setNavExpanded] = useState(false);
@@ -37,7 +40,12 @@ function CustomNavbar() {
   // ...
 }
 
-function Header({ onSignupClick, isLoggedIn, userFirstName, onLogout, onLogin }) {
+function Header({ onLogin }) {
+  const { isLoggedIn, userFirstName, handleLogout } = useUser();
+  console.log("Header isLoggedIn:", isLoggedIn);  // Ajoute cette ligne
+  console.log("Header userFirstName:", userFirstName);  // Ajoute cette ligne
+
+
 
   // console.log('isLoggedIn:', isLoggedIn);
   // console.log('userFirstName:', userFirstName);
@@ -102,7 +110,7 @@ function Header({ onSignupClick, isLoggedIn, userFirstName, onLogout, onLogin })
   
       if (response.data.success) {
         const firstName = response.data.firstName;
-        onLogin(firstName); // Mettre à jour l'état de connexion dans le composant parent
+        onLogin(firstName); // Utilise la fonction onLogin pour mettre à jour userFirstName
         handleCloseLoginForm(); // Fermer le formulaire de connexion
       } else {
         console.error('Échec de la connexion :', response.data.message);
@@ -111,6 +119,7 @@ function Header({ onSignupClick, isLoggedIn, userFirstName, onLogout, onLogin })
       console.error('Erreur de connexion :', error);
     }
   };
+  
   
   const handleHeaderClick = () => {
     // Fermer le formulaire lorsque l'utilisateur clique sur le header (en dehors du formulaire)

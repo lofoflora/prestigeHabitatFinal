@@ -17,25 +17,35 @@ import { UserProvider } from './components/UserContext';
 import SearchPageOption from './components/pages/SearchPageOption.jsx';
 import './App.css';
 import axios from 'axios';
+import { useUser } from "./components/UserContext.jsx";
 
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userFirstName, setUserFirstName] = useState('');
-  const [userData, setUserData] = useState(null); // Définir userData avec la valeur initiale null
+  const {  isLoggedIn,
+    setIsLoggedIn,
+    userData,
+    setUserData,
+    userFirstName,
+    setUserFirstName,
+    handleLogout,
+     } = useUser();
 
-  const handleLogin = (firstName, userData) => {
+  const handleLogin = (firstName, authToken, userData) => {
     setIsLoggedIn(true);
     setUserFirstName(firstName);
     setUserData(userData); // Mettre à jour les données utilisateur
-    localStorage.setItem('isLoggedIn', true);
+    console.log("app isLoggedIn:", isLoggedIn);  // Ajoute cette ligne
+    console.log("app userFirstName:", userFirstName);  // Ajoute cette ligne
+    // Stocker le jeton d'authentification et le prénom dans le stockage local
+    localStorage.setItem('authToken', authToken); // Stockez le jeton d'authentification
     localStorage.setItem('userFirstName', firstName);
   };
+  
 
  
 
-  const handleLoginFormSubmit = async (formData) => {
+  const handleLoginFormSubmitApp = async (formData) => {
     try {
       const response = await axios.post('http://127.0.0.1:3000/login', {
         email: formData.email,
@@ -68,27 +78,21 @@ useEffect(() => {
   }
 }, []);
 
-const handleLogout = () => {
-  console.log('Déconnexion en cours...'); // Vérifiez si cette ligne s'affiche dans la console
-  setIsLoggedIn(false);
-  setUserFirstName('');
-  setUserData(null);
-  localStorage.removeItem('isLoggedIn');
-  localStorage.removeItem('userFirstName');
-  localStorage.removeItem('authToken'); // Supprimez également le token du stockage local
-  console.log('Token supprimé'); // Vérifiez si cette ligne s'affiche dans la console
-};
+
+
+
+
   
   return (
-    <UserProvider>
-    <Router>
+    
       <div className="App">
       <Header
-            isLoggedIn={isLoggedIn}
-            userFirstName={userFirstName}
-            onLogin={handleLogin} // Utiliser directement la fonction ici
-            onLogout={handleLogout}
-          />
+  isLoggedIn={isLoggedIn}
+  userFirstName={userFirstName}
+  onLogin={handleLogin} // Passer la fonction onLogin comme prop
+  //onLogout={handleLogout}
+/>
+
 
         <Routes>
           <Route path="/" element={<Home />} />
@@ -106,8 +110,7 @@ const handleLogout = () => {
         </Routes>
 
       </div>
-    </Router>
-    </UserProvider>
+   
   );
 }
 

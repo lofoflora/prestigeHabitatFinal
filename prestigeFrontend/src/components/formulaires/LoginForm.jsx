@@ -2,13 +2,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useUser } from '../UserContext'; // Assurez-vous d'ajuster le chemin d'import selon l'emplacement du fichier UserContext
+import { useUser } from '../UserContext'; //Assurez-vous d'ajuster le chemin d'import selon l'emplacement du fichier UserContext
 
 function LoginForm({ onLogin, onCloseLoginForm }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  const { setIsLoggedIn } = useUser(); // Utilisation du hook useUser
+  // LoginForm.jsx
+const { setIsLoggedIn, handleLogin } = useUser();
+// Utilisation du hook useUser
   
   const handleSubmit = (e) => {
     e.preventDefault();

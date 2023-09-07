@@ -1,26 +1,18 @@
-import React, { useContext,useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { UserProvider, useUser } from '../UserContext';
-
+import { useUser } from '../UserContext';
 
 function Dashboard() {
-  const { isLoggedIn, setIsLoggedIn, userData, setUserData } = useUser();
-
-  const handleLogout = () => {
-    console.log('Déconnexion en cours...');
-    // Effectuer les opérations nécessaires pour déconnecter l'utilisateur
-    setIsLoggedIn(false); // Utilisez setIsLoggedIn pour déconnecter l'utilisateur
-  };
+  const { isLoggedIn, setIsLoggedIn, userData, setUserData, handleLogout } = useUser();
 
   useEffect(() => {
     console.log('isLoggedIn après déconnexion:', isLoggedIn);
-  }, [isLoggedIn]); // Le effet s'exécutera lorsque isLoggedIn change
+  }, [isLoggedIn]);
 
   const handleDeleteAccount = () => {
     console.log('Suppression du compte en cours...');
-    // Effectuer les opérations nécessaires pour supprimer le compte de l'utilisateur
-    // Ceci pourrait nécessiter une validation de l'administrateur
-    setIsLoggedIn(false); // Déconnecter l'utilisateur après la suppression du compte
+    // ... (ton code pour supprimer le compte)
+    setIsLoggedIn(false);
   };
 
 
