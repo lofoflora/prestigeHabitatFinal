@@ -30,13 +30,30 @@ export const loginUser = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(400).json({ success: false, message: 'L\'email ou le mot de passe est incorrect.' });
     }
+// Détermine le type d'utilisateur
+let userType;
+if (await Client.findOne({ where: { email } })) {
+  user = await Client.findOne({ where: { email } });
+  userType = 'Client';
+} else if (await Partner.findOne({ where: { email } })) {
+  user = await Partner.findOne({ where: { email } });
+  userType = 'Partner';
+} else if (await AdCom.findOne({ where: { email } })) {
+  user = await AdCom.findOne({ where: { email } });
+  userType = 'AdCom';
 
-    // Générez un token JWT
-    const token = jwt.sign(
-      { userId: user.id, userType: user.userType },
-      process.env.SECRET_KEY,  // Assure-toi que cela correspond à ce que tu as dans ton fichier .env
-      { expiresIn: '1h' }
-    );
+  // Ajoute le rôle spécifique si c'est un AdCom
+  userType = `AdCom-${user.role}`;  // Ce sera soit "AdCom-Admin" soit "AdCom-Commercial"
+}
+// ...
+
+// Génère le token avec le type d'utilisateur
+const token = jwt.sign(
+  { userId: user.id, userType: userType },
+  process.env.SECRET_KEY,
+  { expiresIn: '1h' }
+);
+
     
 
     res.json({

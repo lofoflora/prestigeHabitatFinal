@@ -2,6 +2,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -21,12 +22,13 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem('authToken');
     navigate('/');
   };
-  const handleLogin = (firstName, userData) => {
+  const handleLogin = (firstName, userData,authToken) => {
     setIsLoggedIn(true);
     setUserFirstName(firstName);  // <-- C'est ici que userFirstName est mis à jour
     setUserData(userData);
     localStorage.setItem('isLoggedIn', true);
     localStorage.setItem('userFirstName', firstName);
+    localStorage.setItem('authToken', authToken); 
   };
   
 

@@ -31,52 +31,57 @@ function App() {
     handleLogout,
      } = useUser();
 
-  const handleLogin = (firstName, authToken, userData) => {
-    setIsLoggedIn(true);
-    setUserFirstName(firstName);
-    setUserData(userData); // Mettre à jour les données utilisateur
-    console.log("app isLoggedIn:", isLoggedIn);  // Ajoute cette ligne
-    console.log("app userFirstName:", userFirstName);  // Ajoute cette ligne
-    // Stocker le jeton d'authentification et le prénom dans le stockage local
-    localStorage.setItem('authToken', authToken); // Stockez le jeton d'authentification
-    localStorage.setItem('userFirstName', firstName);
-  };
+
+     const handleLogin = (firstName, userData, authToken) => {
+      setIsLoggedIn(true);
+      setUserFirstName(firstName);
+      setUserData(userData);
+      localStorage.setItem('authToken', authToken);
+      localStorage.setItem('userFirstName', firstName);
+    };
+    
+  
   
 
  
 
-  const handleLoginFormSubmitApp = async (formData) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:3000/login', {
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (response.data.success) {
-        const firstName = response.data.firstName;
-        const userData = response.data.userData; // Assurez-vous que les données utilisateur sont renvoyées depuis le backend
-
-        handleLogin(firstName, userData); // Utilisez la fonction handleLogin avec les données utilisateur
-
-        onCloseLoginForm();
-      } else {
-        console.error('Échec de la connexion :', response.data.message);
+    const handleLoginFormSubmitApp = async (formData) => {
+      try {
+        const response = await axios.post('http://127.0.0.1:3000/login', {
+          email: formData.email,
+          password: formData.password,
+        });
+    
+        if (response.data.success) {
+          const firstName = response.data.firstName;
+          const userData = response.data.userData;
+          const authToken = response.data.token;  // Récupère le token ici
+          handleLogin(firstName, userData, authToken);  // Appelle handleLogin avec le token
+          onCloseLoginForm();
+        } else {
+          console.error('Échec de la connexion :', response.data.message);
+        }
+      } catch (error) {
+        console.error('Erreur de connexion :', error);
       }
-    } catch (error) {
-      console.error('Erreur de connexion :', error);
-    }
-  };
+    };
+    
+  
 
  // Utilisez le useEffect pour vérifier le token au chargement de l'application
 useEffect(() => {
   const storedToken = localStorage.getItem('authToken');
   if (storedToken) {
+    // Configure Axios pour utiliser le token dans les headers
+    axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+
     // Ici, vous pourriez envoyer le token au serveur pour vérification si nécessaire
     // Puis, si le token est valide, utilisez handleLogin pour mettre à jour l'état de connexion
     const firstName = localStorage.getItem('userFirstName'); // Obtenez le prénom depuis le local storage
     handleLogin(firstName, null); // userData est null au départ
   }
 }, []);
+
 
 
 
