@@ -15,6 +15,10 @@ import imageRouter from './src/routes/annonces/routeImage.js';
 import achatRouter from './src/routes/services/routeAchat.js';
 import dossierClientRouter from './src/routes/routeDossierClient.js';
 import avisRouter from './src/routes/routeAvis.js';
+import createUserRouter from './src/routes/users/routeCreateUser.js';
+import authrouter from './src/routes/authRoutes.js';
+import cors from 'cors';
+
 
 
 
@@ -23,9 +27,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Utilisez le middleware CORS
+app.use(cors());
+
 // routes users
 app.use('/adcom', adComRouter); 
 app.use('/partner',partnerRouter);
+app.use('/client',clientRouter);
+app.use('/createUser',createUserRouter)
+
+// connection
+app.use('/login',authrouter)
 
 // route étapes
 app.use('/vente', venteRouter); 

@@ -21,7 +21,7 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
 
   const handleLoginFormSubmit = async (formData) => {
     try {
-      const response = await axios.post('http://127.0.0.1:3001/login', {
+      const response = await axios.post('http://127.0.0.1:3000/login', {
         email: formData.email,
         password: formData.password,
       });

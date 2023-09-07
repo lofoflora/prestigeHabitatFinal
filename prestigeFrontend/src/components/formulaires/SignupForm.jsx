@@ -76,41 +76,44 @@ function SignupForm() {
   // Utiliser le contexte utilisateur pour enregistrer les données après inscription
   const { setUserData } = useUser();
 
-  // Fonction de soumission du formulaire
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-    
-    // Validation des champs et traitements
+ // Fonction de soumission du formulaire
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
 
-    if (password !== confirmPassword) {
-      alert("Les mots de passe ne correspondent pas.");
-    }
+  // Validation des champs et traitements
+  if (password !== confirmPassword) {
+    alert("Les mots de passe ne correspondent pas.");
+    return; // Important de s'assurer que la fonction s'arrête ici
+  }
 
-    if (!verifySiret()) {
-      return;
-    }
+  if (!verifySiret()) {
+    alert("Le SIRET n'est pas valide.");
+    return; // Important de s'assurer que la fonction s'arrête ici
+  }
 
-    try {
-      // Envoi des données d'inscription au backend
-      const response = await axios.post('http://127.0.0.1:3001/signup', {
-        userType,
-        title,
-        firstName,
-        lastName,
-        entreprise,
-        siret,
-        email,
-        phoneNumber,
-        password,
-        postalCode,
-        streetNumber,
-        streetName,
-        addressComplement,
-        city,
-        acceptConditions: acceptedConditions,
-      });
+  const data = {
+    type: userType, // soit "client" soit "partner"
+    title,
+    firstName,
+    lastName,
+    entreprise,
+    siret,
+    email,
+    phoneNumber,
+    password,
+    postalCode,
+    streetNumber,
+    streetName,
+    addressComplement,
+    city,
+    acceptConditions: acceptedConditions,
+  };
 
-      console.log(response.data);
+  try {
+    // Envoi des données d'inscription au backend
+    const response = await axios.post('http://127.0.0.1:3000/createUser', data);
+
+    console.log(response.data);
 
       // Enregistrement des données de l'utilisateur dans le contexte
       setUserData({
