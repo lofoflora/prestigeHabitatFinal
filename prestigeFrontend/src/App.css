@@ -254,7 +254,9 @@ header {
 
 
 .login-form input[type="text"],
-.login-form input[type="password"] {
+.login-form input[type="password"],
+.login-form input[type="email"]
+ {
   width: 100%;
   padding: 10px;
   border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
@@ -639,4 +641,47 @@ input[type="checkbox"]:checked + .toggle-switch:before {
   color: white;
   font-weight: bold;
   margin-right: 10px;
+}
+/* Style général pour la bulle d'erreur */
+.error-tooltip {
+  display: none;
+  visibility: hidden;
+  background-color: #f44336;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%; /* Position au-dessus de l'élément cible */
+  left: 50%;
+  margin-left: -60px; /* Centrer la bulle */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Style pour la flèche de la bulle */
+.error-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Position en bas de la bulle */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #f44336 transparent transparent transparent;
+}
+
+/* Afficher la bulle lorsque l'élément cible est survolé */
+input:hover + .error-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+/* Afficher la bulle d'erreur lorsque la classe 'show' est ajoutée */
+.show {
+  display: block;
+}
+.error {
+  color: red;
+  margin-top: 10px;
 }

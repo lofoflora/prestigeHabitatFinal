@@ -1,4 +1,5 @@
 //index.js
+
 import express from 'express';
 import 'dotenv/config.js';
 import { sequelize } from './src/configs/db.config.js';
@@ -18,7 +19,8 @@ import avisRouter from './src/routes/routeAvis.js';
 import createUserRouter from './src/routes/users/routeCreateUser.js';
 import authrouter from './src/routes/authRoutes.js';
 import cors from 'cors';
-
+import bcrypt from 'bcrypt';
+import { AdCom } from './src/models/users/adCom.js'; // Ajuste le chemin d'import selon l'emplacement du fichier adCom.js
 
 
 
@@ -59,12 +61,36 @@ app.use('/Avis',avisRouter);
 
 
 
+const createAdminIfNotExist = async () => {
+  try {
+    const admin = await AdCom.findOne({
+      where: {
+        userType: 'admin',
+      },
+    });
+
+    if (!admin) {
+      const hashedPassword = await bcrypt.hash(process.env.ADMIN_INITIAL_PASSWORD, 10);
+      await AdCom.create({
+        userType: 'admin',
+        title: 'Mr.',
+        firstName: 'Anthony',
+        lastName: 'Villa',
+        email: 'lofoflora@gmail.com',
+        phoneNumber: '0670508291',
+        password: hashedPassword,
+      });
+      console.log('Admin créé avec succès.');
+    }
+  } catch (error) {
+    console.error('Erreur lors de la création de l\'admin:', error);
+  }
+};
+
 const startServer = async () => {
   try {
-    // Synchronisation avec la base de données
-    await sequelize.sync({alter:true});
-    
-    // Démarrage du serveur
+    await sequelize.sync({/*alter:true*/});
+    await createAdminIfNotExist();  
     app.listen(PORT, () => {
       console.log(`Serveur lancé sur le port ${PORT}`);
     });

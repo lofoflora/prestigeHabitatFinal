@@ -1,75 +1,86 @@
-//LoginForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useUser } from '../UserContext'; //Assurez-vous d'ajuster le chemin d'import selon l'emplacement du fichier UserContext
+import { useUser } from '../UserContext';
 
 function LoginForm({ onLogin, onCloseLoginForm }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  // LoginForm.jsx
-const { setIsLoggedIn, handleLogin } = useUser();
- // Utilisation du hook useUser
-  
+  const [hasError, setHasError] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const emailRef = useRef(null);
+
+  const { setIsLoggedIn, handleLogin } = useUser();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsSubmitted(true);
     handleLoginFormSubmit({ email, password });
   };
 
-  const handleInputClick = (e) => {
-    e.stopPropagation();
+  const handleInputChange = (e) => {
+    setEmail(e.target.value);
+    if (emailRef.current) {
+      emailRef.current.setCustomValidity(''); // Réinitialise le message d'erreur
+    }
   };
+  
 
   const handleLoginFormSubmit = async (formData) => {
-  try {
-    const response = await axios.post('http://127.0.0.1:3000/login', {
-      email: formData.email,
-      password: formData.password,
-    });
+    try {
+      const response = await axios.post('http://127.0.0.1:3000/login', {
+        email: formData.email,
+        password: formData.password,
+      });
 
-    if (response.data.success) {
-      const firstName = response.data.firstName;
-      const userData = response.data.userData; // Supposons que tu reçois aussi des données utilisateur
-      const token = response.data.token;
+      if (response.data.success) {
+        const firstName = response.data.firstName;
+        const userData = response.data.userData;
+        const token = response.data.token;
 
-      handleLogin(firstName, userData, token); // Mettre à jour toutes les infos utilisateur en une seule fois
-
-      onCloseLoginForm();
-    } else {
-      console.error('Échec de la connexion :', response.data.message);
+        handleLogin(firstName, userData, token);
+        onCloseLoginForm();
+        setHasError(false);
+        emailRef.current.setCustomValidity('');
+      } else {
+        setHasError(true);
+        emailRef.current.setCustomValidity('Email ou mot de passe incorrect');
+        emailRef.current.reportValidity();
+      }
+    } catch (error) {
+      console.error('Erreur de connexion :', error);
+      setHasError(true);
+      emailRef.current.setCustomValidity('Email ou mot de passe incorrect');
+      emailRef.current.reportValidity();
     }
-    
-  } catch (error) {
-    console.error('Erreur de connexion :', error);
-  }
-};
-
+  };
 
   return (
-    <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <input
+        ref={emailRef}
         type="text"
         placeholder="Email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        onClick={handleInputClick}
+        onChange={handleInputChange}
+        required
       />
       <input
         type="password"
         placeholder="Mot de passe"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        onClick={handleInputClick}
+        required
       />
       <button type="submit">Se connecter</button>
+      {isSubmitted && hasError && <div className="error-tooltip">Email ou mot de passe incorrect</div>}
       <div>
         Pas de compte ? <Link to="/signupform" style={{ textDecoration: 'underline' }}>Inscrivez-vous ici</Link>
       </div>
       <div>
         <Link to="/resetpassword" style={{ textDecoration: 'underline' }}>Mot de passe oublié ?</Link>
       </div>
-      <button onClick={onCloseLoginForm} type='submit'>Fermer</button>
+      <button onClick={onCloseLoginForm} type="button">Fermer</button>
     </form>
   );
 }
