@@ -33,13 +33,17 @@ function App() {
      } = useUser();
 
 
-     const handleLogin = (firstName, userData, authToken) => {
+     const handleLogin = (firstName, lastName, title, type, userData, authToken) => {
       setIsLoggedIn(true);
       setUserFirstName(firstName);
       setUserData(userData);
       localStorage.setItem('authToken', authToken);
       localStorage.setItem('userFirstName', firstName);
+      localStorage.setItem('userLastName', lastName);
+      localStorage.setItem('userTitle', title);
+      localStorage.setItem('userType', type); // Ajoute cette ligne
     };
+    
     
   
   
@@ -55,9 +59,13 @@ function App() {
     
         if (response.data.success) {
           const firstName = response.data.firstName;
+          const lastName = response.data.lastName; // Nouveau
+          const title = response.data.title; // Nouveau
+          const type = response.data.type; // Nouveau
           const userData = response.data.userData;
-          const authToken = response.data.token;  // Récupère le token ici
-          handleLogin(firstName, userData, authToken);  // Appelle handleLogin avec le token
+          const authToken = response.data.token;
+    
+          handleLogin(firstName, lastName, title, type, userData, authToken); // Modifié
           onCloseLoginForm();
         } else {
           console.error('Échec de la connexion :', response.data.message);
@@ -67,21 +75,24 @@ function App() {
       }
     };
     
+    
   
 
  // Utilisez le useEffect pour vérifier le token au chargement de l'application
-useEffect(() => {
+ useEffect(() => {
   const storedToken = localStorage.getItem('authToken');
+  const storedUserType = localStorage.getItem('userType'); // Nouveau
   if (storedToken) {
-    // Configure Axios pour utiliser le token dans les headers
     axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
-
-    // Ici, vous pourriez envoyer le token au serveur pour vérification si nécessaire
-    // Puis, si le token est valide, utilisez handleLogin pour mettre à jour l'état de connexion
-    const firstName = localStorage.getItem('userFirstName'); // Obtenez le prénom depuis le local storage
-    handleLogin(firstName, null); // userData est null au départ
+    const firstName = localStorage.getItem('userFirstName');
+    const lastName = localStorage.getItem('userLastName');
+    const title = localStorage.getItem('userTitle');
+    const type = storedUserType; // Utilise le type d'utilisateur stocké
+    handleLogin(firstName, lastName, title, type, null, storedToken); // userData est null au départ
   }
 }, []);
+
+
 
 
 

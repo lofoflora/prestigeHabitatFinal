@@ -32,13 +32,16 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
         email: formData.email,
         password: formData.password,
       });
-
+  
       if (response.data.success) {
         const firstName = response.data.firstName;
+        const lastName = response.data.lastName; // Nouveau
+        const title = response.data.title; // Nouveau
+        const type = response.data.userType; // Nouveau
         const userData = response.data.userData;
         const token = response.data.token;
-
-        handleLogin(firstName, userData, token);
+  
+        handleLogin(firstName, lastName, title, type, userData, token); // Modifié
         onCloseLoginForm();
         setHasError(false);
         emailRef.current.setCustomValidity('');
@@ -54,7 +57,7 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
       emailRef.current.reportValidity();
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <input

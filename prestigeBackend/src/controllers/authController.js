@@ -56,12 +56,14 @@ const token = jwt.sign(
 
     
 
-    res.json({
-      success: true,
-      token,
-      firstName: user.firstName,
-      userType: user.userType
-    });
+res.json({
+  success: true,
+  token,
+  firstName: user.firstName,
+  lastName: user.lastName,  // Ajoute ça
+  title: user.title,  // Ajoute ça
+  userType: user.userType
+});
   } catch (error) {
     console.error('Erreur lors de la connexion:', error);
     res.status(500).json({ success: false, message: 'Erreur serveur.' });

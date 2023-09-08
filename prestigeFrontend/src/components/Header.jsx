@@ -10,7 +10,7 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import LoginForm from './formulaires/LoginForm'; // Assurez-vous d'importer votre composant LoginForm
-
+import AdminNavbar from './adcom/AdminNavbar';
 
 function CustomNavbar() {
   const [navExpanded, setNavExpanded] = useState(false);
@@ -37,18 +37,25 @@ function CustomNavbar() {
     };
   }, [isLoginFormVisible]);
 
-  // ...
+  
 }
 
 function Header({ onLogin }) {
-  const { isLoggedIn, userFirstName, handleLogout } = useUser();
+  const { isLoggedIn, userFirstName, userType, setUserType } = useUser();
+  // Ajoute userType
   console.log("Header isLoggedIn:", isLoggedIn);  // Ajoute cette ligne
   console.log("Header userFirstName:", userFirstName);  // Ajoute cette ligne
+  console.log("userType:", userType);
+// Ajoute ce useEffect pour mettre à jour userType depuis le localStorage
+useEffect(() => {
+  const storedUserType = localStorage.getItem('userType');
+  if (storedUserType) {
+    setUserType(storedUserType);
+  }
+}, []);
 
 
-
-  // console.log('isLoggedIn:', isLoggedIn);
-  // console.log('userFirstName:', userFirstName);
+ ;
   const [navExpanded, setNavExpanded] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
 
@@ -149,7 +156,9 @@ function Header({ onLogin }) {
           <span>Bonjour, {userFirstName} !</span>
         </div>
       )}
-
+{userType === 'admin' ? ( // Vérifie si l'utilisateur est un admin
+        <AdminNavbar /> // Utilise la navbar admin
+      ) : (
       <Navbar
         className="custom-navbar"
         bg="dark"
@@ -218,7 +227,7 @@ function Header({ onLogin }) {
           </Navbar.Collapse>
         </div>
       </Navbar>
-
+)}
      {/* Afficher le formulaire de connexion si nécessaire */}
       {showLoginForm && !isLoggedIn && (
        
