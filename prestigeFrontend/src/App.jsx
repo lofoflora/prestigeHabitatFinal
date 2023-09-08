@@ -15,6 +15,7 @@ import PurchaseResalePage from "./components/pages/PurchaseResalePage.jsx";
 import Dashboard from "./components/clients/Dashboard.jsx";
 import { UserProvider } from './components/UserContext';
 import SearchPageOption from './components/pages/SearchPageOption.jsx';
+import CreateAdForm from "./components/formulaires/Adcom/CreateAnnonce";
 import './App.css';
 import axios from 'axios';
 import { useUser } from "./components/UserContext.jsx";
@@ -111,6 +112,7 @@ useEffect(() => {
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/purchaseresalpage" element={<PurchaseResalePage />} />
           <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/createannonce" element={<CreateAdForm/>}/>
 
         </Routes>
 

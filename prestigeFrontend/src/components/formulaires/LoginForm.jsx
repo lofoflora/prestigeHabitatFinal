@@ -10,7 +10,7 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
   
   // LoginForm.jsx
 const { setIsLoggedIn, handleLogin } = useUser();
-// Utilisation du hook useUser
+ // Utilisation du hook useUser
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,30 +22,29 @@ const { setIsLoggedIn, handleLogin } = useUser();
   };
 
   const handleLoginFormSubmit = async (formData) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:3000/login', {
-        email: formData.email,
-        password: formData.password,
-      });
+  try {
+    const response = await axios.post('http://127.0.0.1:3000/login', {
+      email: formData.email,
+      password: formData.password,
+    });
 
-      if (response.data.success) {
-        const firstName = response.data.firstName;
-        const token = response.data.token;
+    if (response.data.success) {
+      const firstName = response.data.firstName;
+      const userData = response.data.userData; // Supposons que tu reçois aussi des données utilisateur
+      const token = response.data.token;
 
-        localStorage.setItem('authToken', token);
-        
-        setIsLoggedIn(true); // Mettre à jour l'état de connexion via le contexte
-        
-        onLogin(firstName);
-        onCloseLoginForm();
-      } else {
-        console.error('Échec de la connexion :', response.data.message);
-      }
-      
-    } catch (error) {
-      console.error('Erreur de connexion :', error);
+      handleLogin(firstName, userData, token); // Mettre à jour toutes les infos utilisateur en une seule fois
+
+      onCloseLoginForm();
+    } else {
+      console.error('Échec de la connexion :', response.data.message);
     }
-  };
+    
+  } catch (error) {
+    console.error('Erreur de connexion :', error);
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

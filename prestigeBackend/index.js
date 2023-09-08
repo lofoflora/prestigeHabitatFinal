@@ -62,7 +62,7 @@ app.use('/Avis',avisRouter);
 const startServer = async () => {
   try {
     // Synchronisation avec la base de données
-    await sequelize.sync();
+    await sequelize.sync({alter:true});
     
     // Démarrage du serveur
     app.listen(PORT, () => {

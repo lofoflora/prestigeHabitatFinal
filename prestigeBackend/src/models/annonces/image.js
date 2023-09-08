@@ -7,6 +7,10 @@ export const Image = sequelize.define("image", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  thumbnailFilename: {  
+    type: DataTypes.STRING,
+    allowNull: false,  
+  },
   uploadDate: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
