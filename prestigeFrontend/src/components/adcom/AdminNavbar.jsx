@@ -12,52 +12,53 @@ const AdminNavbar = () => {
   const onLogoutClick = () => {
     handleLogout();  // Appelle la fonction de déconnexion
   };
+
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar className="admin-navbar" bg="dark" variant="dark" expand="lg">
       <div className="container">
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link as={Link} to="/admin">
+            <Nav.Link className="admin-nav-link" as={Link} to="/admin">
               Tableau de bord
             </Nav.Link>
-            <NavDropdown title="Nos services" id="basic-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/admin/amo">
+            <NavDropdown className="admin-nav-link" title="Mes dossiers" id="basic-nav-dropdown">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/amo">
                 AMO
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/admin/achat">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/achat">
                 Achat
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/admin/vente">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/vente">
                 Vente
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/admin/construction">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/construction">
                 Construction
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/admin/achat-revente">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/achat-revente">
                 Achat / Revente
               </NavDropdown.Item>
             </NavDropdown>
-            <NavDropdown title="Actualités" id="basic-nav-dropdown">
-              <NavDropdown.Item as={Link} to="/admin/news">
+            <NavDropdown className="admin-nav-link" title="Actualités" id="basic-nav-dropdown">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/news">
                 News
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/admin/temoignages">
+              <NavDropdown.Item className="admin-dropdown-item" as={Link} to="/admin/temoignages">
                 Témoignages
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link as={Link} to="/admin/create-annonce">
+            <Nav.Link className="admin-nav-link" as={Link} to="/admin/create-annonce">
               Créer Annonce
             </Nav.Link>
-            <Nav.Link as={Link} to="/admin/create-client">
+            <Nav.Link className="admin-nav-link" as={Link} to="/admin/create-client">
               Créer Client
             </Nav.Link>
-            <Nav.Link as={Link} to="/admin/create-partenaire">
+            <Nav.Link className="admin-nav-link" as={Link} to="/admin/create-partenaire">
               Créer Partenaire
             </Nav.Link>
           </Nav>
-           <Nav>
-            <Nav.Link onClick={onLogoutClick}>Déconnexion</Nav.Link>  {/* Bouton de déconnexion */}
+          <Nav>
+            <Nav.Link className="admin-nav-link" onClick={onLogoutClick}>Déconnexion</Nav.Link>  {/* Bouton de déconnexion */}
           </Nav>
         </Navbar.Collapse>
       </div>

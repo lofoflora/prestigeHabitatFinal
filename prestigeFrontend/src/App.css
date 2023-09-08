@@ -685,3 +685,40 @@ input:hover + .error-tooltip {
   color: red;
   margin-top: 10px;
 }
+
+
+
+
+
+
+/* Pour la barre de navigation admin en entier */
+.admin-navbar {
+  color: var(--text-color);
+  font-weight: bold;
+  border: 2px solid blue;  /* Contour bleu */
+  border-radius: 20px;
+  background-color: var(--background-color);
+  box-shadow: 0 0 10px blue;  /* Ombre bleue */
+  min-height: 60px;
+  margin-bottom: 10px;
+}
+
+/* Pour les liens et les éléments de la liste déroulante dans la barre de navigation admin */
+.admin-navbar .admin-nav-link,
+.admin-navbar .admin-dropdown-item {
+  color: blue;  /* Texte bleu */
+  border: 2px solid blue;  /* Contour bleu */
+  border-radius: 20px;
+}
+
+/* Pour les liens et les éléments de la liste déroulante au survol */
+.admin-navbar .admin-nav-link:hover,
+.admin-navbar .admin-dropdown-item:hover {
+  background-color: rgb(23, 23, 114);  /* Fond bleu */
+  color: var(--background-color);
+}
+
+/* Pour le menu déroulant dans la barre de navigation admin */
+.admin-navbar .admin-dropdown-menu {
+  background-color: var(--background-color);
+}
