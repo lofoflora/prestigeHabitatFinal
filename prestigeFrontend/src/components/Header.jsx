@@ -209,6 +209,9 @@ useEffect(() => {
                   Témoignages
                 </NavDropdown.Item>
               </NavDropdown>
+              <Nav.Link className="admin-nav-link" as={Link} to="/create-partenaire">
+              Créer Partenaire
+            </Nav.Link>
             </Nav>
            
             <Nav>

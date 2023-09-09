@@ -19,7 +19,9 @@ import CreateAdForm from "./components/formulaires/Adcom/CreateAnnonce";
 import './App.css';
 import axios from 'axios';
 import { useUser } from "./components/UserContext.jsx";
-
+import AdComForm from "./components/adcom/usersCreate/AdComForm";
+import ClientForm from "./components/adcom/usersCreate/ClientForm";
+import PartnerForm from "./components/adcom/usersCreate/PartnerForm";
 
 
 function App() {
@@ -124,6 +126,9 @@ function App() {
           <Route path="/purchaseresalpage" element={<PurchaseResalePage />} />
           <Route path="/dashboard" element={<Dashboard/>} />
           <Route path="/createannonce" element={<CreateAdForm/>}/>
+          <Route path="/create-partenaire" element={<PartnerForm/>}/>
+          <Route path="/create-client" element={<ClientForm/>}/>
+          <Route path="/create-adcom" element={<AdComForm/>}/>
 
         </Routes>
 

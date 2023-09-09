@@ -47,14 +47,17 @@ const AdminNavbar = () => {
                 Témoignages
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link className="admin-nav-link" as={Link} to="/admin/create-annonce">
+            <Nav.Link className="admin-nav-link" as={Link} to="/create-annonce">
               Créer Annonce
             </Nav.Link>
-            <Nav.Link className="admin-nav-link" as={Link} to="/admin/create-client">
+            <Nav.Link className="admin-nav-link" as={Link} to="/create-client">
               Créer Client
             </Nav.Link>
-            <Nav.Link className="admin-nav-link" as={Link} to="/admin/create-partenaire">
+            <Nav.Link className="admin-nav-link" as={Link} to="/create-partenaire">
               Créer Partenaire
+            </Nav.Link>
+            <Nav.Link className="admin-nav-link" as={Link} to="/create-adcom">
+              Créer Adcom
             </Nav.Link>
           </Nav>
           <Nav>
