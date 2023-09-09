@@ -17,57 +17,70 @@ function PartnerForm() {
   const [addressComplement, setAddressComplement] = useState('');
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
+  const [city, setCity] = useState("");
 
 
-  // État pour stocker les villes associées au code postal
-  const [cities, setCities] = useState([]);
-  // État pour stocker la ville sélectionnée
-  const [city, setCity] = useState('');
 
-  // Référence pour l'élément de sélection de la ville (la petite flèche)
-  const citySelectRef = useRef();
+  // // État pour stocker les villes associées au code postal
+  // const [cities, setCities] = useState([]);
+  // // État pour stocker la ville sélectionnée
+  // const [city, setCity] = useState('');
 
-  // Utiliser useEffect pour effectuer la recherche à chaque changement du code postal
-  useEffect(() => {
-    if (postalCode.length === 5) {
-      fetchCityByPostalCode();
-    } else {
-      setCity('');
-      setCities([]);
+  // // Référence pour l'élément de sélection de la ville (la petite flèche)
+  // const citySelectRef = useRef();
+
+  // // Utiliser useEffect pour effectuer la recherche à chaque changement du code postal
+  // useEffect(() => {
+  //   if (postalCode.length === 5) {
+  //     fetchCityByPostalCode();
+  //   } else {
+  //     setCity('');
+  //     setCities([]);
+  //   }
+  // }, [postalCode]);
+
+  // // Utiliser useEffect pour simuler un clic sur la flèche de la liste déroulante lorsque les villes sont disponibles
+  // useEffect(() => {
+  //   if (cities.length > 0) {
+  //     citySelectRef.current.focus();
+  //   }
+  // }, [cities]);
+
+  // // Fonction pour récupérer la liste des villes associées au code postal depuis l'API
+  // const fetchCityByPostalCode = async () => {
+  //   try {
+  //     const response = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postalCode)}`);
+  //     if (response.data.features.length > 0) {
+  //       // Extraire la liste des villes de la réponse de l'API
+  //       const listeVilles = response.data.features.map((feature) => feature.properties.city);
+
+  //       // Éliminer les doublons en utilisant un Set et convertir en tableau
+  //       const uniqueCities = [...new Set(listeVilles)];
+
+  //       setCities(uniqueCities);
+  //       setCity(uniqueCities[0]); // Définir la première ville unique comme ville sélectionnée
+  //     } else {
+  //       setCities([]); // Réinitialiser la liste des villes associées
+  //       setCity('');
+  //     }
+  //   } catch (error) {
+  //     console.error('Erreur lors de la recherche de la ville :', error.message);
+  //     setCities([]); // Réinitialiser la liste des villes associées
+  //     setCity('');
+  //   }
+  // };
+  const handlePostalCodeChange = (event) => {
+    let value = event.target.value;
+    // Supprime tous les caractères non numériques
+    value = value.replace(/\D/g, '');
+    // Limite à 5 chiffres
+    value = value.substring(0, 5);
+    // Ajoute un espace après les 2 premiers chiffres
+    if (value.length > 2) {
+      value = value.substring(0, 2) + ' ' + value.substring(2);
     }
-  }, [postalCode]);
-
-  // Utiliser useEffect pour simuler un clic sur la flèche de la liste déroulante lorsque les villes sont disponibles
-  useEffect(() => {
-    if (cities.length > 0) {
-      citySelectRef.current.focus();
-    }
-  }, [cities]);
-
-  // Fonction pour récupérer la liste des villes associées au code postal depuis l'API
-  const fetchCityByPostalCode = async () => {
-    try {
-      const response = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postalCode)}`);
-      if (response.data.features.length > 0) {
-        // Extraire la liste des villes de la réponse de l'API
-        const listeVilles = response.data.features.map((feature) => feature.properties.city);
-
-        // Éliminer les doublons en utilisant un Set et convertir en tableau
-        const uniqueCities = [...new Set(listeVilles)];
-
-        setCities(uniqueCities);
-        setCity(uniqueCities[0]); // Définir la première ville unique comme ville sélectionnée
-      } else {
-        setCities([]); // Réinitialiser la liste des villes associées
-        setCity('');
-      }
-    } catch (error) {
-      console.error('Erreur lors de la recherche de la ville :', error.message);
-      setCities([]); // Réinitialiser la liste des villes associées
-      setCity('');
-    }
+    setPostalCode(value);
   };
-
   // Utiliser le hook de navigation pour rediriger l'utilisateur après inscription
   const navigate = useNavigate();
   // Utiliser le contexte utilisateur pour enregistrer les données après inscription
@@ -89,8 +102,6 @@ const handleFormSubmit = async (event) => {
     title,
     firstName,
     lastName,
-    entreprise,
-    siret,
     email,
     phoneNumber,
     password,
@@ -99,7 +110,6 @@ const handleFormSubmit = async (event) => {
     streetName,
     addressComplement,
     city,
-    acceptConditions: acceptedConditions,
   };
 
   try {
@@ -114,8 +124,6 @@ const handleFormSubmit = async (event) => {
         title,
         firstName,
         lastName,
-        entreprise,
-        siret,
         email,
         phoneNumber,
         password,
@@ -128,8 +136,6 @@ const handleFormSubmit = async (event) => {
   title,
   firstName,
   lastName,
-  entreprise,
-  siret,
   email,
   phoneNumber,
   password,
@@ -231,15 +237,16 @@ const handleFormSubmit = async (event) => {
           <input type="text" name="addressComplement" value={addressComplement} onChange={(e) => setAddressComplement(e.target.value)} />
         </label>
 
-        {/* Champs de saisie pour le code postal et la ville */}
+         {/*
+        {/*Champs de saisie pour le code postal et la ville*
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {/* Champs de saisie pour le code postal */}
+          {/* Champs de saisie pour le code postal 
           <label style={{ color: 'white', marginRight: '10px', width: '25%' }}>
             Code postal :
             <input type="text" name="postalCode" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} pattern="[0-9]{5}" required />
           </label>
 
-          {/* Input "Ville" en permanence */}
+          {/* Input "Ville" en permanence 
           <label style={{ color: 'white', width: '83%' }}>
             Ville :
             {cities.length > 0 ? (
@@ -254,7 +261,28 @@ const handleFormSubmit = async (event) => {
               <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
             )}
           </label>
-        </div>
+        </div>*/}
+{/* Champs de saisie pour le code postal et la ville */}
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  {/* Champs de saisie pour le code postal */}
+  <label style={{ color: 'white', marginRight: '10px', width: '25%' }}>
+    Code postal :
+    <input
+      type="text"
+      name="postalCode"
+      value={postalCode}
+      onChange={handlePostalCodeChange} // Utilise la fonction de gestion du changement
+      maxLength="6" // 5 chiffres + 1 espace
+      required
+    />
+  </label>
+
+  {/* Champs de saisie pour la ville */}
+  <label style={{ color: 'white', width: '75%' }}>
+    Ville :
+    <input type="text" name="city" value={city} onChange={(e) => setCity(e.target.value)} required />
+  </label>
+</div>
 
 
         <hr style={{ borderColor: '#ffd700', borderWidth: '3px', margin: '10px auto', width: '95%' }} />

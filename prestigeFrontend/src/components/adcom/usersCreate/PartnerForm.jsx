@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../UserContext';
 
-function Partnerform() {
+function PartnerForm() {
   // State pour gérer les champs du formulaire
-  const [userType, setUserType] = useState('client');
+  const [userType, setUserType] = useState('partenaire');
   const [title, setTitle] = useState('M.');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -15,68 +15,75 @@ function Partnerform() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [acceptConditions, setAcceptConditions] = useState(false);
-  const [postalCode, setPostalCode] = useState('');
+   const [postalCode, setPostalCode] = useState('');
   const [addressComplement, setAddressComplement] = useState('');
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
   const [verificationResult, setVerificationResult] = useState('');
-
-  // État pour stocker les villes associées au code postal
-  const [cities, setCities] = useState([]);
-  // État pour stocker la ville sélectionnée
   const [city, setCity] = useState('');
 
-  // Référence pour l'élément de sélection de la ville (la petite flèche)
-  const citySelectRef = useRef();
 
-  // Utiliser useEffect pour effectuer la recherche à chaque changement du code postal
-  useEffect(() => {
-    if (postalCode.length === 5) {
-      fetchCityByPostalCode();
-    } else {
-      setCity('');
-      setCities([]);
+  // // État pour stocker les villes associées au code postal
+  // const [cities, setCities] = useState([]);
+  // // État pour stocker la ville sélectionnée
+  // const [city, setCity] = useState('');
+
+  // // Référence pour l'élément de sélection de la ville (la petite flèche)
+  // const citySelectRef = useRef();
+
+  // // Utiliser useEffect pour effectuer la recherche à chaque changement du code postal
+  // useEffect(() => {
+  //   if (postalCode.length === 5) {
+  //     fetchCityByPostalCode();
+  //   } else {
+  //     setCity('');
+  //     setCities([]);
+  //   }
+  // }, [postalCode]);
+
+  // // Utiliser useEffect pour simuler un clic sur la flèche de la liste déroulante lorsque les villes sont disponibles
+  // useEffect(() => {
+  //   if (cities.length > 0) {
+  //     citySelectRef.current.focus();
+  //   }
+  // }, [cities]);
+
+  // // Fonction pour récupérer la liste des villes associées au code postal depuis l'API
+  // const fetchCityByPostalCode = async () => {
+  //   try {
+  //     const response = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postalCode)}`);
+  //     if (response.data.features.length > 0) {
+  //       // Extraire la liste des villes de la réponse de l'API
+  //       const listeVilles = response.data.features.map((feature) => feature.properties.city);
+
+  //       // Éliminer les doublons en utilisant un Set et convertir en tableau
+  //       const uniqueCities = [...new Set(listeVilles)];
+
+  //       setCities(uniqueCities);
+  //       setCity(uniqueCities[0]); // Définir la première ville unique comme ville sélectionnée
+  //     } else {
+  //       setCities([]); // Réinitialiser la liste des villes associées
+  //       setCity('');
+  //     }
+  //   } catch (error) {
+  //     console.error('Erreur lors de la recherche de la ville :', error.message);
+  //     setCities([]); // Réinitialiser la liste des villes associées
+  //     setCity('');
+  //   }
+  // };
+  const handlePostalCodeChange = (event) => {
+    let value = event.target.value;
+    // Supprime tous les caractères non numériques
+    value = value.replace(/\D/g, '');
+    // Limite à 5 chiffres
+    value = value.substring(0, 5);
+    // Ajoute un espace après les 2 premiers chiffres
+    if (value.length > 2) {
+      value = value.substring(0, 2) + ' ' + value.substring(2);
     }
-  }, [postalCode]);
-
-  // Utiliser useEffect pour simuler un clic sur la flèche de la liste déroulante lorsque les villes sont disponibles
-  useEffect(() => {
-    if (cities.length > 0) {
-      citySelectRef.current.focus();
-    }
-  }, [cities]);
-
- // Fonction pour récupérer la liste des villes associées au code postal depuis l'API
-const fetchCityByPostalCode = async () => {
-  try {
-    const response = await axios.get(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(postalCode)}`, {
-      // Ajoute les en-têtes d'autorisation uniquement si l'utilisateur n'est pas connecté
-      headers: !localStorage.getItem('token')
-        ? {}
-        : { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-    });
-
-    if (response.data.features.length > 0) {
-      // Extraire la liste des villes de la réponse de l'API
-      const listeVilles = response.data.features.map((feature) => feature.properties.city);
-
-      // Éliminer les doublons en utilisant un Set et convertir en tableau
-      const uniqueCities = [...new Set(listeVilles)];
-
-      setCities(uniqueCities);
-      setCity(uniqueCities[0]); // Définir la première ville unique comme ville sélectionnée
-    } else {
-      setCities([]); // Réinitialiser la liste des villes associées
-      setCity('');
-    }
-  } catch (error) {
-    console.error('Erreur lors de la recherche de la ville :', error.message);
-    setCities([]); // Réinitialiser la liste des villes associées
-    setCity('');
-  }
-};
-
+    setPostalCode(value);
+  };
+  
 
   // Utiliser le hook de navigation pour rediriger l'utilisateur après inscription
   const navigate = useNavigate();
@@ -99,7 +106,7 @@ const handleFormSubmit = async (event) => {
   }
 
   const data = {
-    type: userType, // soit "client" soit "partner"
+    type: 'partenaire', // toujours "partenaire"
     title,
     firstName,
     lastName,
@@ -113,8 +120,7 @@ const handleFormSubmit = async (event) => {
     streetName,
     addressComplement,
     city,
-    acceptConditions: acceptedConditions,
-  };
+    };
 
   try {
     // Envoi des données d'inscription au backend
@@ -233,34 +239,19 @@ const handleFormSubmit = async (event) => {
     <div className="auth-form" style={{ backgroundColor: '#343a40', padding: '50px', borderRadius: '5px', position: 'relative',width: '50%' }}>
       <form onSubmit={handleFormSubmit}>
         <h2>Formulaire d'inscription</h2>
-
-        {/* Champs de saisie pour le type d'utilisateur */}
-        <div>
-          <label style={{ color: 'white',width:'100%' }}>
-            Type d'utilisateur :
-            <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-              <option value="client">Client</option>
-              <option value="partenaire">Partenaire</option>
-            </select>
-          </label>
-        </div>
-
-        {/* Champs de saisie pour le SIRET (uniquement pour les partenaires) */}
-        {userType === 'partenaire' && (
-          <>
-            <label style={{ color: 'white' }}>
-              Entreprise :
-              <input type="text" name="entreprise" value={entreprise} onChange={(e) => setEntreprise(e.target.value)} required />
-            </label>
-
-            <label style={{ color: 'white' }}>
-              SIRET :
-              <input type="text" name="siret" value={siret} onChange={handleSiretChange} required />
-            </label>
-            {verificationResult && <p style={{ color: 'red' }}>{verificationResult}</p>}
-          </>
-        )}
-
+  
+        {/* Champs de saisie pour l'Entreprise et le SIRET (affichés en permanence) */}
+        <label style={{ color: 'white' }}>
+          Entreprise :
+          <input type="text" name="entreprise" value={entreprise} onChange={(e) => setEntreprise(e.target.value)} required />
+        </label>
+  
+        <label style={{ color: 'white' }}>
+          SIRET :
+          <input type="text" name="siret" value={siret} onChange={handleSiretChange} required />
+        </label>
+        {verificationResult && <p style={{ color: 'red' }}>{verificationResult}</p>}
+  
         {/* Champs de saisie pour le titre */}
         <div>
           <label style={{ color: 'white',width:'17%' }}>
@@ -320,15 +311,16 @@ const handleFormSubmit = async (event) => {
           <input type="text" name="addressComplement" value={addressComplement} onChange={(e) => setAddressComplement(e.target.value)} />
         </label>
 
-        {/* Champs de saisie pour le code postal et la ville */}
+         {/*
+        {/*Champs de saisie pour le code postal et la ville*
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {/* Champs de saisie pour le code postal */}
+          {/* Champs de saisie pour le code postal 
           <label style={{ color: 'white', marginRight: '10px', width: '25%' }}>
             Code postal :
             <input type="text" name="postalCode" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} pattern="[0-9]{5}" required />
           </label>
 
-          {/* Input "Ville" en permanence */}
+          {/* Input "Ville" en permanence 
           <label style={{ color: 'white', width: '83%' }}>
             Ville :
             {cities.length > 0 ? (
@@ -343,7 +335,28 @@ const handleFormSubmit = async (event) => {
               <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
             )}
           </label>
-        </div>
+        </div>*/}
+{/* Champs de saisie pour le code postal et la ville */}
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  {/* Champs de saisie pour le code postal */}
+  <label style={{ color: 'white', marginRight: '10px', width: '25%' }}>
+    Code postal :
+    <input
+      type="text"
+      name="postalCode"
+      value={postalCode}
+      onChange={handlePostalCodeChange} // Utilise la fonction de gestion du changement
+      maxLength="6" // 5 chiffres + 1 espace
+      required
+    />
+  </label>
+
+  {/* Champs de saisie pour la ville */}
+  <label style={{ color: 'white', width: '75%' }}>
+    Ville :
+    <input type="text" name="city" value={city} onChange={(e) => setCity(e.target.value)} required />
+  </label>
+</div>
 
 
         <hr style={{ borderColor: '#ffd700', borderWidth: '3px', margin: '10px auto', width: '95%' }} />
@@ -362,10 +375,12 @@ const handleFormSubmit = async (event) => {
 
 
      
-  <button type="submit" className="custom-button" disabled={!acceptedConditions}>S'inscrire</button>
+
+  {/* Bouton pour soumettre le formulaire */}
+  <button type="submit" className="custom-button" >S'inscrire</button>
       </form>
     </div>
   );
 }
 
-export default Partnerform;
+export default PartnerForm;
