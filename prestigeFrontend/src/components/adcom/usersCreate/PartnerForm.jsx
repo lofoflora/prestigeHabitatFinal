@@ -37,31 +37,41 @@ useEffect(() => {
 
 
 const verifySiret = async () => {
+  console.log('Vérification du SIRET en cours...');
+
   if (siret.length !== 14) {
+    console.log("Le numéro SIRET est invalide.");
     setVerificationResult("Le numéro SIRET est invalide.");
     return false;
   }
 
   try {
-    const response = await axios.post('http://localhost:5000/api/insee/token', 'grant_type=client_credentials', {
+    const response = await axios.get(`http://localhost:5000/insee/siret/${siret}`, {
       headers: {
         'Authorization': `Bearer ${apiToken}`
       }
     });
-
-    if (response.data) {
-      setVerificationResult("");
+    console.log("Response from server: ", response);
+    if (response.status === 200 && response.data) {
+      console.log('Réponse de l\'API INSEE :', response.data);
+      setVerificationResult("Le SIRET est valide.");
       return true;
     } else {
+      console.log("Le SIRET n'est pas valide.");
       setVerificationResult("Le SIRET n'est pas valide.");
       return false;
     }
   } catch (error) {
     console.error('Erreur lors de la vérification du SIRET:', error);
+
     setVerificationResult("Erreur lors de la vérification du SIRET.");
     return false;
   }
 };
+
+
+
+
 
  
   
@@ -133,7 +143,7 @@ const verifySiret = async () => {
   const { setUserData } = useUser();
 
  // Fonction de soumission du formulaire
-const handleFormSubmit = async (event) => {
+ const handleFormSubmit = async (event) => {
   event.preventDefault();
 
   // Validation des champs et traitements
@@ -142,8 +152,12 @@ const handleFormSubmit = async (event) => {
     return; // Important de s'assurer que la fonction s'arrête ici
   }
 
-  if (!verifySiret()) {
+  console.log('Vérification du SIRET en cours...');
+  const isSiretValid = await verifySiret(); // Utilise "await" pour attendre la réponse de la fonction
+
+  if (!isSiretValid) {
     alert("Le SIRET n'est pas valide.");
+    console.log('Le SIRET n\'est pas valide.'); // Ajoute ce console.log
     return; // Important de s'assurer que la fonction s'arrête ici
   }
 
@@ -162,7 +176,7 @@ const handleFormSubmit = async (event) => {
     streetName,
     addressComplement,
     city,
-    };
+  };
 
   try {
     // Envoi des données d'inscription au backend
@@ -222,28 +236,12 @@ const handleFormSubmit = async (event) => {
   // Fonction pour formater le numéro de SIRET
   const handleSiretChange = (event) => {
     const siretValue = event.target.value;
-    const sanitizedSiret = siretValue.replace(/\D/g, '');
-    const truncatedSiret = sanitizedSiret.slice(0, 14);
-
-    let formattedSiret = '';
-    if (truncatedSiret.length > 5) {
-      formattedSiret += truncatedSiret.slice(0, 3) + '  ';
-      if (truncatedSiret.length > 8) {
-        formattedSiret += truncatedSiret.slice(3, 6) + '  ';
-        if (truncatedSiret.length > 11) {
-          formattedSiret += truncatedSiret.slice(6, 9) + '  ' + truncatedSiret.slice(9, 14);
-        } else {
-          formattedSiret += truncatedSiret.slice(6, 9) + '  ' + truncatedSiret.slice(9);
-        }
-      } else {
-        formattedSiret += truncatedSiret.slice(3, 6) + '  ' + truncatedSiret.slice(6);
-      }
-    } else {
-      formattedSiret = truncatedSiret;
-    }
-
-    setSiret(formattedSiret);
+    const sanitizedSiret = siretValue.replace(/\D/g, ''); // Supprime tous les caractères non numériques
+    const truncatedSiret = sanitizedSiret.slice(0, 14); // Limite à 14 caractères
+  
+    setSiret(truncatedSiret);
   };
+  
 
   // Fonction pour mettre la première lettre en majuscule
   const capitalizeFirstLetter = (str) => {
@@ -274,12 +272,19 @@ const handleFormSubmit = async (event) => {
           <input type="text" name="entreprise" value={entreprise} onChange={(e) => setEntreprise(e.target.value)} required />
         </label>
   
-        <label style={{ color: 'white' }}>
-          SIRET :
-          <input type="text" value={siret} onChange={handleSiretChange} />
-          {verificationResult && <p>{verificationResult}</p>}
-        </label>
-        {verificationResult && <p style={{ color: 'red' }}>{verificationResult}</p>}
+        // ... (reste du code)
+
+<label style={{ color: 'white' }}>
+  SIRET :
+  <input type="text" value={siret} onChange={handleSiretChange} />
+  {verificationResult && <p>{verificationResult}</p>}
+</label>
+{/* Bouton pour vérifier le SIRET */}
+<button type="button" onClick={verifySiret}>Vérifier SIRET</button>
+{verificationResult && <p style={{ color: 'red' }}>{verificationResult}</p>}
+
+// ... (reste du code)
+
   
         {/* Champs de saisie pour le titre */}
         <div>
@@ -406,7 +411,7 @@ const handleFormSubmit = async (event) => {
      
 
   {/* Bouton pour soumettre le formulaire */}
-  <button type="submit" className="custom-button" onClick={verifySiret} >S'inscrire</button>
+  <button type="submit" className="custom-button" >S'inscrire</button>
  
       </form>
     </div>
