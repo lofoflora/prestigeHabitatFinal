@@ -15,7 +15,7 @@ import PurchaseResalePage from "./components/pages/PurchaseResalePage.jsx";
 import Dashboard from "./components/clients/Dashboard.jsx";
 import { UserProvider } from './components/UserContext';
 import SearchPageOption from './components/pages/SearchPageOption.jsx';
-import CreateAdForm from "./components/formulaires/Adcom/CreateAnnonce";
+import CreateAdForm from "./components/adcom/CreateAnnonce";
 import './App.css';
 import axios from 'axios';
 import { useUser } from "./components/UserContext.jsx";

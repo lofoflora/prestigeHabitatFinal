@@ -1,3 +1,14 @@
+// Définition de process.env pour Vite
+if (import.meta.env.MODE === 'development') {
+  globalThis.process = {
+    env: { NODE_ENV: 'development' }
+  };
+} else {
+  globalThis.process = {
+    env: { NODE_ENV: 'production' }
+  };
+}
+
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 //import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,7 +20,7 @@ createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
       <UserProvider>
-      <App />
+        <App />
       </UserProvider>
     </Router>
   </React.StrictMode>

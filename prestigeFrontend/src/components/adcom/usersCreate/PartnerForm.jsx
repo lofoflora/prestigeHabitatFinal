@@ -21,8 +21,50 @@ function PartnerForm() {
   const [streetName, setStreetName] = useState('');
   const [verificationResult, setVerificationResult] = useState('');
   const [city, setCity] = useState('');
+  const [apiToken, setApiToken] = useState('');
+
+  // Générer le token d'API au chargement du composant
+ // Front-end
+useEffect(() => {
+  axios.get('http://localhost:5000/api/getToken', { withCredentials: true })
+    .then(response => {
+      setApiToken(response.data.access_token);
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération du token:', error);
+    });
+}, []);
 
 
+const verifySiret = async () => {
+  if (siret.length !== 14) {
+    setVerificationResult("Le numéro SIRET est invalide.");
+    return false;
+  }
+
+  try {
+    const response = await axios.post('http://localhost:5000/api/insee/token', 'grant_type=client_credentials', {
+      headers: {
+        'Authorization': `Bearer ${apiToken}`
+      }
+    });
+
+    if (response.data) {
+      setVerificationResult("");
+      return true;
+    } else {
+      setVerificationResult("Le SIRET n'est pas valide.");
+      return false;
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification du SIRET:', error);
+    setVerificationResult("Erreur lors de la vérification du SIRET.");
+    return false;
+  }
+};
+
+ 
+  
   // // État pour stocker les villes associées au code postal
   // const [cities, setCities] = useState([]);
   // // État pour stocker la ville sélectionnée
@@ -165,21 +207,7 @@ const handleFormSubmit = async (event) => {
     }
   };
 
-  // Fonction pour vérifier le SIRET
-  const verifySiret = () => {
-    if (userType === 'client') {
-      setVerificationResult("");
-      return true;
-    }
-
-    if (siret.length !== 14) {
-      setVerificationResult("Le numéro SIRET est invalide.");
-      return false;
-    }
-
-    setVerificationResult("");
-    return true;
-  };
+ 
 
   // Fonction pour formater le numéro de téléphone
   const handlePhoneNumberChange = (event) => {
@@ -248,7 +276,8 @@ const handleFormSubmit = async (event) => {
   
         <label style={{ color: 'white' }}>
           SIRET :
-          <input type="text" name="siret" value={siret} onChange={handleSiretChange} required />
+          <input type="text" value={siret} onChange={handleSiretChange} />
+          {verificationResult && <p>{verificationResult}</p>}
         </label>
         {verificationResult && <p style={{ color: 'red' }}>{verificationResult}</p>}
   
@@ -377,7 +406,8 @@ const handleFormSubmit = async (event) => {
      
 
   {/* Bouton pour soumettre le formulaire */}
-  <button type="submit" className="custom-button" >S'inscrire</button>
+  <button type="submit" className="custom-button" onClick={verifySiret} >S'inscrire</button>
+ 
       </form>
     </div>
   );

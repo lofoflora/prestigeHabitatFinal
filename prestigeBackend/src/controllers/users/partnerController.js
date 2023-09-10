@@ -1,6 +1,6 @@
+//partnerController.js
 import { Partner } from "../../models/users/partner.js";
 import bcrypt from 'bcrypt';
-
 
 // Créer un nouveau partenaire (accessible par les partenaires et les admins)
 export const createPartner = async (req, res) => {
@@ -10,7 +10,8 @@ export const createPartner = async (req, res) => {
     
     const partner = await Partner.create({
       ...req.body,
-      password: hashedPassword
+      password: hashedPassword,
+      siret: req.body.siret // Ajoute la colonne siret ici
     });
     
     res.status(201).json(partner);
@@ -51,9 +52,15 @@ export const getPartnerById = async (req, res) => {
 export const updatePartner = async (req, res) => {
   const id = req.params.id;
   try {
-    const [updated] = await Partner.update(req.body, {
-      where: { id: id }
-    });
+    const [updated] = await Partner.update(
+      {
+        ...req.body,
+        siret: req.body.siret // Ajoute la colonne siret ici
+      },
+      {
+        where: { id: id }
+      }
+    );
     if (updated) {
       res.status(200).json({ message: 'Partenaire mis à jour avec succès.' });
     } else {
