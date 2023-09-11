@@ -22,6 +22,7 @@ import { useUser } from "./components/UserContext.jsx";
 import AdComForm from "./components/adcom/usersCreate/AdComForm";
 import ClientForm from "./components/adcom/usersCreate/ClientForm";
 import PartnerForm from "./components/adcom/usersCreate/PartnerForm";
+import DashboardAdmin from "./components/adcom/DashboardAdmin";
 
 
 function App() {
@@ -129,6 +130,7 @@ function App() {
           <Route path="/create-partenaire" element={<PartnerForm/>}/>
           <Route path="/create-client" element={<ClientForm/>}/>
           <Route path="/create-adcom" element={<AdComForm/>}/>
+          <Route path="/dashboard-admin" element={<DashboardAdmin/>} />
 
         </Routes>
 

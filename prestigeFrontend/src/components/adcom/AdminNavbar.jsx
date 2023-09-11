@@ -19,7 +19,7 @@ const AdminNavbar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link className="admin-nav-link" as={Link} to="/admin">
+            <Nav.Link className="admin-nav-link" as={Link} to="/dashboard-admin">
               Tableau de bord
             </Nav.Link>
             <NavDropdown className="admin-nav-link" title="Mes dossiers" id="basic-nav-dropdown">
