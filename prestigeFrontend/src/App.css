@@ -724,3 +724,22 @@ input:hover + .error-tooltip {
 }
 
 
+.client-list {
+  margin: 20px;
+}
+
+.client-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.client-table th,
+.client-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.client-table th {
+  background-color: #f2f2f2;
+}

@@ -1,6 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function DashboardAdmin() {
+  const navigate = useNavigate();
+
+  const navigateToClientsList = () => {
+    navigate('/list-client');
+  };
   // Styles pour le conteneur principal
   const dashboardStyle = {
     border: '1px solid #ccc', // Bordure autour de la page
@@ -92,9 +98,9 @@ const sectionStyle = {
       <div style={rowStyle}>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Liste des Clients</h4>
-          <button style={buttonStyle} onClick={() => navigateToClientsList()}>
-            Liste des clients
-          </button>
+          <button style={buttonStyle} onClick={navigateToClientsList}>
+    Liste des clients
+  </button>
         </div>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Liste des partenaires</h4>

@@ -23,6 +23,7 @@ import AdComForm from "./components/adcom/usersCreate/AdComForm";
 import ClientForm from "./components/adcom/usersCreate/ClientForm";
 import PartnerForm from "./components/adcom/usersCreate/PartnerForm";
 import DashboardAdmin from "./components/adcom/DashboardAdmin";
+import ListeClients from "./components/adcom/pages/ListeClients";
 
 
 function App() {
@@ -131,6 +132,8 @@ function App() {
           <Route path="/create-client" element={<ClientForm/>}/>
           <Route path="/create-adcom" element={<AdComForm/>}/>
           <Route path="/dashboard-admin" element={<DashboardAdmin/>} />
+          <Route path="/list-client" element={<ListeClients/>} />
+
 
         </Routes>
 
