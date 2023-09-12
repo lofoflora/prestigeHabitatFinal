@@ -24,6 +24,15 @@ import ClientForm from "./components/adcom/usersCreate/ClientForm";
 import PartnerForm from "./components/adcom/usersCreate/PartnerForm";
 import DashboardAdmin from "./components/adcom/DashboardAdmin";
 import ListeClients from "./components/adcom/pages/ListeClients";
+import ListeAmo from "./components/adcom/pages/DossierAmo";
+import ListeVente from "./components/adcom/pages/DossierVente";
+import ListPartner from "./components/adcom/pages/ListePartenaire";
+import ListeAchat from "./components/adcom/pages/DossirAchat";
+import ListeAchatRevente from "./components/adcom/pages/DosssierAchatRevente";
+import ListeSuiviConstruction from "./components/adcom/pages/SuiviConstruction";
+
+
+
 
 
 function App() {
@@ -133,6 +142,12 @@ function App() {
           <Route path="/create-adcom" element={<AdComForm/>}/>
           <Route path="/dashboard-admin" element={<DashboardAdmin/>} />
           <Route path="/list-client" element={<ListeClients/>} />
+          <Route path="/list-amo" element={<ListeAmo/>} />
+          <Route path="/list-vente" element={<ListeVente/>} />
+          <Route path="/list-partner" element={<ListPartner/>} />
+          <Route path="/list-achat" element={<ListeAmo/>} />
+          <Route path="/list-achat-revente" element={<ListeVente/>} />
+          <Route path="/list-construction" element={<ListPartner/>} />
 
 
         </Routes>

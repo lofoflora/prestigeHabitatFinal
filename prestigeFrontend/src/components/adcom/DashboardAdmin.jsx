@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function DashboardAdmin() {
   const navigate = useNavigate();
@@ -7,6 +7,7 @@ function DashboardAdmin() {
   const navigateToClientsList = () => {
     navigate('/list-client');
   };
+ 
   // Styles pour le conteneur principal
   const dashboardStyle = {
     border: '1px solid #ccc', // Bordure autour de la page
@@ -98,14 +99,14 @@ const sectionStyle = {
       <div style={rowStyle}>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Liste des Clients</h4>
-          <button style={buttonStyle} onClick={navigateToClientsList}>
-    Liste des clients
+          <button style={buttonStyle}>
+          <Link to="/list-client"> Liste des clients</Link>
   </button>
         </div>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Liste des partenaires</h4>
-          <button style={buttonStyle} onClick={() => navigateToPartnersList()}>
-            Liste des partenaires
+          <button style={buttonStyle} >
+          <Link to="/list-partner"> Liste des partenaires </Link>
           </button>
         </div>
       </div>
@@ -114,20 +115,20 @@ const sectionStyle = {
       <div style={rowStyle}>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Dossier AMO</h4>
-          <button style={buttonStyle} onClick={() => navigateToAmoList()}>
-            Dossier AMO
-          </button>
+          <button style={buttonStyle}>
+  <Link to="/list-amo">Dossier AMO</Link>
+</button>
         </div>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Dossier Achat</h4>
-          <button style={buttonStyle} onClick={() => navigateToPurchasesList()}>
-            Dossier Achat
+          <button style={buttonStyle} >
+          <Link to="/list-achat"> Dossier Achat</Link>
           </button>
         </div>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Dossier Vente</h4>
-          <button style={buttonStyle} onClick={() => navigateToSalesList()}>
-            Dossier Vente
+          <button style={buttonStyle} >
+          <Link to="/list-vente">  Dossier Vente</Link>
           </button>
         </div>
       </div>
@@ -136,14 +137,14 @@ const sectionStyle = {
       <div style={rowStyle}>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Dossier Achat/Revente</h4>
-          <button style={buttonStyle} onClick={() => navigateToResalePurchasesList()}>
-            Dossier Achat/Revente
+          <button style={buttonStyle} >
+          <Link to="/list-achat-revente"> Dossier Achat/Revente</Link>
           </button>
         </div>
         <div style={sectionStyle}>
           <h4 style={h4Style}>Dossier Suivi de Construction</h4>
-          <button style={buttonStyle} onClick={() => navigateToConstructionTracking()}>
-            Dossier Suivi de Construction
+          <button style={buttonStyle} >
+          <Link to="/list-construction">  Dossier Suivi de Construction</Link>
           </button>
         </div>
       </div>

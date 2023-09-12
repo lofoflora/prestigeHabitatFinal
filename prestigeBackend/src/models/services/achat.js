@@ -2,6 +2,9 @@ import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 
 export const Achat = sequelize.define("Achat", {
+
+  nomDuProjet: DataTypes.STRING,
+  
     // Étape 1: Définition Projet
     definitionProjetStartDate: DataTypes.DATE,
     definitionProjetStatus: DataTypes.STRING,

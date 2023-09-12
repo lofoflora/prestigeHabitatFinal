@@ -1,11 +1,10 @@
 import { vente } from "../../models/services/vente.js";
 
-
 // Créer une nouvelle entité "Vente"
 export const createVente = async (req, res) => {
   try {
-    const vente = await vente.create(req.body);
-    res.status(201).json(vente);
+    const nouvelleVente = await vente.create(req.body);
+    res.status(201).json(nouvelleVente);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'entité "Vente".' });
@@ -15,7 +14,7 @@ export const createVente = async (req, res) => {
 // Obtenir toutes les entités "Vente"
 export const getAllVente = async (req, res) => {
   try {
-    const ventes = await Vente.findAll();
+    const ventes = await vente.findAll();
     res.status(200).json(ventes);
   } catch (error) {
     console.error(error);
@@ -27,9 +26,9 @@ export const getAllVente = async (req, res) => {
 export const getVenteById = async (req, res) => {
   const id = req.params.id;
   try {
-    const vente = await Vente.findByPk(id);
-    if (vente) {
-      res.status(200).json(vente);
+    const venteTrouvee = await vente.findByPk(id);
+    if (venteTrouvee) {
+      res.status(200).json(venteTrouvee);
     } else {
       res.status(404).json({ message: 'Entité "Vente" non trouvée.' });
     }
@@ -43,7 +42,7 @@ export const getVenteById = async (req, res) => {
 export const deleteVente = async (req, res) => {
   const id = req.params.id;
   try {
-    const deleted = await Vente.destroy({
+    const deleted = await vente.destroy({
       where: { id: id }
     });
     if (deleted) {
