@@ -200,6 +200,14 @@ useEffect(() => {
                   Nos valeurs
                 </NavDropdown.Item>
               </NavDropdown>
+              {isLoggedIn ? (  <>  
+                <Nav.Link as={Link} to="/news/News">
+                News
+      </Nav.Link>
+      <Nav.Link as={Link} to="/creation-temoignage">
+        Ecrire un témoignage
+      </Nav.Link>  </>) :(
+              
               <NavDropdown title="Actualités" id="basic-nav-dropdown">
 
                 <NavDropdown.Item as={Link} to="/news/News">
@@ -209,9 +217,9 @@ useEffect(() => {
                   Témoignages
                 </NavDropdown.Item>
               </NavDropdown>
-              <Nav.Link className="admin-nav-link" as={Link} to="/create-partenaire">
-              Créer Partenaire
-            </Nav.Link>
+              
+              )}
+             
             </Nav>
            
             <Nav>

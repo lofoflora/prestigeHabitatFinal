@@ -32,6 +32,8 @@ export const RealEstateAd = sequelize.define("RealEstateAd", {
   heating: DataTypes.STRING,
   amenities: DataTypes.STRING,
   description: DataTypes.STRING,
+  actif: DataTypes.BOOLEAN
+
 });
 
 // Relation : Une société immobilière (AdCom) a plusieurs annonces immobilières

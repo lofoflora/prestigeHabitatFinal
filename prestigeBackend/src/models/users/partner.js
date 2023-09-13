@@ -26,5 +26,6 @@ export const Partner = sequelize.define("Partner", {
   adresseComplement: DataTypes.STRING,
   city: DataTypes.STRING,
   note: DataTypes.STRING,
-  siret: DataTypes.STRING, // Ajoute cette ligne pour la colonne Siret
+  siret: DataTypes.STRING,
+  actif: DataTypes.BOOLEAN // Ajoute cette ligne pour la colonne Siret
 });

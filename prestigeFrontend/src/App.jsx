@@ -33,7 +33,8 @@ import ListeAchatRevente from "./components/adcom/pages/DosssierAchatRevente";
 import ListeSuiviConstruction from "./components/adcom/pages/SuiviConstruction";
 import FicheClient from "./components/adcom/pagedetails/FicheClient";
 import FichePartenaire from "./components/adcom/pagedetails/FichePartner";
-
+import RealEstateForm from "./components/formulaires/CreaAnnonce";
+import TestimonialPage from "./components/pages/TestimonialPage";
 
 
 
@@ -153,7 +154,8 @@ function App() {
           <Route path="/list-construction" element={<ListeSuiviConstruction/>} />
           <Route path="/fiche-client/:id" element={<FicheClient/>} />
           <Route path="/fiche-partner/:id" element={<FichePartenaire/>} />
-
+          <Route path="/create-annonce" element={<RealEstateForm/>} />
+          <Route path="/creation-temoignage" element={<TestimonialPage/>} />
 
         </Routes>
 

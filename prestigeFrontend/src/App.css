@@ -743,3 +743,23 @@ input:hover + .error-tooltip {
 .client-table th {
   background-color: #f2f2f2;
 }
+textarea {
+  width: 50%; /* Largeur à 100% du conteneur */
+  resize: none; /* Désactive le redimensionnement manuel */
+  overflow: hidden; /* Cache le défilement */
+}
+
+
+.star {
+  font-size: 2em; /* Deux fois la taille normale */
+  color: gold; /* Couleur dorée */
+  transition: font-size 0.5s; /* Animation douce lors du changement de taille */
+}
+
+.star:hover {
+  font-size: 2.5em; /* Taille plus grande au survol */
+}
+
+.star-rating {
+  cursor: default; /* Le pointeur reste une flèche */
+}

@@ -554,8 +554,8 @@ const SearchPageOption = () => {
               Climatisation
             </button>
             <button
-              className={amenities.includes("autre") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "autre")}
+              className={amenities.includes("Panneaux solaires") ? "selected" : ""}
+              onClick={() => handleSelect("amenities", "Panneaux solaires")}
             >
               Panneaux solaires
             </button>
