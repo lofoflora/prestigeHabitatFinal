@@ -77,9 +77,7 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
       />
       <button type="submit">Se connecter</button>
       {isSubmitted && hasError && <div className="error-tooltip">Email ou mot de passe incorrect</div>}
-      <div>
-        Pas de compte ? <Link to="/signupform" style={{ textDecoration: 'underline' }}>Inscrivez-vous ici</Link>
-      </div>
+      
       <div>
         <Link to="/resetpassword" style={{ textDecoration: 'underline' }}>Mot de passe oublié ?</Link>
       </div>

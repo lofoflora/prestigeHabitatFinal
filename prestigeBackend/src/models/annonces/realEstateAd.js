@@ -8,12 +8,8 @@ import { ThreeDView } from "./ThreeDView.js";
 
 
 export const RealEstateAd = sequelize.define("RealEstateAd", {
-  userType: DataTypes.STRING,
+ 
   title: DataTypes.STRING,
-  firstName: DataTypes.STRING,
-  lastName: DataTypes.STRING,
-  email: DataTypes.STRING,
-  phoneNumber: DataTypes.STRING,
   password: DataTypes.STRING,
   streetNumber: DataTypes.STRING,
   streetName: DataTypes.STRING,

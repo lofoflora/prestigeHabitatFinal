@@ -1,7 +1,7 @@
 import { Image } from "../../models/annonces/image.js";
 
 // Fonction pour créer une miniature
-const createThumbnail = async (imagePath, thumbnailPath) => {
+export const createThumbnail = async (imagePath, thumbnailPath) => {
   try {
     await sharp(imagePath)
       .resize(100, 100)
@@ -11,6 +11,7 @@ const createThumbnail = async (imagePath, thumbnailPath) => {
     throw new Error("Erreur lors de la création de la miniature");
   }
 };
+
 // Créer une nouvelle image pour une annonce immobilière
 export const createImage = async (req, res) => {
   try {
