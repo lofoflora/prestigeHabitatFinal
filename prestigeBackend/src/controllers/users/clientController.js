@@ -50,7 +50,7 @@ export const getClientById = async (req, res) => {
 // Mettre à jour un client (accessible par les clients et les admins)
 export const updateClient = async (req, res) => {
   const id = req.params.id;
-  //console.log (id)
+  console.log (id)
   try {
     const [updated] = await Client.update(req.body, {
       where: { id: id }

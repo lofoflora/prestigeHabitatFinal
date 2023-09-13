@@ -42,7 +42,7 @@ export default function ListeClients() {
       {/* Ajout de la barre de recherche */}
       <SearchBar filter={filter} onFilterChange={handleSearch} />
 
-      <table className="client-table">
+      <table className="client-table" >
         <thead>
           <tr>
             <th>Prénom</th>

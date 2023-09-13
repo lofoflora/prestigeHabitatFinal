@@ -1,5 +1,6 @@
 
 //app.jsx
+
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -30,6 +31,8 @@ import ListPartner from "./components/adcom/pages/ListePartenaire";
 import ListeAchat from "./components/adcom/pages/DossirAchat";
 import ListeAchatRevente from "./components/adcom/pages/DosssierAchatRevente";
 import ListeSuiviConstruction from "./components/adcom/pages/SuiviConstruction";
+import FicheClient from "./components/adcom/pagedetails/FicheClient";
+import FichePartenaire from "./components/adcom/pagedetails/FichePartner";
 
 
 
@@ -145,9 +148,11 @@ function App() {
           <Route path="/list-amo" element={<ListeAmo/>} />
           <Route path="/list-vente" element={<ListeVente/>} />
           <Route path="/list-partner" element={<ListPartner/>} />
-          <Route path="/list-achat" element={<ListeAmo/>} />
-          <Route path="/list-achat-revente" element={<ListeVente/>} />
-          <Route path="/list-construction" element={<ListPartner/>} />
+          <Route path="/list-achat" element={<ListeAchat/>} />
+          <Route path="/list-achat-revente" element={<ListeAchatRevente/>} />
+          <Route path="/list-construction" element={<ListeSuiviConstruction/>} />
+          <Route path="/fiche-client/:id" element={<FicheClient/>} />
+          <Route path="/fiche-partner/:id" element={<FichePartenaire/>} />
 
 
         </Routes>
