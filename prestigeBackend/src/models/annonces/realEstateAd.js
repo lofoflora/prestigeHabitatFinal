@@ -8,14 +8,12 @@ import { ThreeDView } from "./ThreeDView.js";
 
 
 export const RealEstateAd = sequelize.define("RealEstateAd", {
- 
   title: DataTypes.STRING,
-  password: DataTypes.STRING,
   streetNumber: DataTypes.STRING,
   streetName: DataTypes.STRING,
-  adresseComplement: DataTypes.STRING,
+  adressComplement: DataTypes.STRING,
+  postalCode: DataTypes.STRING, // Ajoutez ce champ
   city: DataTypes.STRING,
-  localite: DataTypes.STRING,
   propertyType: DataTypes.STRING,
   purchaseType: DataTypes.STRING,
   houseSurface: DataTypes.STRING,
@@ -25,11 +23,12 @@ export const RealEstateAd = sequelize.define("RealEstateAd", {
   numWC: DataTypes.STRING,
   numBathrooms: DataTypes.STRING,
   budget: DataTypes.STRING,
-  heating: DataTypes.STRING,
-  amenities: DataTypes.STRING,
+  heating: DataTypes.ARRAY(DataTypes.STRING),
+  amenities: DataTypes.ARRAY(DataTypes.STRING),
+
   description: DataTypes.STRING,
   actif: DataTypes.BOOLEAN
-
+  
 });
 
 // Relation : Une société immobilière (AdCom) a plusieurs annonces immobilières

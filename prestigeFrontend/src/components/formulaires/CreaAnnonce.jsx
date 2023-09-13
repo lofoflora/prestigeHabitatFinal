@@ -3,12 +3,11 @@ import axios from 'axios';
 
 function RealEstateForm() {
   const [title, setTitle] = useState('');
-  const [password, setPassword] = useState(''); // Assure-toi que ce champ est bien nécessaire
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
   const [addressComplement, setAddressComplement] = useState('');
+  const [postalCode, setPostalCode] = useState('');
   const [city, setCity] = useState('');
-  const [localite, setLocalite] = useState('');
   const [propertyType, setPropertyType] = useState([]);
   const [purchaseType, setPurchaseType] = useState([]);
   const [houseSurface, setHouseSurface] = useState('');
@@ -18,12 +17,12 @@ function RealEstateForm() {
   const [numWC, setNumWC] = useState('');
   const [numBathrooms, setNumBathrooms] = useState('');
   const [budget, setBudget] = useState('');
-  const [heating, setHeating] = useState([]); // Si c'est un tableau
-  const [amenities, setAmenities] = useState([]); // Si c'est un tableau
+  const [heating, setHeating] = useState([]);
+  const [amenities, setAmenities] = useState([]);
   const [description, setDescription] = useState('');
-  const [actif, setActif] = useState(true); // Assure-toi que ce champ est bien nécessaire
-  const [postalCode, setPostalCode] = useState('');
-  const [cities, setCities] = useState([]); // Ajout de l'état des villes
+  const [actif, setActif] = useState(true);
+  const [photos, setPhotos] = useState([]);
+  const [threeDViews, setThreeDViews] = useState([]);
 
   const textAreaRef = useRef(null);
 
@@ -70,7 +69,7 @@ function RealEstateForm() {
       fetchCityByPostalCode();
     } else {
       setCity('');
-      setCities([]); // Réinitialiser la liste des villes
+      // Réinitialiser la liste des villes
     }
   }, [postalCode]);
 
@@ -79,46 +78,42 @@ function RealEstateForm() {
       const response = await axios.get(`http://localhost:5000/adresse/search/?q=${encodeURIComponent(postalCode)}`);
       if (response.data.features.length > 0) {
         const listeVilles = response.data.features.map(feature => feature.properties.city);
-        const uniqueCities = [...new Set(listeVilles)];
-        setCities(uniqueCities);
-        setCity(uniqueCities[0]);
+        const uniqueCity = [...new Set(listeVilles)];
+      
+        setCity(uniqueCity.length > 0 ? uniqueCity[0] : '');
       } else {
-        setCities([]);
         setCity('');
       }
     } catch (error) {
       console.error('Erreur lors de la recherche de la ville :', error.message);
-      setCities([]);
       setCity('');
     }
   };
+  
 
-  const [photos, setPhotos] = useState([]);
+
 
   const handlePhotoUpload = e => {
     const files = Array.from(e.target.files);
     setPhotos(files);
   };
-  const [threeDViews, setThreeDViews] = useState([]);
+
   const handleThreeDUpload = e => {
     const files = Array.from(e.target.files);
     setThreeDViews(files);
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
-    // Ajouter tous les champs du modèle RealEstateAd
     formData.append('title', title);
-    formData.append('password', password); // Assure-toi que ce champ est bien nécessaire
     formData.append('streetNumber', streetNumber);
     formData.append('streetName', streetName);
-    formData.append('adresseComplement', addressComplement);
+    formData.append('addressComplement', addressComplement);
     formData.append('city', city);
-    formData.append('localite', localite);
-    formData.append('propertyType', JSON.stringify(propertyType)); // Convertir en chaîne JSON
-    formData.append('purchaseType', JSON.stringify(purchaseType)); // Convertir en chaîne JSON
+    formData.append('propertyType', JSON.stringify(propertyType));
+    formData.append('purchaseType', JSON.stringify(purchaseType));
     formData.append('houseSurface', houseSurface);
     formData.append('landSurface', landSurface);
     formData.append('numRooms', numRooms);
@@ -129,20 +124,18 @@ function RealEstateForm() {
     formData.append('heating', JSON.stringify(heating));
     formData.append('amenities', JSON.stringify(amenities));
     formData.append('description', description);
-    formData.append('actif', actif); // Assure-toi que ce champ est bien nécessaire
+    formData.append('actif', actif);
 
-    // Ajouter les photos
     photos.forEach((photo, index) => {
       formData.append(`photos[${index}]`, photo);
     });
 
-    // Ajouter les vues 3D
     threeDViews.forEach((view, index) => {
       formData.append(`threeDViews[${index}]`, view);
     });
-
+    console.log('Données envoyées:', Object.fromEntries(formData));
     try {
-      const response = await axios.post('/api/createRealEstate', formData, {
+      const response = await axios.post('http://127.0.0.1:3000/realEstateAd', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -152,8 +145,18 @@ function RealEstateForm() {
       console.error("Erreur lors de la création de l'annonce:", error);
     }
   };
-  
+  useEffect(() => {
+    if (postalCode.length === 5) {
+      fetchCityByPostalCode();
+    } else {
+      setCity('');
     
+    }
+  }, [postalCode]);
+
+  
+
+
   return (
     <form onSubmit={handleSubmit}>
       <h1>Création d'annonce immobilière</h1>
@@ -176,16 +179,29 @@ function RealEstateForm() {
         Complément d'adresse :
         <input type="text" value={addressComplement} onChange={e => setAddressComplement(e.target.value)} />
       </label>
+      <label>
+        Code Postal :
+        <input type="text" value={postalCode} onChange={e => setPostalCode(e.target.value)} required />
+      </label>
+      <label>
+        Ville :
+        <input type="text" value={city} readOnly />
+      </label>
+
 
       <h5>Bien à vendre</h5>
 
-     {/* Type de propriété */}
-<label>Type de propriété:</label>
+      <label>Titre de l'annonce:</label>
+<input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+
+      {/* Type de propriété */}
+      <label>Type de propriété :</label>
 <div className="radio-group">
   {["Appartement", "Maison", "Studio", "Terrain", "Loft/atelier", "Chateau", "Local professionnel", "Commerce", "Garage/Hangar", "Autre"].map(type => (
     <label key={type}>
       <input
         type="radio"
+        name="propertyType" // Utilisez le même nom pour tous les boutons de ce groupe
         value={type}
         checked={propertyType === type}
         onChange={() => setPropertyType(type)}
@@ -195,13 +211,13 @@ function RealEstateForm() {
   ))}
 </div>
 
-{/* Type de vente */}
-<label>Type de vente:</label>
+<label>Type de vente :</label>
 <div className="radio-group">
   {["Ancien", "Neuf", "Viager", "A rénover"].map(type => (
     <label key={type}>
       <input
         type="radio"
+        name="purchaseType" // Utilisez le même nom pour tous les boutons de ce groupe
         value={type}
         checked={purchaseType === type}
         onChange={() => setPurchaseType(type)}
@@ -212,63 +228,67 @@ function RealEstateForm() {
 </div>
 
 
-  
+
       {/* Surface de la maison */}
       <label>Surface de la maison:</label>
       <input type="text" value={houseSurface} onChange={(e) => setHouseSurface(e.target.value)} />
-  
+
       {/* Surface du terrain */}
       <label>Surface du terrain:</label>
       <input type="text" value={landSurface} onChange={(e) => setLandSurface(e.target.value)} />
-  
+
       {/* Nombre de pièces */}
       <label>Nombre de pièces:</label>
       <input type="number" value={numRooms} onChange={(e) => setNumRooms(e.target.value)} />
-  
+
       {/* Nombre de chambres */}
       <label>Nombre de chambres:</label>
       <input type="number" value={numBedrooms} onChange={(e) => setNumBedrooms(e.target.value)} />
-  
+
       {/* Nombre de WC */}
       <label>Nombre de WC:</label>
       <input type="number" value={numWC} onChange={(e) => setNumWC(e.target.value)} />
-  
+
       {/* Nombre de salles de bain */}
       <label>Nombre de salles de bain:</label>
       <input type="number" value={numBathrooms} onChange={(e) => setNumBathrooms(e.target.value)} />
-  
+
       {/* Budget */}
       <label>Budget:</label>
       <input type="text" value={budget} onChange={(e) => setBudget(e.target.value)} />
-  
+
       {/* Chauffage */}
-      <label>Chauffage:</label>
-      <div className="checkbox-group">
-        {["Electrique", "Gaz", "Fioul", "Bois", "Autre"].map(type => (
-          <button
-            type="button"
-            className={heating.includes(type) ? "selected" : ""}
-            onClick={() => handleSelect("heating", type)}
-          >
-            {type}
-          </button>
-        ))}
-      </div>
-  
-      {/* Commodités */}
-      <label>Commodités:</label>
-      <div className="checkbox-group">
-        {["Jardin", "Garage", "Piscine", "Ascenseur", "Balcon", "Cave", "Terrasse", "Pompe à chaleur", "Climatisation", "Panneaux solaires", "Autre"].map(type => (
-          <button
-            type="button"
-            className={amenities.includes(type) ? "selected" : ""}
-            onClick={() => handleSelect("amenities", type)}
-          >
-            {type}
-          </button>
-        ))}
-      </div>
-  
+    {/* Chauffage */}
+<label>Chauffage:</label>
+<div className="checkbox-group">
+  {["Electrique", "Gaz", "Fioul", "Bois", "Autre"].map(type => (
+    <button
+      key={type} // Ajoutez une clé unique ici
+      type="button"
+      className={heating.includes(type) ? "selected" : ""}
+      onClick={() => handleSelect("heating", type)}
+    >
+      {type}
+    </button>
+  ))}
+</div>
+
+{/* Commodités */}
+<label>Commodités:</label>
+<div className="checkbox-group">
+  {["Jardin", "Garage", "Piscine", "Ascenseur", "Balcon", "Cave", "Terrasse", "Pompe à chaleur", "Climatisation", "Panneaux solaires", "Autre"].map(type => (
+    <button
+      key={type} // Ajoutez une clé unique ici
+      type="button"
+      className={amenities.includes(type) ? "selected" : ""}
+      onClick={() => handleSelect("amenities", type)}
+    >
+      {type}
+    </button>
+  ))}
+</div>
+
+
       <div>
         <label>Description</label>
         <textarea
@@ -279,21 +299,21 @@ function RealEstateForm() {
           onInput={handleTextChange}
         ></textarea>
       </div>
-  
+
       <div>
         <label>Photo</label>
         <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} />
       </div>
-  
+
       <div>
         <label>Vue 3D</label>
         <input type="file" accept=".obj,.gltf" multiple onChange={handleThreeDUpload} />
       </div>
-  
+
       <button type="submit">Créer l'annonce</button>
     </form>
   );
-  
+
 };
 
 export default RealEstateForm;

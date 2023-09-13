@@ -18,8 +18,8 @@ export const createImage = async (req, res) => {
     const image = await Image.create(req.body);
     
     // Chemins pour l'image et la miniature
-    const imagePath = 'chemin/vers/ton/image.jpg';
-    const thumbnailPath = 'chemin/vers/la/miniature.jpg';
+    const imagePath = 'prestigeBackend/uploads/images';
+    const thumbnailPath = 'prestigeBackend/uploads/miniatures';
 
     // Créer une miniature pour cette image
     await createThumbnail(imagePath, thumbnailPath);

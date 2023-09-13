@@ -89,7 +89,7 @@ const createAdminIfNotExist = async () => {
 
 const startServer = async () => {
   try {
-    await sequelize.sync({/*alter:true*/});
+  await sequelize.sync({/*alter:true*/});
     await createAdminIfNotExist();  
     app.listen(PORT, () => {
       console.log(`Serveur lancé sur le port ${PORT}`);
