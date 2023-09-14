@@ -1,7 +1,10 @@
 import { RealEstateAd } from "../../models/annonces/realEstateAd.js";
-
-// Créer une nouvelle annonce immobilière (accessible par les sociétés immobilières)
+// Créer une nouvelle annonce immobilière 
 export const createRealEstateAd = async (req, res) => {
+  let annonce = req.body;
+    annonce.AdComId= req.authenticatedUser.userId;
+    console.log(JSON.stringify(req.authenticatedUser))
+    console.log(JSON.stringify(annonce))
   try {
     const ad = await RealEstateAd.create(req.body);
     res.status(201).json(ad);

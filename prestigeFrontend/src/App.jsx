@@ -1,6 +1,5 @@
 
 //app.jsx
-
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -14,7 +13,6 @@ import Amo from "./components/pages/Amo.jsx";
 import ConfirmationPage from "./components/pages/ConfirmationPage.jsx";
 import PurchaseResalePage from "./components/pages/PurchaseResalePage.jsx";
 import Dashboard from "./components/clients/Dashboard.jsx";
-import { UserProvider } from './components/UserContext';
 import SearchPageOption from './components/pages/SearchPageOption.jsx';
 import './App.css';
 import axios from 'axios';
@@ -35,9 +33,6 @@ import FichePartenaire from "./components/adcom/pagedetails/FichePartner";
 import RealEstateForm from "./components/formulaires/CreaAnnonce";
 import TestimonialPage from "./components/pages/TestimonialPage";
 
-
-
-
 function App() {
   const {  isLoggedIn,
     setIsLoggedIn,
@@ -48,74 +43,58 @@ function App() {
     handleLogout,
      } = useUser();
 
+  const handleLogin = (firstName, lastName, title, type, userData, authToken) => {
+    setIsLoggedIn(true);
+    setUserFirstName(firstName);
+    setUserData(userData);
+    localStorage.setItem('authToken', authToken);
+    localStorage.setItem('userFirstName', firstName);
+    localStorage.setItem('userLastName', lastName);
+    localStorage.setItem('userTitle', title);
+    localStorage.setItem('userType', type); // Ajoute cette ligne
+    // Configurez Axios avec le token lors de la connexion
+    axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+  };
 
-     const handleLogin = (firstName, lastName, title, type, userData, authToken) => {
-      setIsLoggedIn(true);
-      setUserFirstName(firstName);
-      setUserData(userData);
-      localStorage.setItem('authToken', authToken);
-      localStorage.setItem('userFirstName', firstName);
-      localStorage.setItem('userLastName', lastName);
-      localStorage.setItem('userTitle', title);
-      localStorage.setItem('userType', type); // Ajoute cette ligne
-    };
-    
-    
-  
-  
+  const handleLoginFormSubmitApp = async (formData) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:3000/login', {
+        email: formData.email,
+        password: formData.password,
+      });
 
- 
+      if (response.data.success) {
+        const id = response.data
+        const firstName = response.data.firstName;
+        const lastName = response.data.lastName; // Nouveau
+        const title = response.data.title; // Nouveau
+        const type = response.data.type; // Nouveau
+        const userData = response.data.userData;
+        const authToken = response.data.token;
 
-    const handleLoginFormSubmitApp = async (formData) => {
-      try {
-        const response = await axios.post('http://127.0.0.1:3000/login', {
-          email: formData.email,
-          password: formData.password,
-        });
-    
-        if (response.data.success) {
-          const firstName = response.data.firstName;
-          const lastName = response.data.lastName; // Nouveau
-          const title = response.data.title; // Nouveau
-          const type = response.data.type; // Nouveau
-          const userData = response.data.userData;
-          const authToken = response.data.token;
-    
-          handleLogin(firstName, lastName, title, type, userData, authToken); // Modifié
-          onCloseLoginForm();
-        } else {
-          console.error('Échec de la connexion :', response.data.message);
-        }
-      } catch (error) {
-        console.error('Erreur de connexion :', error);
+        handleLogin(firstName, lastName, title, type, userData, authToken); // Modifié
+        onCloseLoginForm();
+      } else {
+        console.error('Échec de la connexion :', response.data.message);
       }
-    };
-    
-    
-  
+    } catch (error) {
+      console.error('Erreur de connexion :', error);
+    }
+  };
 
- // Utilisez le useEffect pour vérifier le token au chargement de l'application
- useEffect(() => {
-  const storedToken = localStorage.getItem('authToken');
-  const storedUserType = localStorage.getItem('userType'); // Nouveau
-  if (storedToken) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
-    const firstName = localStorage.getItem('userFirstName');
-    const lastName = localStorage.getItem('userLastName');
-    const title = localStorage.getItem('userTitle');
-    const type = storedUserType; // Utilise le type d'utilisateur stocké
-    handleLogin(firstName, lastName, title, type, null, storedToken); // userData est null au départ
-  }
-}, []);
-
-
-
-
-
-
-
-
-  
+  // Utilisez le useEffect pour vérifier le token au chargement de l'application
+  useEffect(() => {
+    const storedToken = localStorage.getItem('authToken');
+    const storedUserType = localStorage.getItem('userType'); // Nouveau
+    if (storedToken) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+      const firstName = localStorage.getItem('userFirstName');
+      const lastName = localStorage.getItem('userLastName');
+      const title = localStorage.getItem('userTitle');
+      const type = storedUserType; // Utilise le type d'utilisateur stocké
+      handleLogin(firstName, lastName, title, type, null, storedToken); // userData est null au départ
+    }
+  }, []);
   return (
     
       <div className="App">

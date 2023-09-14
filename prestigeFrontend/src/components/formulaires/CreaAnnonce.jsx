@@ -6,11 +6,11 @@ function RealEstateForm() {
     title: '',
     streetNumber: '',
     streetName: '',
-    addressComplement: '',
+    adressComplement: '',
     postalCode: '',
     city: '',
-    propertyType: [],
-    purchaseType: [],
+    propertyType: '',
+    purchaseType: '',
     houseSurface: '',
     landSurface: '',
     numRooms: '',
@@ -30,7 +30,7 @@ function RealEstateForm() {
     title: { touched: false, messages: '' },
     streetNumber: { touched: false, messages: '' },
     streetName: { touched: false, messages: '' },
-    addressComplement: { touched: false, messages: '' },
+    adressComplement: { touched: false, messages: '' },
     postalCode: { touched: false, messages: '' },
     city: { touched: false, messages: '' },
     houseSurface: { touched: false, messages: '' },
@@ -52,43 +52,25 @@ function RealEstateForm() {
     textArea.style.height = textArea.scrollHeight + 'px';
   };
 
-  const handleSelect = (type, value) => {
-    let currentValues;
-    let setFunction;
-
-    switch (type) {
-      case 'propertyType':
-        currentValues = propertyType;
-        setFunction = setPropertyType;
-        break;
-      case 'purchaseType':
-        currentValues = purchaseType;
-        setFunction = setPurchaseType;
-        break;
-      case 'heating':
-        currentValues = heating;
-        setFunction = setHeating;
-        break;
-      case 'amenities':
-        currentValues = amenities;
-        setFunction = setAmenities;
-        break;
-      default:
-        return;
-    }
-
-    if (currentValues.includes(value)) {
-      setFunction(currentValues.filter(item => item !== value));
-    } else {
-      setFunction([...currentValues, value]);
-    }
+  const handleSelect = (event) => {
+    const { name, value } = event.target;
+    setProduct({
+      ...product,
+      [name]: value,
+    });
   };
-
+  
+  
+      
+    
   useEffect(() => {
     if (product.postalCode.length === 5) {
       fetchCityByPostalCode();
     } else {
-      setCity('');
+     setProduct({
+      ...product,
+      city: ''
+     });
       // Réinitialiser la liste des villes
     }
   }, [product.postalCode]);
@@ -100,13 +82,22 @@ function RealEstateForm() {
         const listeVilles = response.data.features.map(feature => feature.properties.city);
         const uniqueCity = [...new Set(listeVilles)];
 
-        setCity(uniqueCity.length > 0 ? uniqueCity[0] : '');
+        setProduct({
+          ...product,
+          city: (uniqueCity.length > 0 ? uniqueCity[0] : '')
+         });
       } else {
-        setCity('');
+        setProduct({
+      ...product,
+      city: ''
+     });
       }
     } catch (error) {
       console.error('Erreur lors de la recherche de la ville :', error.message);
-      setCity('');
+      setProduct({
+      ...product,
+      city: ''
+     });
     }
   };
 
@@ -129,7 +120,16 @@ function RealEstateForm() {
       [name]: value,
     }));
     validate({ ...product, [name]: value }, name);
+  
+    // Ajoutez cette partie pour mettre à jour la description
+    if (name === 'description') {
+      setProduct({
+        ...product,
+        description: value,
+      });
+    }
   };
+  
   
 
   const validate = (object, field) => {
@@ -153,7 +153,33 @@ function RealEstateForm() {
     setErrors(newErrors);
   };
   
+  const toggleHeating = (type) => {
+    if (product.heating.includes(type)) {
+      setProduct({
+        ...product,
+        heating: product.heating.filter((item) => item !== type),
+      });
+    } else {
+      setProduct({
+        ...product,
+        heating: [...product.heating, type],
+      });
+    }
+  };
   
+  const toggleAmenity = (type) => {
+    if (product.amenities.includes(type)) {
+      setProduct({
+        ...product,
+        amenities: product.amenities.filter((item) => item !== type),
+      });
+    } else {
+      setProduct({
+        ...product,
+        amenities: [...product.amenities, type],
+      });
+    }
+  };
   
 
 
@@ -162,16 +188,21 @@ function RealEstateForm() {
       .map((key) => errors[key].messages)
       .every((value) => value === '');
   };
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate other fields here if needed
     if (isValid()) {
-      // Prepare and send your data to the backend here
       try {
+        // Récupérez le token depuis le localStorage
+        const authToken = localStorage.getItem('authToken');
+        // Assurez-vous que "authToken" contient le token JWT
+  console.log(authToken)
+        // Ajoutez le token à l'en-tête de la requête
         const response = await axios.post('http://127.0.0.1:3000/realEstateAd', product, {
           headers: {
-            'Content-Type': 'application/json', // Change to the appropriate content type
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`, 
           },
         });
         console.log('Réponse du serveur:', response.data);
@@ -182,18 +213,21 @@ function RealEstateForm() {
       console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
     }
   };
+  
   useEffect(() => {
     if (product.postalCode.length === 5) {
       fetchCityByPostalCode();
     } else {
-      setCity('');
+      setProduct({
+      ...product,
+      city: ''
+     });
       // Réinitialiser la liste des villes
     }
   }, [product.postalCode]);
 
 
   
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -206,43 +240,68 @@ function RealEstateForm() {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <label>
           N° :
-          <input type="text" value={product.streetNumber} onChange={e => setStreetNumber(e.target.value)} required />
+          <input
+            type="text"
+            value={product.streetNumber}
+            onChange={(e) =>
+              setProduct({ ...product, streetNumber: e.target.value })
+            }
+          />
         </label>
         <label>
           Voie/Rue/Chemin :
-          <input type="text" value={product.streetName} onChange={e => setStreetName(e.target.value)} required />
+          <input
+            type="text"
+            value={product.streetName}
+            onChange={(e) => setProduct({ ...product, streetName: e.target.value })}
+            required
+          />
         </label>
       </div>
       <label>
         Complément d'adresse :
-        <input type="text" value={product.addressComplement} onChange={e => setAddressComplement(e.target.value)} />
+        <input
+          type="text"
+          value={product.adressComplement}
+          onChange={(e) => setProduct({ ...product, adressComplement: e.target.value })}
+        />
       </label>
       <label>
         Code Postal :
-        <input type="text" value={product.postalCode} onChange={e => setPostalCode(e.target.value)} required />
+        <input
+          type="text"
+          value={product.postalCode}
+          onChange={(e) => setProduct({ ...product, postalCode: e.target.value })}
+          required
+        />
       </label>
       <label>
         Ville :
         <input type="text" value={product.city} readOnly />
       </label>
 
-
+      {/* Bien à vendre */}
       <h5>Bien à vendre</h5>
 
       <label>Titre de l'annonce:</label>
-<input type="text" value={product.title} onChange={(e) => setTitle(e.target.value)} required />
+      <input
+        type="text"
+        value={product.title}
+        onChange={(e) => setProduct({ ...product, title: e.target.value })}
+        required
+      />
 
-      {/* Type de propriété */}
-      <label>Type de propriété :</label>
+     {/* Type de propriété */}
+<label>Type de propriété :</label>
 <div className="radio-group">
   {["Appartement", "Maison", "Studio", "Terrain", "Loft/atelier", "Chateau", "Local professionnel", "Commerce", "Garage/Hangar", "Autre"].map(type => (
     <label key={type}>
       <input
         type="radio"
-        name="propertyType" // Utilisez le même nom pour tous les boutons de ce groupe
-        value={product.type}
+        name="propertyType" // Assurez-vous que le nom est correct
+        value={type} // Utilisez la valeur du type ici
         checked={product.propertyType === type}
-        onChange={handleChange}
+        onChange={handleSelect}
       />
       {type}
     </label>
@@ -255,10 +314,10 @@ function RealEstateForm() {
     <label key={type}>
       <input
         type="radio"
-        name="purchaseType" // Utilisez le même nom pour tous les boutons de ce groupe
-        value={product.type}
+        name="purchaseType" // Assurez-vous que le nom est correct
+        value={type} // Utilisez la valeur du type ici
         checked={product.purchaseType === type}
-        onChange={ handleChange}
+        onChange={handleSelect}
       />
       {type}
     </label>
@@ -266,93 +325,144 @@ function RealEstateForm() {
 </div>
 
 
-
       {/* Surface de la maison */}
       <label>Surface de la maison:</label>
-      <input type="text" value={product.houseSurface} onChange={(e) => setHouseSurface(e.target.value)} />
+      <input
+        type="text"
+        value={product.houseSurface}
+        onChange={(e) => setProduct({ ...product, houseSurface: e.target.value })}
+      />
 
       {/* Surface du terrain */}
       <label>Surface du terrain:</label>
-      <input type="text" value={product.landSurface} onChange={(e) => setLandSurface(e.target.value)} />
+      <input
+        type="text"
+        value={product.landSurface}
+        onChange={(e) => setProduct({ ...product, landSurface: e.target.value })}
+      />
 
       {/* Nombre de pièces */}
       <label>Nombre de pièces:</label>
-      <input type="number" value={product.numRooms} onChange={(e) => setNumRooms(e.target.value)} />
+      <input
+        type="number"
+        value={product.numRooms}
+        onChange={(e) => setProduct({ ...product, numRooms: e.target.value })}
+      />
 
       {/* Nombre de chambres */}
       <label>Nombre de chambres:</label>
-      <input type="number" value={product.numBedrooms} onChange={(e) => setNumBedrooms(e.target.value)} />
+      <input
+        type="number"
+        value={product.numBedrooms}
+        onChange={(e) => setProduct({ ...product, numBedrooms: e.target.value })}
+      />
 
       {/* Nombre de WC */}
       <label>Nombre de WC:</label>
-      <input type="number" value={product.numWC} onChange={(e) => setNumWC(e.target.value)} />
+      <input
+        type="number"
+        value={product.numWC}
+        onChange={(e) => setProduct({ ...product, numWC: e.target.value })}
+      />
 
       {/* Nombre de salles de bain */}
       <label>Nombre de salles de bain:</label>
-      <input type="number" value={product.numBathrooms} onChange={(e) => setNumBathrooms(e.target.value)} />
+      <input
+        type="number"
+        value={product.numBathrooms}
+        onChange={(e) => setProduct({ ...product, numBathrooms: e.target.value })}
+      />
 
       {/* Budget */}
       <label>Budget:</label>
-      <input type="text" value={product.budget} onChange={(e) => setBudget(e.target.value)} />
+      <input
+        type="text"
+        value={product.budget}
+        onChange={(e) => setProduct({ ...product, budget: e.target.value })}
+      />
 
-      {/* Chauffage */}
-    {/* Chauffage */}
+{/* Chauffage*/} 
 <label>Chauffage:</label>
 <div className="checkbox-group">
-  {["Electrique", "Gaz", "Fioul", "Bois", "Autre"].map(type => (
+  {["Electrique", "Gaz", "Fioul", "Bois", "Autre"].map((type) => (
     <button
-      key={type} // Ajoutez une clé unique ici
+      key={type}
       type="button"
       className={product.heating.includes(type) ? "selected" : ""}
-      onClick={handleChange}
+      onClick={() => toggleHeating(type)}
     >
       {type}
     </button>
   ))}
 </div>
 
-{/* Commodités */}
+{/* Commodités*/}
 <label>Commodités:</label>
 <div className="checkbox-group">
-  {["Jardin", "Garage", "Piscine", "Ascenseur", "Balcon", "Cave", "Terrasse", "Pompe à chaleur", "Climatisation", "Panneaux solaires", "Autre"].map(type => (
+  {[
+    "Jardin",
+    "Garage",
+    "Piscine",
+    "Ascenseur",
+    "Balcon",
+    "Cave",
+    "Terrasse",
+    "Pompe à chaleur",
+    "Climatisation",
+    "Panneaux solaires",
+    "Autre",
+  ].map((type) => (
     <button
-      key={type} // Ajoutez une clé unique ici
+      key={type}
       type="button"
       className={product.amenities.includes(type) ? "selected" : ""}
-      onClick={handleChange}
+      onClick={() => toggleAmenity(type)}
     >
       {type}
     </button>
   ))}
 </div>
 
-
-      <div>
-        <label>Description</label>
-        <textarea
-          ref={textAreaRef}
-          placeholder="Description"
-          value={product.description}
-          onChange={handleChange}
-          onInput={handleTextChange}
-        ></textarea>
-      </div>
+<div>
+  <label>Description</label>
+  <textarea
+    ref={textAreaRef}
+    placeholder="Description"
+    value={product.description}
+    onChange={(e) => {
+      setProduct({
+        ...product,
+        description: e.target.value,
+      });
+      handleTextChange(); // Met à jour la hauteur du champ de texte
+    }}
+    onInput={handleTextChange}
+  ></textarea>
+</div>
 
       <div>
         <label>Photo</label>
-        <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} />
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handlePhotoUpload}
+        />
       </div>
 
       <div>
         <label>Vue 3D</label>
-        <input type="file" accept=".obj,.gltf" multiple onChange={handleThreeDUpload} />
+        <input
+          type="file"
+          accept=".obj,.gltf"
+          multiple
+          onChange={handleThreeDUpload}
+        />
       </div>
 
       <button type="submit">Créer l'annonce</button>
     </form>
   );
-
-};
+}
 
 export default RealEstateForm;
-

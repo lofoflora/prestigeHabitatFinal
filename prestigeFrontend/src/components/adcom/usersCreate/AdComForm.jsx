@@ -5,8 +5,7 @@ import { useUser } from '../../UserContext';
 
 function AdComForm() {
   // State pour gérer les champs du formulaire
-  const [userType, setUserType] = useState('commercial');
-
+  const [userType, setUserType] = useState('');
   const [title, setTitle] = useState('M.');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -36,7 +35,7 @@ const handleFormSubmit = async (event) => {
 
  
   const data = {
-    type: userType, // soit "client" soit "partner"
+    type: userType, 
     title,
     firstName,
     lastName,
@@ -47,7 +46,7 @@ const handleFormSubmit = async (event) => {
 
   try {
     // Envoi des données d'inscription au backend
-    const response = await axios.post('http://127.0.0.1:3000/createUser', data);
+    const response = await axios.post('http://127.0.0.1:3000/adcom', data);
 
     console.log(response.data);
 

@@ -21,7 +21,7 @@ import authrouter from './src/routes/authRoutes.js';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import { AdCom } from './src/models/users/adCom.js'; // Ajuste le chemin d'import selon l'emplacement du fichier adCom.js
-
+import { jwtMiddleware } from './src/middleware/tokenMiddleware.js';
 
 
 const app = express();
@@ -32,6 +32,7 @@ app.use(express.json());
 // Utilisez le middleware CORS
 app.use(cors());
 
+app.use(jwtMiddleware);
 // routes users
 app.use('/adcom', adComRouter); 
 app.use('/partner',partnerRouter);
@@ -83,6 +84,7 @@ const createAdminIfNotExist = async () => {
       console.log('Admin créé avec succès.');
     }
   } catch (error) {
+    console.log(error.response.data)
     console.error('Erreur lors de la création de l\'admin:', error);
   }
 };

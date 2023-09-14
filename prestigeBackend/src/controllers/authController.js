@@ -59,9 +59,10 @@ const token = jwt.sign(
 res.json({
   success: true,
   token,
+  userId: user.id, // Ajoutez l'ID de l'utilisateur ici
   firstName: user.firstName,
-  lastName: user.lastName,  // Ajoute ça
-  title: user.title,  // Ajoute ça
+  lastName: user.lastName,
+  title: user.title,
   userType: user.userType
 });
   } catch (error) {
