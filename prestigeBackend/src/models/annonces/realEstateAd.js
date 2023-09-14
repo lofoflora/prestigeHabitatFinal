@@ -23,8 +23,15 @@ export const RealEstateAd = sequelize.define("RealEstateAd", {
   numWC: DataTypes.STRING,
   numBathrooms: DataTypes.STRING,
   budget: DataTypes.STRING,
-  heating: DataTypes.ARRAY(DataTypes.STRING),
-  amenities: DataTypes.ARRAY(DataTypes.STRING),
+  heating: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  
+  amenities: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
 
   description: DataTypes.STRING,
   actif: DataTypes.BOOLEAN
