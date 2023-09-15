@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from '../../SearchBar';
+import axios from 'axios';
+
 
 export default function ListePartner() {
   const [partners, setPartner] = useState([]);
@@ -20,17 +22,25 @@ export default function ListePartner() {
     setFilter(searchTerm); // Met à jour le filtre
   };
 
-  useEffect(() => {
-    // Appel API pour récupérer les données
-    fetch('http://localhost:3000/partner') // Remplace par l'URL de ton API
-      .then(response => response.json())
-      .then(data => {
-        setPartner(data);
-        setFilteredPartner(data); // Initialise filteredPartner avec toutes les données
-      })
-      .catch(error => console.error('Erreur lors de la récupération des partners:', error));
-  }, []);
 
+
+  useEffect(() => {
+    const authToken = localStorage.getItem('authToken');
+    axios.get('http://localhost:3000/partner', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
+    .then(response => {
+      setPartner(response.data);
+      setFilteredPartner(response.data);
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération des partners:', error);
+      // Tu peux aussi mettre à jour l'état pour informer l'utilisateur
+    });
+  }, []);
+  
   const lastItem = currentPage * itemsPerPage;
   const firstItem = lastItem - itemsPerPage;
   const currentItems = filteredPartner.slice(firstItem, lastItem); // Utilise filteredPartner au lieu de partners

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from '../../SearchBar';
+import axios from 'axios';
 
 export default function ListeClients() {
   const [clients, setClients] = useState([]);
@@ -21,15 +22,22 @@ export default function ListeClients() {
   };
 
   useEffect(() => {
-    // Appel API pour récupérer les données
-    fetch('http://localhost:3000/client') // Remplace par l'URL de ton API
-      .then(response => response.json())
-      .then(data => {
-        setClients(data);
-        setFilteredClients(data); // Initialise filteredClients avec toutes les données
-      })
-      .catch(error => console.error('Erreur lors de la récupération des clients:', error));
+    const authToken = localStorage.getItem('authToken');
+    axios.get('http://localhost:3000/client', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
+    .then(response => {
+      setClients(response.data);
+      setFilteredClients(response.data);
+    })
+    .catch(error => {
+      console.error('Erreur:', error);
+      // Tu peux aussi mettre à jour l'état pour informer l'utilisateur
+    });
   }, []);
+  
 
   const lastItem = currentPage * itemsPerPage;
   const firstItem = lastItem - itemsPerPage;

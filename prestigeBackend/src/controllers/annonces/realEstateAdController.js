@@ -1,18 +1,30 @@
 import { RealEstateAd } from "../../models/annonces/realEstateAd.js";
-// Créer une nouvelle annonce immobilière 
+
 export const createRealEstateAd = async (req, res) => {
   let annonce = req.body;
-    annonce.AdComId= req.authenticatedUser.userId;
-    console.log(JSON.stringify(req.authenticatedUser))
-    console.log(JSON.stringify(annonce))
+  annonce.AdComId = req.authenticatedUser.userId;
+
+  //console.log('Type d\'utilisateur:', req.authenticatedUser.userType); // Debug
+
+  if (req.authenticatedUser.userType=== 'commercial') {
+    annonce.actif = 0;
+}
+
+
+  // console.log('Valeur de actif:', annonce.actif); // Debug
+  // console.log('Utilisateur authentifié:', req.authenticatedUser.userType);
+  // console.log('Valeur de actif avant:', annonce.actif);
+  
   try {
-    const ad = await RealEstateAd.create(req.body);
+    const ad = await RealEstateAd.create(annonce);
+    console.log('Valeur de actif après insertion:', ad.actif); // Debug
     res.status(201).json(ad);
   } catch (error) {
-    console.error(error);
+    console.error("Erreur lors de la création de l'annonce :", error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'annonce immobilière.' });
   }
 };
+
 
 // Obtenir toutes les annonces immobilières
 export const getAllRealEstateAds = async (req, res) => {

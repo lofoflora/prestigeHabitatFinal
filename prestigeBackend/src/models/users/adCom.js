@@ -25,8 +25,11 @@ export const AdCom = sequelize.define('AdCom', {
     },
   },
   phoneNumber: DataTypes.STRING,
-  password: DataTypes.STRING,
+  password: {
+    type: DataTypes.STRING, // Utilisez le type STRING pour stocker le mot de passe haché
+  },
 });
+
 // Relation : AdCom a plusieurs clients
 AdCom.hasMany(Client);
 

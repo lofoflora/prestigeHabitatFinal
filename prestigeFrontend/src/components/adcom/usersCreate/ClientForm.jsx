@@ -88,8 +88,7 @@ const handleFormSubmit = async (event) => {
 
 
   const data = {
-    type: userType, // soit "client" soit "partner"
-    title,
+    type: userType, 
     firstName,
     lastName,
     email,

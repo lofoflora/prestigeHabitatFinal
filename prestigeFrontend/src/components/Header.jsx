@@ -156,7 +156,7 @@ useEffect(() => {
           <span>Bonjour, {userFirstName} !</span>
         </div>
       )}
-{userType === 'admin' ? ( // Vérifie si l'utilisateur est un admin
+{(userType === 'admin' || userType === 'commercial') ? (// Le contenu auquel ont accès les admins et les commerciaux
         <AdminNavbar /> // Utilise la navbar admin
       ) : (
       <Navbar

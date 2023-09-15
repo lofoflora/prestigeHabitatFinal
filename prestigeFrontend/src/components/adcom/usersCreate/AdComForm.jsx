@@ -68,7 +68,7 @@ const handleFormSubmit = async (event) => {
   lastName,
   email,
   phoneNumber,
-  password,
+ 
  
 }));
 
@@ -110,17 +110,35 @@ const handleFormSubmit = async (event) => {
       <form onSubmit={handleFormSubmit}>
         <h2>Formulaire de creation AdCom</h2>
 
-        {/* Champs de saisie pour le type d'utilisateur */}
-        <div>
-        <label style={{ color: 'white',width:'100%' }}>
-  Type d'utilisateur :
-  <select value={userType} onChange={(e) => setUserType(e.target.value)}>
-    <option value="admin">Administrateur</option>
-    <option value="commercial">Commercial</option>
-  </select>
-</label>
+    {/* Champs de saisie pour le type d'utilisateur */}
+<div>
+  <label style={{ color: 'white', width: '100%' }}>
+    Type d'utilisateur :
+  </label>
+  <div>
+    <label style={{ marginRight: '10px' }}>
+      <input
+        type="radio"
+        name="userType"
+        value="admin"
+        checked={userType === "admin"}
+        onChange={() => setUserType("admin")}
+      />
+      Administrateur
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="userType"
+        value="commercial"
+        checked={userType === "commercial"}
+        onChange={() => setUserType("commercial")}
+      />
+      Commercial
+    </label>
+  </div>
+</div>
 
-        </div>
 
        
         

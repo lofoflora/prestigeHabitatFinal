@@ -4,14 +4,17 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
-import { useUser } from '../UserContext';// Importe useUser
+import { useUser } from '../UserContext'; // Importe useUser
+
 
 const AdminNavbar = () => {
-  const { handleLogout } = useUser();  // Utilise handleLogout depuis le contexte
+  const { handleLogout, userType } = useUser(); // Utilise handleLogout et userType depuis le contexte
 
   const onLogoutClick = () => {
-    handleLogout();  // Appelle la fonction de déconnexion
+    handleLogout(); // Appelle la fonction de déconnexion
   };
+
+  console.log('userType:', userType);
 
   return (
     <Navbar className="admin-navbar" bg="dark" variant="dark" expand="lg">
@@ -56,9 +59,15 @@ const AdminNavbar = () => {
             <Nav.Link className="admin-nav-link" as={Link} to="/create-partenaire">
               Créer Partenaire
             </Nav.Link>
-            <Nav.Link className="admin-nav-link" as={Link} to="/create-adcom">
-              Créer Adcom
-            </Nav.Link>
+            {
+  userType === 'admin' && (
+    <Nav.Link className="admin-nav-link" as={Link} to="/create-adcom">
+      Créer Adcom
+    </Nav.Link>
+  )
+}
+
+
           </Nav>
           <Nav>
             <Nav.Link className="admin-nav-link" onClick={onLogoutClick}>Déconnexion</Nav.Link>  {/* Bouton de déconnexion */}

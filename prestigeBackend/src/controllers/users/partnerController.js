@@ -4,6 +4,8 @@ import bcrypt from 'bcrypt';
 
 // Créer un nouveau partenaire (accessible par les partenaires et les admins)
 export const createPartner = async (req, res) => {
+  let annonce = req.body;
+  annonce.AdComId = req.authenticatedUser.userId;
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
