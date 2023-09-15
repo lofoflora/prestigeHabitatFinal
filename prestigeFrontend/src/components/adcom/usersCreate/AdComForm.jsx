@@ -35,7 +35,7 @@ const handleFormSubmit = async (event) => {
 
  
   const data = {
-    type: userType, 
+    userType: userType, 
     title,
     firstName,
     lastName,

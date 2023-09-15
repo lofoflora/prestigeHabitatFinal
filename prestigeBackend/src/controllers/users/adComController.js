@@ -1,22 +1,35 @@
 import { AdCom } from "../../models/users/adCom.js";
 
-
 // Créer un nouvel utilisateur (admin ou commercial)
 export const createAdCom = async (req, res) => {
-  try {
-    const { userType, ...adComData } = req.body;
+  const { userType, ...adComData } = req.body;
 
-    if (userType === 'commercial' || userType === 'admin') {
-      const adCom = await AdCom.create(adComData);
-      res.status(201).json(adCom);
-    } else {
-      res.status(400).json({ message: 'Type d\'utilisateur non valide.' });
+  try {
+    // Vérifier que le userType est valide
+    if (userType !== 'commercial' && userType !== 'admin') {
+      return res.status(400).json({ message: 'Type d\'utilisateur non valide.' });
     }
+
+    // Créer l'utilisateur en utilisant les données adComData
+    const adCom = await AdCom.create({
+      userType,
+      ...adComData,
+    });
+
+    return res.status(201).json(adCom);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'utilisateur.' });
+
+    // Gérer les erreurs spécifiques
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ message: 'Adresse e-mail déjà utilisée.' });
+    }
+
+    return res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'utilisateur.' });
   }
 };
+
+
 
 // Obtenir tous les utilisateurs (admin ou commercial)
 export const getAllAdComs = async (req, res) => {
