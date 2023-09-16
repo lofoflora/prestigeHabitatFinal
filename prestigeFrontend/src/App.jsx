@@ -32,6 +32,7 @@ import FicheClient from "./components/adcom/pagedetails/FicheClient";
 import FichePartenaire from "./components/adcom/pagedetails/FichePartner";
 import RealEstateForm from "./components/formulaires/CreaAnnonce";
 import TestimonialPage from "./components/pages/TestimonialPage";
+import TableauxDeValidation from "./components/adcom/pages/ValidationList";
 
 function App() {
   const {  isLoggedIn,
@@ -133,7 +134,8 @@ function App() {
           <Route path="/fiche-partner/:id" element={<FichePartenaire/>} />
           <Route path="/create-annonce" element={<RealEstateForm/>} />
           <Route path="/creation-temoignage" element={<TestimonialPage/>} />
-
+          <Route path="/tableau-validation" element={<TableauxDeValidation/>} />
+          
         </Routes>
 
       </div>

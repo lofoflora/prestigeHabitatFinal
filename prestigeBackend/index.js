@@ -22,6 +22,7 @@ import cors from 'cors';
 import bcrypt from 'bcrypt';
 import { AdCom } from './src/models/users/adCom.js'; // Ajuste le chemin d'import selon l'emplacement du fichier adCom.js
 import { jwtMiddleware } from './src/middleware/tokenMiddleware.js';
+import validationRouter from './src/routes/validationRoutes.js';
 
 
 const app = express();
@@ -56,6 +57,7 @@ app.use('/ThreeDView',threeDViewRouter);
 
 app.use('/DossierClient',dossierClientRouter);
 app.use('/Avis',avisRouter);
+app.use('/validation',validationRouter);
 
 
 

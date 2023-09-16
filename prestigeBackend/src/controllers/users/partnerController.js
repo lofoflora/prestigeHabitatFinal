@@ -6,6 +6,19 @@ import bcrypt from 'bcrypt';
 export const createPartner = async (req, res) => {
   let annonce = req.body;
   annonce.AdComId = req.authenticatedUser.userId;
+
+  //console.log('Type d\'utilisateur:', req.authenticatedUser.userType); // Debug
+
+  if (req.authenticatedUser.userType=== 'commercial') {
+    annonce.actif = 0;
+}
+
+
+  // console.log('Valeur de actif:', annonce.actif); // Debug
+  // console.log('Utilisateur authentifié:', req.authenticatedUser.userType);
+  // console.log('Valeur de actif avant:', annonce.actif);
+  
+  
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);

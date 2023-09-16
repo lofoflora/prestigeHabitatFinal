@@ -169,7 +169,7 @@ const fetchCityByPostalCode = async () => {
 
   try {
     // Envoi des données d'inscription au backend
-    const response = await axios.post('http://127.0.0.1:3000/createUser', data);
+    const response = await axios.post('http://127.0.0.1:3000/validation', data);
 
     console.log(response.data);
 

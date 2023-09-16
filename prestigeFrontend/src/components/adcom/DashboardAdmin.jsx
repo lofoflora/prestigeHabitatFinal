@@ -1,12 +1,67 @@
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+import { useUser } from '../UserContext';
 
 function DashboardAdmin() {
   const navigate = useNavigate();
 
+    const {userType } = useUser(); // Utilise handleLogout et userType depuis le contexte
+
+    console.log('userType:', userType);
   const navigateToClientsList = () => {
     navigate('/list-client');
   };
+
+  const [operationsToValidate, setOperationsToValidate] = useState({
+    numPartnersToValidate: 0,
+    numRealEstateAdsToValidate: 0,
+  });
+  
+  
+  const fetchData = async () => {
+    try {
+      // Récupère le jeton d'authentification du local storage
+      const authToken = localStorage.getItem('authToken');
+  
+      // Début de la requête Axios
+      console.log("Début de la requête Axios");
+  
+      // Effectue la requête pour obtenir les données
+      const response = await axios.get("http://localhost:3000/validation", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+  
+      // Log la réponse
+      console.log("Fin de la requête Axios - Succès", response.data);
+  
+      // Mettre à jour l'état ici
+      setOperationsToValidate({
+        numPartnersToValidate: response.data.numPartnersToValidate,
+        numRealEstateAdsToValidate: response.data.numRealEstateAdsToValidate,
+      });
+  
+    } catch (error) {
+      console.error("Fin de la requête Axios - Erreur", error);
+    }
+  };
+  
+  // Dans le useEffect pour appeler la fonction au montage du composant
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
+  
+  
+  
+  
+  // ... le reste de ton code pour afficher le composant
+
+  // Dans le composant, utilise {operationsToValidate} pour afficher le nombre d'opérations à valider
+  // Par exemple : <p>Opérations à valider : {operationsToValidate}</p>
  
   // Styles pour le conteneur principal
   const dashboardStyle = {
@@ -75,7 +130,6 @@ const sectionStyle = {
     A valider
   </button>
 </div>
-
   </div>
   </div>
   
@@ -87,12 +141,22 @@ const sectionStyle = {
       <h4 style={h4Style}>Dernière mise à jour des dossiers</h4>
       (Tableau pour l'affichage des derniers dossiers)
     </div>
+    {
+  userType === 'admin' && (
     <div className="sub-section">
-      <p style={{ marginRight: '10px' }}>Opérations à valider</p> {/* Ajout de la marge à droite ici */}
-      <button  style={buttonStyle}  onClick={() => navigateToValidation()}>
-        A valider
-      </button>
-    </div>
+    <div style={{ marginRight: '10px' }}>
+  <p>Opérations à valider:</p>
+  <ul>
+    <li>Vous avez {operationsToValidate.numPartnersToValidate} partenaires à valider.</li>
+    <li>Vous avez {operationsToValidate.numRealEstateAdsToValidate} annonces immobilières à valider.</li>
+  </ul>
+</div>
+  <button style={buttonStyle}>
+  <Link to="/tableau-validation"> Liste des partenaires </Link>
+  </button>
+</div>
+
+)};
   </div>
 
       {/* Deuxième rangée */}
