@@ -13,7 +13,7 @@ export const getOperationsToValidate = async (req, res, next) => {
       where: {
         actif: false,
       },
-      attributes: ['id', 'entreprise'],
+      attributes: ["id", "entreprise"],
     });
 
     // Compte et récupère les annonces immobilières inactives (non validées)
@@ -26,11 +26,14 @@ export const getOperationsToValidate = async (req, res, next) => {
       where: {
         actif: false,
       },
-      attributes: ['id', 'title'],
+      attributes: ["id", "title"],
     });
 
-    console.log('Nombre de partenaires à valider :', numPartnersToValidate);
-    console.log('Nombre d\'annonces immobilières à valider :', numRealEstateAdsToValidate);
+    console.log("Nombre de partenaires à valider :", numPartnersToValidate);
+    console.log(
+      "Nombre d'annonces immobilières à valider :",
+      numRealEstateAdsToValidate
+    );
 
     // Envoie la réponse au client
     res.json({
@@ -40,38 +43,43 @@ export const getOperationsToValidate = async (req, res, next) => {
       annoncesAValider,
     });
   } catch (error) {
-    console.error('Erreur lors de la récupération des opérations à valider :', error.message);
+    console.error(
+      "Erreur lors de la récupération des opérations à valider :",
+      error.message
+    );
     next(error);
   }
 };
-export const validatePartner = async (req, res, next) => {
+export const validate = async (req, res, next) => {
   try {
-    const { id } = req.body;
-    await Partner.update({ actif: true }, {
-      where: {
-        id: id,
-      },
-    });
-    res.status(200).json({ message: "Partenaire validé" });
+    const { id, type } = req.body;
+    if (type === "partner") {
+      await Partner.update(
+        { actif: true },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+
+      res.status(200).json({ message: "Partenaire validé" });
+    } else if (type === "realestatead") {
+      await RealEstateAd.update(
+        { actif: true },
+        {
+          where: {
+            id: id,
+          },
+        }
+      );
+      res.status(200).json({ message: "Annonce immobilière validée" });
+    }
+    else 
+    res.sendStatus(400)
   } catch (error) {
     console.error("Erreur lors de la validation du partenaire:", error.message);
     next(error);
   }
 };
 
-// Ajoute la méthode POST pour valider une annonce immobilière
-export const validateRealEstateAd = async (req, res, next) => {
-  console.log("Fonction validateRealEstateAd appelée");
-  try {
-    const { id } = req.body;
-    await RealEstateAd.update({ actif: true }, {
-      where: {
-        id: id,
-      },
-    });
-    res.status(200).json({ message: "Annonce immobilière validée" });
-  } catch (error) {
-    console.error("Erreur lors de la validation de l'annonce immobilière:", error.message);
-    next(error);
-  }
-};

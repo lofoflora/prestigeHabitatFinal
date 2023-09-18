@@ -38,9 +38,9 @@ Client.belongsTo(AdCom);
 
 
 // Relation : Un partenaire appartient à plusieurs adcom et un adcom a plusieurs partenaires (relation plusieurs-à-plusieurs)
-// AdCom.belongsToMany(Partner, { through: 'AdComPartner' });
-// Partner.belongsToMany(AdCom, { through: 'AdComPartner' });
+AdCom.belongsToMany(Partner, { through: 'AdComPartner' });
+Partner.belongsToMany(AdCom, { through: 'AdComPartner' });
 // Relation : AdCom a plusieurs clients
-AdCom.hasMany(Partner);
-// Relation : Une client immobilière appartient à un AdCom
-Partner.belongsTo(AdCom);
+// AdCom.hasMany(Partner);
+// // Relation : Une client immobilière appartient à un AdCom
+// Partner.belongsTo(AdCom);

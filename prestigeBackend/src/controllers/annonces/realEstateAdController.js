@@ -1,23 +1,31 @@
-import { RealEstateAd } from "../../models/annonces/realEstateAd.js";
+import { RealEstateAd } from "../../models/annonces/RealEstateAd.js";
+import { Image } from "../../models/annonces/image.js";
+import { ThreeDView } from "../../models/annonces/ThreeDView.js";
 
+// Créer une annonce immobilière avec images et vues 3D
 export const createRealEstateAd = async (req, res) => {
   let annonce = req.body;
   annonce.AdComId = req.authenticatedUser.userId;
 
-  //console.log('Type d\'utilisateur:', req.authenticatedUser.userType); // Debug
-
-  if (req.authenticatedUser.userType=== 'commercial') {
+  if (req.authenticatedUser.userType === 'commercial') {
     annonce.actif = 0;
-}
+  }
 
-
-  // console.log('Valeur de actif:', annonce.actif); // Debug
-  // console.log('Utilisateur authentifié:', req.authenticatedUser.userType);
-  // console.log('Valeur de actif avant:', annonce.actif);
-  
   try {
     const ad = await RealEstateAd.create(annonce);
-    console.log('Valeur de actif après insertion:', ad.actif); // Debug
+
+    // Gérer les images associées à l'annonce
+    if (req.body.images && req.body.images.length > 0) {
+      const images = req.body.images.map((image) => ({ ...image, RealEstateAdId: ad.id }));
+      await Image.bulkCreate(images);
+    }
+
+    // Gérer les vues 3D associées à l'annonce
+    if (req.body.threeDViews && req.body.threeDViews.length > 0) {
+      const threeDViews = req.body.threeDViews.map((view) => ({ ...view, RealEstateAdId: ad.id }));
+      await ThreeDView.bulkCreate(threeDViews);
+    }
+
     res.status(201).json(ad);
   } catch (error) {
     console.error("Erreur lors de la création de l'annonce :", error);
@@ -25,11 +33,15 @@ export const createRealEstateAd = async (req, res) => {
   }
 };
 
-
-// Obtenir toutes les annonces immobilières
-export const getAllRealEstateAds = async (req, res) => {
+// Obtenir toutes les annonces immobilières avec leurs images et vues 3D
+export const getAllRealEstateAd = async (req, res) => {
   try {
-    const ads = await RealEstateAd.findAll();
+    const ads = await RealEstateAd.findAll({
+      include: [
+        { model: Image },
+        { model: ThreeDView },
+      ],
+    });
     res.status(200).json(ads);
   } catch (error) {
     console.error(error);
@@ -37,11 +49,16 @@ export const getAllRealEstateAds = async (req, res) => {
   }
 };
 
-// Obtenir une annonce immobilière par son ID
+// Obtenir une annonce immobilière par son ID avec ses images et vues 3D
 export const getRealEstateAdById = async (req, res) => {
   const id = req.params.id;
   try {
-    const ad = await RealEstateAd.findByPk(id);
+    const ad = await RealEstateAd.findByPk(id, {
+      include: [
+        { model: Image },
+        { model: ThreeDView },
+      ],
+    });
     if (ad) {
       res.status(200).json(ad);
     } else {
@@ -53,14 +70,32 @@ export const getRealEstateAdById = async (req, res) => {
   }
 };
 
-// Mettre à jour une annonce immobilière
-export const updateRealEstateAd = async (req, res) => {
+// Mettre à jour une annonce immobilière avec ses images et vues 3D
+export const updateRealEstate = async (req, res) => {
   const id = req.params.id;
   try {
     const [updated] = await RealEstateAd.update(req.body, {
-      where: { id: id }
+      where: { id: id },
     });
     if (updated) {
+      // Supprimer les images associées à l'annonce
+      await Image.destroy({ where: { RealEstateAdId: id } });
+
+      // Supprimer les vues 3D associées à l'annonce
+      await ThreeDView.destroy({ where: { RealEstateAdId: id } });
+
+      // Gérer les images associées à l'annonce
+      if (req.body.images && req.body.images.length > 0) {
+        const images = req.body.images.map((image) => ({ ...image, RealEstateAdId: id }));
+        await Image.bulkCreate(images);
+      }
+
+      // Gérer les vues 3D associées à l'annonce
+      if (req.body.threeDViews && req.body.threeDViews.length > 0) {
+        const threeDViews = req.body.threeDViews.map((view) => ({ ...view, RealEstateAdId: id }));
+        await ThreeDView.bulkCreate(threeDViews);
+      }
+
       res.status(200).json({ message: 'Annonce immobilière mise à jour avec succès.' });
     } else {
       res.status(404).json({ message: 'Annonce immobilière non trouvée.' });
@@ -71,18 +106,20 @@ export const updateRealEstateAd = async (req, res) => {
   }
 };
 
-// Supprimer une annonce immobilière
-export const deleteRealEstateAd = async (req, res) => {
+// Supprimer une annonce immobilière avec ses images et vues 3D
+export const deleteRealEstate = async (req, res) => {
   const id = req.params.id;
   try {
-    const deleted = await RealEstateAd.destroy({
-      where: { id: id }
-    });
-    if (deleted) {
-      res.status(200).json({ message: 'Annonce immobilière supprimée avec succès.' });
-    } else {
-      res.status(404).json({ message: 'Annonce immobilière non trouvée.' });
-    }
+    // Supprimer l'annonce immobilière
+    await RealEstateAd.destroy({ where: { id: id } });
+
+    // Supprimer les images associées à l'annonce
+    await Image.destroy({ where: { RealEstateAdId: id } });
+
+    // Supprimer les vues 3D associées à l'annonce
+    await ThreeDView.destroy({ where: { RealEstateAdId: id } });
+
+    res.status(200).json({ message: 'Annonce immobilière et ses éléments associés supprimés avec succès.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la suppression de l\'annonce immobilière.' });

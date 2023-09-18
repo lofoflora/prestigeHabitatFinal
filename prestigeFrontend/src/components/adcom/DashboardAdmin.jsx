@@ -152,11 +152,11 @@ const sectionStyle = {
   </ul>
 </div>
   <button style={buttonStyle}>
-  <Link to="/tableau-validation"> Liste des partenaires </Link>
+  <Link to="/tableau-validation"> Liste des Validation </Link>
   </button>
 </div>
 
-)};
+)}   
   </div>
 
       {/* Deuxième rangée */}

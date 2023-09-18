@@ -1,21 +1,28 @@
 import express from 'express';
-import { createRealEstateAd, getAllRealEstateAds, getRealEstateAdById, updateRealEstateAd, deleteRealEstateAd } from '../../controllers/annonces/realEstateAdController.js';
+import { uploadImage, uploadThreeD } from '../../multerConfig.js'; // Assurez-vous d'importer correctement vos configurations Multer
+import {
+  createRealEstateAd,
+  getAllRealEstateAd,
+  getRealEstateAdById,
+  updateRealEstate,
+  deleteRealEstate,
+} from '../../controllers/annonces/realEstateAdController.js'; // Assurez-vous d'importer correctement vos contrôleurs
 
-const realEstateAdRouter = express.Router();
+const router = express.Router();
 
-// Créer une nouvelle annonce immobilière (accessible par les sociétés immobilières)
-realEstateAdRouter.post('/', createRealEstateAd);
+// Créer une annonce immobilière avec images et vues 3D
+router.post('/', uploadImage.array('photos', 5), /*uploadThreeD.array('threeDViews', 5),*/ createRealEstateAd);
 
-// Obtenir toutes les annonces immobilières
-realEstateAdRouter.get('/', getAllRealEstateAds);
+// Obtenir toutes les annonces immobilières avec leurs images et vues 3D
+router.get('/', getAllRealEstateAd);
 
-// Obtenir une annonce immobilière par son ID
-realEstateAdRouter.get('/:id', getRealEstateAdById);
+// Obtenir une annonce immobilière par son ID avec ses images et vues 3D
+router.get('/:id', getRealEstateAdById);
 
-// Mettre à jour une annonce immobilière
-realEstateAdRouter.put('/:id', updateRealEstateAd);
+// Mettre à jour une annonce immobilière avec ses images et vues 3D
+router.put('/:id', uploadImage.array('images', 5), uploadThreeD.array('threeDViews', 5), updateRealEstate);
 
-// Supprimer une annonce immobilière
-realEstateAdRouter.delete('/:id', deleteRealEstateAd);
+// Supprimer une annonce immobilière avec ses images et vues 3D
+router.delete('/:id', deleteRealEstate);
 
-export default realEstateAdRouter;
+export default router;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 function RealEstateForm() {
+
   const [product, setProduct] = useState({
     title: '',
     streetNumber: '',
@@ -24,6 +25,7 @@ function RealEstateForm() {
     actif: true,
     photos: [],
     threeDViews: [],
+    photos: [],
   });
 
   const [errors, setErrors] = useState({
@@ -43,6 +45,49 @@ function RealEstateForm() {
     description: { touched: false, messages: '' },
     // Add validation states for other fields here
   });
+  const handleSubmit = async (e) => {
+
+    console.log (product)
+    e.preventDefault();
+    if (isValid()) {
+      try {
+        // Créez un objet FormData pour envoyer des fichiers
+        const formData = new FormData();
+        
+        // Ajoutez les données du produit à FormData
+        for (const key in product) {
+          if (key === 'photos' || key === 'threeDViews') {
+            // Si la clé est 'photos' ou 'threeDViews', ajoutez les fichiers à FormData
+            product[key].forEach((file, index) => {
+              formData.append(`${key}[${index}]`, file);
+            });
+          } else {
+            // Sinon, ajoutez les autres champs à FormData
+            formData.append(key, product[key]);
+          }
+        }
+
+        // Récupérez le token depuis le localStorage
+        const authToken = localStorage.getItem('authToken');
+
+        // Assurez-vous que "authToken" contient le token JWT
+        console.log(authToken);
+
+        // Ajoutez le token à l'en-tête de la requête
+        const response = await axios.post('http://127.0.0.1:3000/realEstateAd', formData, {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'multipart/form-data', // Utilisez multipart/form-data pour envoyer des fichiers
+          },
+        });
+        console.log('Réponse du serveur:', response.data);
+      } catch (error) {
+        console.error("Erreur lors de la création de l'annonce:", error);
+      }
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
+    }
+  };
 
   const textAreaRef = useRef(null);
 
@@ -102,11 +147,84 @@ function RealEstateForm() {
   };
 
 
-
-  const handlePhotoUpload = e => {
+  
+  const [photoPreviews, setPhotoPreviews] = useState([]);
+  
+  const handlePhotoUpload = (e) => {
     const files = Array.from(e.target.files);
-    setPhotos(files);
+
+    // Créez un tableau pour stocker les miniatures redimensionnées et les fichiers sélectionnés
+    const newPhotoPreviews = [];
+    const newSelectedPhotos = [];
+
+    // Pour chaque fichier sélectionné
+    files.forEach((file) => {
+      const uniqueId = Math.random(); // Génère un identifiant unique
+      // Redimensionnez la photo ici (remplacez width et height par les dimensions souhaitées)
+      const maxWidth = 200; // Largeur maximale souhaitée
+      const maxHeight = 200; // Hauteur maximale souhaitée
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        // Redimensionnez la photo pour qu'elle rentre dans les dimensions maximales
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width *= ratio;
+          height *= ratio;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convertissez la miniature redimensionnée en URL
+        const resizedPreviewURL = canvas.toDataURL('image/jpeg');
+
+        // Ajoutez le fichier d'origine à la liste des photos sélectionnées
+        newSelectedPhotos.push(file);
+
+        // Ajoutez l'URL de l'aperçu redimensionné à la liste des aperçus de photos
+        newPhotoPreviews.push(resizedPreviewURL);
+
+        // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
+        // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
+    if (newPhotoPreviews.length === files.length) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        photos: [...prevProduct.photos, ...newSelectedPhotos], // Mettez à jour les photos sélectionnées
+      }));
+      setPhotoPreviews((prevPhotoPreviews) => [...prevPhotoPreviews, ...newPhotoPreviews]); // Mettez à jour les miniatures
+    }
+
+};
+
+      img.src = URL.createObjectURL(file);
+    });
   };
+  const handleRemovePhoto = (index) => {
+    // Copiez les tableaux d'images et de miniatures existants
+    const updatedPhotos = [...product.photos];
+    const updatedPreviews = [...photoPreviews];
+  
+    // Supprimez la photo sélectionnée et sa miniature en fonction de l'index
+    updatedPhotos.splice(index, 1);
+    updatedPreviews.splice(index, 1);
+  
+    // Mettez à jour les états avec les tableaux mis à jour
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      photos: updatedPhotos,
+    }));
+    setPhotoPreviews(updatedPreviews);
+  };
+  
+  
+  
 
   const handleThreeDUpload = e => {
     const files = Array.from(e.target.files);
@@ -190,30 +308,8 @@ function RealEstateForm() {
   };
  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isValid()) {
-      try {
-        // Récupérez le token depuis le localStorage
-        const authToken = localStorage.getItem('authToken');
-        // Assurez-vous que "authToken" contient le token JWT
-  console.log(authToken)
-        // Ajoutez le token à l'en-tête de la requête
-        const response = await axios.post('http://127.0.0.1:3000/realEstateAd', product, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${authToken}`, 
-          },
-        });
-        console.log('Réponse du serveur:', response.data);
-      } catch (error) {
-        console.error("Erreur lors de la création de l'annonce:", error);
-      }
-    } else {
-      console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
-    }
-  };
   
+
   useEffect(() => {
     if (product.postalCode.length === 5) {
       fetchCityByPostalCode();
@@ -440,8 +536,9 @@ function RealEstateForm() {
   ></textarea>
 </div>
 
-      <div>
-        <label>Photo</label>
+<div>
+        <h2> Photos</h2>
+       
         <input
           type="file"
           accept="image/*"
@@ -449,6 +546,29 @@ function RealEstateForm() {
           onChange={handlePhotoUpload}
         />
       </div>
+      {photoPreviews.length > 0 && (
+  <div>
+    <div className="photo-previews">
+      {photoPreviews.map((previewURL, index) => (
+        <div key={index} className="photo-preview-container">
+          <img
+            src={previewURL}
+            alt={`Aperçu ${index + 1}`}
+            className="photo-preview"
+          />
+          <button
+            onClick={() => handleRemovePhoto(index)}
+            className="remove-photo-button"
+          >
+            <span className="remove-icon">X</span>
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+
 
       <div>
         <label>Vue 3D</label>
