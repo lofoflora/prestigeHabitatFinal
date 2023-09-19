@@ -60,7 +60,7 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user.id, userType:user.userType },
       process.env.SECRET_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: "3h" }
     );
 
     // Génère le token de rafraîchissement

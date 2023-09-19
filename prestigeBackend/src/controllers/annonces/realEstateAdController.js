@@ -40,13 +40,26 @@ export const createRealEstateAd = async (req, res) => {
 // Obtenir toutes les annonces immobilières avec leurs images et vues 3D
 export const getAllRealEstateAd = async (req, res) => {
   try {
-    const ads = await RealEstateAd.findAll({
-      include: [
-        { model: Image },
-        { model: ThreeDView },
-      ],
+    const ads = await RealEstateAd.findAll();
+
+    const adsWithFilepaths = ads.map((ad) => {
+      const adData = ad.toJSON();
+      if (adData.images) {
+        adData.images = adData.images.map((image) => {
+          // Ajoute le chemin complet vers l'image
+          return `/chemin/vers/ton/dossier/images/${image}`;
+        });
+      }
+      if (adData.threeDViews) {
+        adData.threeDViews = adData.threeDViews.map((view) => {
+          // Ajoute le chemin complet vers la vue 3D
+          return `/chemin/vers/ton/dossier/3D/${view}`;
+        });
+      }
+      return adData;
     });
-    res.status(200).json(ads);
+
+    res.status(200).json(adsWithFilepaths);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des annonces immobilières.' });
@@ -57,14 +70,22 @@ export const getAllRealEstateAd = async (req, res) => {
 export const getRealEstateAdById = async (req, res) => {
   const id = req.params.id;
   try {
-    const ad = await RealEstateAd.findByPk(id, {
-      include: [
-        { model: Image },
-        { model: ThreeDView },
-      ],
-    });
+    const ad = await RealEstateAd.findByPk(id);
     if (ad) {
-      res.status(200).json(ad);
+      const adData = ad.toJSON();
+      if (adData.images) {
+        adData.images = adData.images.map((image) => {
+          // Ajoute le chemin complet vers l'image
+          return `/chemin/vers/ton/dossier/images/${image}`;
+        });
+      }
+      if (adData.threeDViews) {
+        adData.threeDViews = adData.threeDViews.map((view) => {
+          // Ajoute le chemin complet vers la vue 3D
+          return `/chemin/vers/ton/dossier/3D/${view}`;
+        });
+      }
+      res.status(200).json(adData);
     } else {
       res.status(404).json({ message: 'Annonce immobilière non trouvée.' });
     }
@@ -82,24 +103,6 @@ export const updateRealEstate = async (req, res) => {
       where: { id: id },
     });
     if (updated) {
-      // Supprimer les images associées à l'annonce
-      await Image.destroy({ where: { RealEstateAdId: id } });
-
-      // Supprimer les vues 3D associées à l'annonce
-      await ThreeDView.destroy({ where: { RealEstateAdId: id } });
-
-      // Gérer les images associées à l'annonce
-      if (req.body.images && req.body.images.length > 0) {
-        const images = req.body.images.map((image) => ({ ...image, RealEstateAdId: id }));
-        await Image.bulkCreate(images);
-      }
-
-      // Gérer les vues 3D associées à l'annonce
-      if (req.body.threeDViews && req.body.threeDViews.length > 0) {
-        const threeDViews = req.body.threeDViews.map((view) => ({ ...view, RealEstateAdId: id }));
-        await ThreeDView.bulkCreate(threeDViews);
-      }
-
       res.status(200).json({ message: 'Annonce immobilière mise à jour avec succès.' });
     } else {
       res.status(404).json({ message: 'Annonce immobilière non trouvée.' });
@@ -116,14 +119,7 @@ export const deleteRealEstate = async (req, res) => {
   try {
     // Supprimer l'annonce immobilière
     await RealEstateAd.destroy({ where: { id: id } });
-
-    // Supprimer les images associées à l'annonce
-    await Image.destroy({ where: { RealEstateAdId: id } });
-
-    // Supprimer les vues 3D associées à l'annonce
-    await ThreeDView.destroy({ where: { RealEstateAdId: id } });
-
-    res.status(200).json({ message: 'Annonce immobilière et ses éléments associés supprimés avec succès.' });
+    res.status(200).json({ message: 'Annonce immobilière supprimée avec succès.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la suppression de l\'annonce immobilière.' });

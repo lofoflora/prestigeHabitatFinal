@@ -349,7 +349,7 @@ function RealEstateAdDetails({ adId: propAdId }) {
                         ></textarea>
                     </div>
 
-                    {/* <div>
+                     <div>
             <label>Photo</label>
             <input
               type="file"
@@ -367,7 +367,7 @@ function RealEstateAdDetails({ adId: propAdId }) {
               multiple
               onChange={handleThreeDUpload}
             />
-          </div> */}
+          </div> 
 
                     <button type="submit">Enregistrer</button>
                 </form>

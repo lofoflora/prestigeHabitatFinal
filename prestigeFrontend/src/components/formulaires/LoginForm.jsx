@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../UserContext';
@@ -10,7 +10,21 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const emailRef = useRef(null);
 
+  // Nouvel état pour stocker les données utilisateur actuelles
+  const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
+    title: '',
+    type: '',
+  });
+
   const { setIsLoggedIn, handleLogin } = useUser();
+
+  useEffect(() => {
+    // Mettez à jour les champs du formulaire lorsque les données utilisateur sont disponibles
+    setEmail(userData.email);
+    // Remplissez d'autres champs selon les besoins
+  }, [userData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,7 +38,6 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
       emailRef.current.setCustomValidity(''); // Réinitialise le message d'erreur
     }
   };
-  
 
   const handleLoginFormSubmit = async (formData) => {
     try {
@@ -32,16 +45,20 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
         email: formData.email,
         password: formData.password,
       });
-  
+
       if (response.data.success) {
-        const firstName = response.data.firstName;
-        const lastName = response.data.lastName; // Nouveau
-        const title = response.data.title; // Nouveau
-        const type = response.data.userType; // Nouveau
-        const userData = response.data.userData;
+        // Mise à jour des données utilisateur actuelles
+        setUserData({
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          title: response.data.title,
+          type: response.data.userType,
+          // Ajoutez d'autres données utilisateur si nécessaire
+        });
+
         const token = response.data.token;
-  
-        handleLogin(firstName, lastName, title, type, userData, token); // Modifié
+
+        handleLogin(response.data.firstName, response.data.lastName, response.data.title, response.data.userType, userData, token);
         onCloseLoginForm();
         setHasError(false);
         emailRef.current.setCustomValidity('');
@@ -57,7 +74,7 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
       emailRef.current.reportValidity();
     }
   };
-  
+
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <input
