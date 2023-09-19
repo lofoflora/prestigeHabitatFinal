@@ -22,8 +22,8 @@ export const createRealEstateAd = async (req, res) => {
     const ad = await RealEstateAd.create(annonce);
 
     // Créer les images associées à cette annonce
-    if (req.files['photo']) {
-      const images = req.files['photo'].map((file) => ({
+    if (req.files['image']) {
+      const images = req.files['image'].map((file) => ({
         path: file.path,
         RealEstateAdId: ad.id
       }));

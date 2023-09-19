@@ -8,7 +8,7 @@ export const imageStorage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    console.log("Filename callback triggered");
+    console.log("Filename callback triggered", file);
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });

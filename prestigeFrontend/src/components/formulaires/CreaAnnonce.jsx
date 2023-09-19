@@ -23,7 +23,7 @@ function RealEstateForm() {
     amenities: [],
     description: '',
     actif: true,
-    photo: [],
+    image: [],
     threeDViews: [],
   });
 
@@ -93,20 +93,20 @@ function RealEstateForm() {
 
 
   
-  const [photoPreviews, setPhotoPreviews] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
   
-  const handlePhotoUpload = (e) => {
-    console.time("Temps d'exécution de handlePhotoUpload");
+  const handleImageUpload = (e) => {
+    console.time("Temps d'exécution de handleImageUpload");
     const files = Array.from(e.target.files);
 
     // Créez un tableau pour stocker les miniatures redimensionnées et les fichiers sélectionnés
-    const newPhotoPreviews = [];
-    const newSelectedPhotos = [];
+    const newimagePreviews = [];
+    const newSelectedimage = [];
 
     // Pour chaque fichier sélectionné
     files.forEach((file) => {
       const uniqueId = Math.random(); // Génère un identifiant unique
-      // Redimensionnez la photo ici (remplacez width et height par les dimensions souhaitées)
+      // Redimensionnez la image ici (remplacez width et height par les dimensions souhaitées)
       const maxWidth = 200; // Largeur maximale souhaitée
       const maxHeight = 200; // Hauteur maximale souhaitée
       const canvas = document.createElement('canvas');
@@ -117,7 +117,7 @@ function RealEstateForm() {
         let width = img.width;
         let height = img.height;
 
-        // Redimensionnez la photo pour qu'elle rentre dans les dimensions maximales
+        // Redimensionnez la image pour qu'elle rentre dans les dimensions maximales
         if (width > maxWidth || height > maxHeight) {
           const ratio = Math.min(maxWidth / width, maxHeight / height);
           width *= ratio;
@@ -131,47 +131,47 @@ function RealEstateForm() {
         // Convertissez la miniature redimensionnée en URL
         const resizedPreviewURL = canvas.toDataURL('image/jpeg');
 
-        // Ajoutez le fichier d'origine à la liste des photos sélectionnées
-        newSelectedPhotos.push(file);
+        // Ajoutez le fichier d'origine à la liste des image sélectionnées
+        newSelectedimage.push(file);
 
-        // Ajoutez l'URL de l'aperçu redimensionné à la liste des aperçus de photos
-        newPhotoPreviews.push(resizedPreviewURL);
+        // Ajoutez l'URL de l'aperçu redimensionné à la liste des aperçus de image
+        newimagePreviews.push(resizedPreviewURL);
 
         // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
         // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
-    if (newPhotoPreviews.length === files.length) {
-      console.log("Avant la mise à jour de setProduct, product.photos :", JSON.stringify(product.photos));
+    if (newimagePreviews.length === files.length) {
+      console.log("Avant la mise à jour de setProduct, product.image :", JSON.stringify(product.image));
       setProduct((prevProduct) => ({
         ...prevProduct,
-        photos: Array.isArray(prevProduct.photos) ? [...prevProduct.photos, ...newSelectedPhotos] : [...newSelectedPhotos],
+        image: Array.isArray(prevProduct.image) ? [...prevProduct.image, ...newSelectedimage] : [...newSelectedimage],
       }));
-      console.log("Après la mise à jour de setProduct, product.photos :", JSON.stringify(product.photos));
+      console.log("Après la mise à jour de setProduct, product.image :", JSON.stringify(product.image));
       
       
-      setPhotoPreviews((prevPhotoPreviews) => [...prevPhotoPreviews, ...newPhotoPreviews]); // Mettez à jour les miniatures
+      setImagePreviews((previmagePreviews) => [...previmagePreviews, ...newimagePreviews]); // Mettez à jour les miniatures
     }
-    console.timeEnd("Temps d'exécution de handlePhotoUpload");
+    console.timeEnd("Temps d'exécution de handleImageUpload");
 
 };
 
       img.src = URL.createObjectURL(file);
     });
   };
-  const handleRemovePhoto = (index) => {
+  const handleRemoveImage = (index) => {
     // Copiez les tableaux d'images et de miniatures existants
-    const updatedPhotos = [...product.photos];
-    const updatedPreviews = [...photoPreviews];
+    const updatedimage = [...product.image];
+    const updatedPreviews = [...imagePreviews];
   
-    // Supprimez la photo sélectionnée et sa miniature en fonction de l'index
-    updatedPhotos.splice(index, 1);
+    // Supprimez la image sélectionnée et sa miniature en fonction de l'index
+    updatedimage.splice(index, 1);
     updatedPreviews.splice(index, 1);
   
     // Mettez à jour les états avec les tableaux mis à jour
     setProduct((prevProduct) => ({
       ...prevProduct,
-      photos: updatedPhotos,
+      image: updatedimage,
     }));
-    setPhotoPreviews(updatedPreviews);
+    setImagePreviews(updatedPreviews);
   };
   
   
@@ -273,52 +273,31 @@ function RealEstateForm() {
     }
   }, [product.postalCode]);
 
+
+
   const handleSubmit = async (e) => {
+  
     console.log("Début de handleSubmit"); 
     e.preventDefault();
-     // Les logs et les opérations de FormData, etc.
-  
-  console.log("Longueur de photo: " + product.photos.length);
-  console.log("Longueur de threeDViews: " + product.threeDViews.length);
-  // Vérifie s'il y a au moins une photo ou une vue 3D
-if (product.photos.length === 0 && product.threeDViews.length === 0) {
-  console.log("Erreur: Aucune photo ou vue 3D n'est présente");
-  return;
-}
-
-// Vérifie s'il n'y a pas de photos
-if (product.photos.length === 0) {
-  console.log("Erreur: Aucune photo n'est présente");
-  // tu peux continuer si tu le souhaite, pas forcément besoin de retourner
-}
-
-// Vérifie s'il n'y a pas de vues 3D
-if (product.threeDViews.length === 0) {
-  console.log("Erreur: Aucune vue 3D n'est présente");
-  // tu peux continuer si tu le souhaite, pas forcément besoin de retourner
-}
-
-// Ton code pour la soumission du formulaire
-if (isValid()) {
+    
+    console.log(`Longueur de image: ${product.image.length}`);
+    console.log(`Longueur de threeDViews: ${product.threeDViews.length}`);
+    
+    if (product.image.length === 0 && product.threeDViews.length === 0) {
+      console.log("Erreur: Aucune image ou vue 3D n'est présente");
+      return;
+    }
+    
+    if (isValid()) {
       try {
         const formData = new FormData();
         console.log("FormData a été créé");
         
-        // Log pour contrôler le type de product['photo'] et product['threeDViews']
-        console.log(`Type de product['photo']: ${typeof product['photo']}`);
-        console.log(`Type de product['threeDViews']: ${typeof product['threeDViews']}`);
-        
         for (const key in product) {
-          if (key === 'photo' || key === 'threeDViews') {
-            console.log("Ajout des fichiers photo et threeDViews à FormData");
-            
-            // Log pour contrôler la longueur des tableaux de fichiers
-            console.log(`Longueur de ${key}: ${product[key].length}`);
+          if (key === 'image' || key === 'threeDViews') {
+            console.log(`Ajout des fichiers pour ${key} à FormData`);
             
             product[key].forEach((file, index) => {
-              // Log pour contrôler le type de chaque fichier
-              console.log(`Type du fichier ${file.name}: ${typeof file}`);
-              
               console.log(`Ajout du fichier ${file.name} à ${key}[${index}]`);
               formData.append(`${key}[${index}]`, file);
             });
@@ -329,7 +308,7 @@ if (isValid()) {
         console.log("FormData a été rempli");
         
         const authToken = localStorage.getItem('authToken');
-        console.log("Token récupéré:", authToken);
+        console.log(`Token récupéré: ${authToken}`);
         
         const config = {
           headers: {
@@ -341,18 +320,20 @@ if (isValid()) {
         
         const response = await axios.post('http://127.0.0.1:3000/realEstateAd', formData, config);
         
-        console.log('Réponse du serveur:', response.data);
+        console.log(`Réponse du serveur: ${response.data}`);
       } catch (error) {
-        console.error("Erreur lors de la création de l'annonce:", error);
+        console.error(`Erreur lors de la création de l'annonce: ${error}`);
       }
     } else {
       console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
     }
-    console.log(`Longueur de product['photo']: ${product['photo'].length}`);
-console.log(`Longueur de product['threeDViews']: ${product['threeDViews'].length}`);
-
+    
+    console.log(`Longueur de product['image']: ${product['image'].length}`);
+    console.log(`Longueur de product['threeDViews']: ${product['threeDViews'].length}`);
+    
     console.log("Fin de handleSubmit");
   };
+  
   return (
     <form onSubmit={handleSubmit}>
       <h1>Création d'annonce immobilière</h1>
@@ -565,28 +546,29 @@ console.log(`Longueur de product['threeDViews']: ${product['threeDViews'].length
 </div>
 
 <div>
-        <h2> Photos</h2>
+        <h2> image</h2>
        
         <input
           type="file"
+          name="image[]"
           accept="image/*"
           multiple
-          onChange={handlePhotoUpload}
+          onChange={handleImageUpload}
         />
       </div>
-      {photoPreviews.length > 0 && (
+      {imagePreviews.length > 0 && (
   <div>
-    <div className="photo-previews">
-      {photoPreviews.map((previewURL, index) => (
-        <div key={index} className="photo-preview-container">
+    <div className="image-previews">
+      {imagePreviews.map((previewURL, index) => (
+        <div key={index} className="image-preview-container">
           <img
             src={previewURL}
             alt={`Aperçu ${index + 1}`}
-            className="photo-preview"
+            className="image-preview"
           />
           <button
-            onClick={() => handleRemovePhoto(index)}
-            className="remove-photo-button"
+            onClick={() => handleRemoveImage(index)}
+            className="remove-image-button"
           >
             <span className="remove-icon">X</span>
           </button>

@@ -11,7 +11,11 @@ import {
 const router = express.Router();
 
 // Créer une annonce immobilière avec images et vues 3D
-router.post('/', uploadImage.array('photo', 5), uploadThreeD.array('threeDViews', 5), createRealEstateAd);
+router.post('/', (req, res, next) => {
+  console.log("Received request on POST /");
+  next();
+}, uploadImage.array('image'), createRealEstateAd);
+
 
 // Obtenir toutes les annonces immobilières avec leurs images et vues 3D
 router.get('/', getAllRealEstateAd);
@@ -20,7 +24,7 @@ router.get('/', getAllRealEstateAd);
 router.get('/:id', getRealEstateAdById);
 
 // Mettre à jour une annonce immobilière avec ses images et vues 3D
-router.put('/:id', uploadImage.array('photo', 5), uploadThreeD.array('threeDViews', 5), updateRealEstate);
+router.put('/:id', uploadImage.array('image', 5), uploadThreeD.array('threeDViews', 5), updateRealEstate);
 
 // Supprimer une annonce immobilière avec ses images et vues 3D
 router.delete('/:id', deleteRealEstate);
