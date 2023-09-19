@@ -23,9 +23,8 @@ function RealEstateForm() {
     amenities: [],
     description: '',
     actif: true,
-    photos: [],
+    photo: [],
     threeDViews: [],
-    photos: [],
   });
 
   const [errors, setErrors] = useState({
@@ -45,49 +44,8 @@ function RealEstateForm() {
     description: { touched: false, messages: '' },
     // Add validation states for other fields here
   });
-  const handleSubmit = async (e) => {
-
-    console.log (product)
-    e.preventDefault();
-    if (isValid()) {
-      try {
-        // Créez un objet FormData pour envoyer des fichiers
-        const formData = new FormData();
-        
-        // Ajoutez les données du produit à FormData
-        for (const key in product) {
-          if (key === 'photos' || key === 'threeDViews') {
-            // Si la clé est 'photos' ou 'threeDViews', ajoutez les fichiers à FormData
-            product[key].forEach((file, index) => {
-              formData.append(`${key}[${index}]`, file);
-            });
-          } else {
-            // Sinon, ajoutez les autres champs à FormData
-            formData.append(key, product[key]);
-          }
-        }
-
-        // Récupérez le token depuis le localStorage
-        const authToken = localStorage.getItem('authToken');
-
-        // Assurez-vous que "authToken" contient le token JWT
-        console.log(authToken);
-
-        // Ajoutez le token à l'en-tête de la requête
-        const response = await axios.post('http://127.0.0.1:3000/realEstateAd', formData, {
-          headers: {
-            'Authorization': `Bearer ${authToken}`,
-            'Content-Type': 'multipart/form-data', // Utilisez multipart/form-data pour envoyer des fichiers
-          },
-        });
-        console.log('Réponse du serveur:', response.data);
-      } catch (error) {
-        console.error("Erreur lors de la création de l'annonce:", error);
-      }
-    } else {
-      console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
-    }
-  };
+  
+  
 
   const textAreaRef = useRef(null);
 
@@ -106,19 +64,6 @@ function RealEstateForm() {
   };
   
   
-      
-    
-  useEffect(() => {
-    if (product.postalCode.length === 5) {
-      fetchCityByPostalCode();
-    } else {
-     setProduct({
-      ...product,
-      city: ''
-     });
-      // Réinitialiser la liste des villes
-    }
-  }, [product.postalCode]);
 
   const fetchCityByPostalCode = async () => {
     try {
@@ -151,6 +96,7 @@ function RealEstateForm() {
   const [photoPreviews, setPhotoPreviews] = useState([]);
   
   const handlePhotoUpload = (e) => {
+    console.time("Temps d'exécution de handlePhotoUpload");
     const files = Array.from(e.target.files);
 
     // Créez un tableau pour stocker les miniatures redimensionnées et les fichiers sélectionnés
@@ -194,12 +140,17 @@ function RealEstateForm() {
         // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
         // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
     if (newPhotoPreviews.length === files.length) {
+      console.log("Avant la mise à jour de setProduct, product.photos :", JSON.stringify(product.photos));
       setProduct((prevProduct) => ({
         ...prevProduct,
-        photos: [...prevProduct.photos, ...newSelectedPhotos], // Mettez à jour les photos sélectionnées
+        photos: Array.isArray(prevProduct.photos) ? [...prevProduct.photos, ...newSelectedPhotos] : [...newSelectedPhotos],
       }));
+      console.log("Après la mise à jour de setProduct, product.photos :", JSON.stringify(product.photos));
+      
+      
       setPhotoPreviews((prevPhotoPreviews) => [...prevPhotoPreviews, ...newPhotoPreviews]); // Mettez à jour les miniatures
     }
+    console.timeEnd("Temps d'exécution de handlePhotoUpload");
 
 };
 
@@ -322,9 +273,86 @@ function RealEstateForm() {
     }
   }, [product.postalCode]);
 
-
+  const handleSubmit = async (e) => {
+    console.log("Début de handleSubmit"); 
+    e.preventDefault();
+     // Les logs et les opérations de FormData, etc.
   
+  console.log("Longueur de photo: " + product.photos.length);
+  console.log("Longueur de threeDViews: " + product.threeDViews.length);
+  // Vérifie s'il y a au moins une photo ou une vue 3D
+if (product.photos.length === 0 && product.threeDViews.length === 0) {
+  console.log("Erreur: Aucune photo ou vue 3D n'est présente");
+  return;
+}
 
+// Vérifie s'il n'y a pas de photos
+if (product.photos.length === 0) {
+  console.log("Erreur: Aucune photo n'est présente");
+  // tu peux continuer si tu le souhaite, pas forcément besoin de retourner
+}
+
+// Vérifie s'il n'y a pas de vues 3D
+if (product.threeDViews.length === 0) {
+  console.log("Erreur: Aucune vue 3D n'est présente");
+  // tu peux continuer si tu le souhaite, pas forcément besoin de retourner
+}
+
+// Ton code pour la soumission du formulaire
+if (isValid()) {
+      try {
+        const formData = new FormData();
+        console.log("FormData a été créé");
+        
+        // Log pour contrôler le type de product['photo'] et product['threeDViews']
+        console.log(`Type de product['photo']: ${typeof product['photo']}`);
+        console.log(`Type de product['threeDViews']: ${typeof product['threeDViews']}`);
+        
+        for (const key in product) {
+          if (key === 'photo' || key === 'threeDViews') {
+            console.log("Ajout des fichiers photo et threeDViews à FormData");
+            
+            // Log pour contrôler la longueur des tableaux de fichiers
+            console.log(`Longueur de ${key}: ${product[key].length}`);
+            
+            product[key].forEach((file, index) => {
+              // Log pour contrôler le type de chaque fichier
+              console.log(`Type du fichier ${file.name}: ${typeof file}`);
+              
+              console.log(`Ajout du fichier ${file.name} à ${key}[${index}]`);
+              formData.append(`${key}[${index}]`, file);
+            });
+          } else {
+            formData.append(key, product[key]);
+          }
+        }
+        console.log("FormData a été rempli");
+        
+        const authToken = localStorage.getItem('authToken');
+        console.log("Token récupéré:", authToken);
+        
+        const config = {
+          headers: {
+            'Authorization': `Bearer ${authToken}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        };
+        console.log("Configuration des headers prête");
+        
+        const response = await axios.post('http://127.0.0.1:3000/realEstateAd', formData, config);
+        
+        console.log('Réponse du serveur:', response.data);
+      } catch (error) {
+        console.error("Erreur lors de la création de l'annonce:", error);
+      }
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
+    }
+    console.log(`Longueur de product['photo']: ${product['photo'].length}`);
+console.log(`Longueur de product['threeDViews']: ${product['threeDViews'].length}`);
+
+    console.log("Fin de handleSubmit");
+  };
   return (
     <form onSubmit={handleSubmit}>
       <h1>Création d'annonce immobilière</h1>

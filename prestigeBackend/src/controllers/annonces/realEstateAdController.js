@@ -3,35 +3,52 @@ import { Image } from "../../models/annonces/image.js";
 import { ThreeDView } from "../../models/annonces/ThreeDView.js";
 
 // Créer une annonce immobilière avec images et vues 3D
+
+
 export const createRealEstateAd = async (req, res) => {
+  console.log("Début de createRealEstateAd");
+
+  // Les fichiers image devraient maintenant être dans req.files['photo']
+  console.log("Fichiers photo :", req.files['photo']);
+
+  // Les fichiers 3D devraient maintenant être dans req.files['threeDViews']
+  console.log("Fichiers 3D :", req.files['threeDViews']);
+
   let annonce = req.body;
   annonce.AdComId = req.authenticatedUser.userId;
 
-  if (req.authenticatedUser.userType === 'commercial') {
-    annonce.actif = 0;
-  }
-
   try {
+    // Créer l'annonce
     const ad = await RealEstateAd.create(annonce);
 
-    // Gérer les images associées à l'annonce
-    if (req.body.images && req.body.images.length > 0) {
-      const images = req.body.images.map((image) => ({ ...image, RealEstateAdId: ad.id }));
+    // Créer les images associées à cette annonce
+    if (req.files['photo']) {
+      const images = req.files['photo'].map((file) => ({
+        path: file.path,
+        RealEstateAdId: ad.id
+      }));
       await Image.bulkCreate(images);
     }
 
-    // Gérer les vues 3D associées à l'annonce
-    if (req.body.threeDViews && req.body.threeDViews.length > 0) {
-      const threeDViews = req.body.threeDViews.map((view) => ({ ...view, RealEstateAdId: ad.id }));
+    // Créer les vues 3D associées à cette annonce
+    if (req.files['threeDViews']) {
+      const threeDViews = req.files['threeDViews'].map((file) => ({
+        path: file.path,
+        RealEstateAdId: ad.id
+      }));
       await ThreeDView.bulkCreate(threeDViews);
     }
 
     res.status(201).json(ad);
+
   } catch (error) {
     console.error("Erreur lors de la création de l'annonce :", error);
-    res.status(500).json({ message: 'Une erreur est survenue lors de la création de l\'annonce immobilière.' });
+    res.status(500).json({ message: "Une erreur est survenue." });
   }
+
+  console.log("Fin de createRealEstateAd");
 };
+
 
 // Obtenir toutes les annonces immobilières avec leurs images et vues 3D
 export const getAllRealEstateAd = async (req, res) => {

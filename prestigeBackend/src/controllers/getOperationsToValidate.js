@@ -1,5 +1,5 @@
 import { Partner } from "../models/users/partner.js";
-import { RealEstateAd } from "../models/annonces/realEstateAd.js";
+import { RealEstateAd } from "../models/annonces/RealEstateAd.js";
 
 export const getOperationsToValidate = async (req, res, next) => {
   try {

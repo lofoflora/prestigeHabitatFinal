@@ -1,14 +1,19 @@
 import multer from 'multer';
 
-// Configuration de Multer pour les images
+// multerConfig.js
+
 export const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log("Destination callback triggered");
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
+    console.log("Filename callback triggered");
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
+
+
 
 export const uploadImage = multer({ storage: imageStorage });
 
