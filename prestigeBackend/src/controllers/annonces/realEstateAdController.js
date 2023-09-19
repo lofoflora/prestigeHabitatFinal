@@ -1,44 +1,31 @@
 import { RealEstateAd } from "../../models/annonces/RealEstateAd.js";
-import { Image } from "../../models/annonces/image.js";
-import { ThreeDView } from "../../models/annonces/ThreeDView.js";
+
 
 // Créer une annonce immobilière avec images et vues 3D
+
 
 
 export const createRealEstateAd = async (req, res) => {
   console.log("Début de createRealEstateAd");
 
-  // Les fichiers image devraient maintenant être dans req.files['photo']
-  console.log("Fichiers photo :", req.files['photo']);
-
-  // Les fichiers 3D devraient maintenant être dans req.files['threeDViews']
-  console.log("Fichiers 3D :", req.files['threeDViews']);
-
   let annonce = req.body;
   annonce.AdComId = req.authenticatedUser.userId;
 
+  // Extraire les chemins des images et des vues 3D
+  if (req.files['image']) {
+    annonce.images = req.files['image'].map(file => file.filename);
+
+  }
+  console.log(req.files)
+  if (req.files['threeDViews']) {
+    annonce.threeDViews = req.files['threeDViews'].map(file => file.filename);
+  }
+
   try {
+    console.log("Annonce à insérer:", annonce);
     // Créer l'annonce
     const ad = await RealEstateAd.create(annonce);
-
-    // Créer les images associées à cette annonce
-    if (req.files['image']) {
-      const images = req.files['image'].map((file) => ({
-        path: file.path,
-        RealEstateAdId: ad.id
-      }));
-      await Image.bulkCreate(images);
-    }
-
-    // Créer les vues 3D associées à cette annonce
-    if (req.files['threeDViews']) {
-      const threeDViews = req.files['threeDViews'].map((file) => ({
-        path: file.path,
-        RealEstateAdId: ad.id
-      }));
-      await ThreeDView.bulkCreate(threeDViews);
-    }
-
+    
     res.status(201).json(ad);
 
   } catch (error) {

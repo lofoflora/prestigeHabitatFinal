@@ -299,7 +299,7 @@ function RealEstateForm() {
             
             product[key].forEach((file, index) => {
               console.log(`Ajout du fichier ${file.name} à ${key}[${index}]`);
-              formData.append(`${key}[${index}]`, file);
+              formData.append(key, file);
             });
           } else {
             formData.append(key, product[key]);

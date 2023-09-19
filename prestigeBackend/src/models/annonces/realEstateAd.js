@@ -2,8 +2,7 @@
 import { DataTypes, STRING } from "sequelize";
 import { sequelize } from "../../configs/db.config.js";
 import { AdCom } from "../users/adCom.js";
-import { Image } from "./image.js";
-import { ThreeDView } from "./ThreeDView.js";
+
 
 
 
@@ -34,7 +33,9 @@ export const RealEstateAd = sequelize.define("RealEstateAd", {
   },
 
   description: DataTypes.STRING,
-  actif: DataTypes.BOOLEAN
+  actif: DataTypes.BOOLEAN,
+  images:DataTypes.JSON,
+  threedviews:DataTypes.JSON
   
 });
 
@@ -44,14 +45,4 @@ AdCom.hasMany(RealEstateAd);
 // Relation : Une annonce immobilière appartient à une société immobilière (AdCom)
 RealEstateAd.belongsTo(AdCom);
 
-// Relation : Une annonce immobilière a plusieurs images
-RealEstateAd.hasMany(Image);
 
-// Définit la relation entre images et annonces (une image appartient à une annonce)
-Image.belongsTo(RealEstateAd);
-
-// Définit la relation entre les vues 3D et les annonces (une vue 3D appartient à une annonce)
-ThreeDView.belongsTo(RealEstateAd);
-
-// Relation : Une annonce immobilière a plusieurs vues 3D
-RealEstateAd.hasMany(ThreeDView);

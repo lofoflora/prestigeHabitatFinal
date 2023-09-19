@@ -10,9 +10,9 @@ import venteRouter from './src/routes/services/routeVente.js';
 import constructionRouter from './src/routes/services/routeConstruction.js';
 import amoRouter from './src/routes/services/routeAmo.js';
 import achatReventeRouter from './src/routes/services/routeAchatRevente.js';
-import threeDViewRouter from './src/routes/annonces/routeThreeDView.js';
+
 import realEstateAdRouter from './src/routes/annonces/routeRealEstateAd.js';
-import imageRouter from './src/routes/annonces/routeImage.js';
+
 import achatRouter from './src/routes/services/routeAchat.js';
 import dossierClientRouter from './src/routes/routeDossierClient.js';
 import avisRouter from './src/routes/routeAvis.js';
@@ -51,9 +51,9 @@ app.use('/Amo',amoRouter);
 app.use('/AchatRevente',achatReventeRouter)
 
 // routes users
-app.use('/Image', imageRouter); 
+
 app.use('/realEstateAd',realEstateAdRouter);
-app.use('/ThreeDView',threeDViewRouter);
+
 
 app.use('/DossierClient',dossierClientRouter);
 app.use('/Avis',avisRouter);
