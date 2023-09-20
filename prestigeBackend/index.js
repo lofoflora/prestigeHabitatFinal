@@ -16,7 +16,7 @@ import realEstateAdRouter from './src/routes/annonces/routeRealEstateAd.js';
 import achatRouter from './src/routes/services/routeAchat.js';
 import dossierClientRouter from './src/routes/routeDossierClient.js';
 import avisRouter from './src/routes/routeAvis.js';
-import createUserRouter from './src/routes/users/routeCreateUser.js';
+
 import authrouter from './src/routes/authRoutes.js';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
@@ -38,7 +38,7 @@ app.use(jwtMiddleware);
 app.use('/adcom', adComRouter); 
 app.use('/partner',partnerRouter);
 app.use('/client',clientRouter);
-app.use('/createUser',createUserRouter)
+
 
 // connection
 app.use('/login',authrouter)
@@ -75,12 +75,12 @@ const createAdminIfNotExist = async () => {
     if (!admin) {
       const hashedPassword = await bcrypt.hash(process.env.ADMIN_INITIAL_PASSWORD, 10);
       await AdCom.create({
-        userType: 'admin',
-        title: 'Mr.',
-        firstName: 'Anthony',
-        lastName: 'Villa',
-        email: 'lofoflora@gmail.com',
-        phoneNumber: '0670508291',
+        userType: (process.env.USER_TYPE),
+        title: (process.env.USER_TITLE),
+        firstName: (process.env.USER_FIRST_NAME),
+        lastName: (process.env.USER_LAST_NAME),
+        email: (process.env.USER_EMAIL),
+        phoneNumber: (process.env.USER_PHONE_NUMBER),
         password: hashedPassword,
       });
       console.log('Admin créé avec succès.');

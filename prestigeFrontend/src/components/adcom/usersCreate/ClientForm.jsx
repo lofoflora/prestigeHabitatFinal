@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../UserContext';
+;
+
 
 function PartnerForm() {
   // State pour gérer les champs du formulaire
@@ -18,6 +20,16 @@ function PartnerForm() {
   const [streetNumber, setStreetNumber] = useState('');
   const [streetName, setStreetName] = useState('');
   const [city, setCity] = useState("");
+
+  // Générez un token d'activation unique côté client (navigateur)
+const tokenArray = new Uint8Array(20); // Créez un tableau d'octets de la longueur souhaitée
+window.crypto.getRandomValues(tokenArray); // Remplissez le tableau avec des valeurs aléatoires sécurisées
+
+// Convertissez le tableau d'octets en une chaîne hexadécimale
+const token = Array.from(tokenArray).map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+// Utilisez le token généré dans votre code
+console.log('Token généré :', token);
 
 
 
@@ -81,10 +93,10 @@ const handleFormSubmit = async (event) => {
   event.preventDefault();
 
   // Validation des champs et traitements
-  if (password !== confirmPassword) {
-    alert("Les mots de passe ne correspondent pas.");
-    return; // Important de s'assurer que la fonction s'arrête ici
-  }
+  // if (password !== confirmPassword) {
+  //   alert("Les mots de passe ne correspondent pas.");
+  //   return; // Important de s'assurer que la fonction s'arrête ici
+  // }
 
 
   const data = {
@@ -93,7 +105,7 @@ const handleFormSubmit = async (event) => {
     lastName,
     email,
     phoneNumber,
-    password,
+   // password,
     postalCode,
     streetNumber,
     streetName,
@@ -103,7 +115,7 @@ const handleFormSubmit = async (event) => {
 
   try {
     // Envoi des données d'inscription au backend
-    const response = await axios.post('http://127.0.0.1:3000/createUser', data);
+    const response = await axios.post('http://127.0.0.1:3000/client', data);
 
     console.log(response.data);
 
@@ -115,7 +127,7 @@ const handleFormSubmit = async (event) => {
         lastName,
         email,
         phoneNumber,
-        password,
+        //password,
         postalCode,
         address: `${streetNumber} ${streetName} ${addressComplement} ${city}`,
       });
@@ -127,11 +139,12 @@ const handleFormSubmit = async (event) => {
   lastName,
   email,
   phoneNumber,
-  password,
+  //password,
   postalCode,
   address: `${streetNumber} ${streetName} ${addressComplement} ${city}`,
 }));
-
+// Envoie de l'e-mail de confirmation
+await sendConfirmationEmail(email, token); // Appelle une fonction pour envoyer l'e-mail
       // Redirection vers une page de confirmation d'inscription
       navigate('/confirmation');
     } catch (error) {
@@ -255,17 +268,17 @@ const handleFormSubmit = async (event) => {
 
         <hr style={{ borderColor: '#ffd700', borderWidth: '3px', margin: '10px auto', width: '95%' }} />
 
-        {/* Champs de saisie pour le mot de passe */}
+        {/* Champs de saisie pour le mot de passe 
         <label style={{ color: 'white' }}>
           Mot de passe :
           <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </label>
 
-        {/* Champs de saisie pour confirmer le mot de passe */}
+        {/* Champs de saisie pour confirmer le mot de passe 
         <label style={{ color: 'white' }}>
           Confirmer le mot de passe :
           <input type="password" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
-        </label>
+        </label>*/}
 
 
      

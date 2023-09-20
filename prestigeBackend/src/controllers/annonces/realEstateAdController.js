@@ -1,5 +1,7 @@
 import { RealEstateAd } from "../../models/annonces/RealEstateAd.js";
 import { Op } from 'sequelize';
+import axios from 'axios';
+import { getCoordinates } from "../../configs/locationUtils.js";
 
 // Créer une annonce immobilière avec images et vues 3D
 

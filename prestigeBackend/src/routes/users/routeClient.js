@@ -1,5 +1,5 @@
 import express from 'express';
-import { createClient, getAllClients, getClientById, updateClient, deleteClient } from '../../controllers/users/clientController.js';
+import { createClient, getAllClients, getClientById, updateClient, deleteClient,createPassword } from '../../controllers/users/clientController.js';
 
 const clientRouter = express.Router();
 
@@ -17,5 +17,7 @@ clientRouter.put('/:id', updateClient);
 
 // Supprimer un client (accessible par les clients et les admins)
 clientRouter.delete('/:id', deleteClient);
+
+clientRouter.post('/updatepassword', createPassword);
 
 export default clientRouter;

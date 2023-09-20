@@ -53,12 +53,15 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
           lastName: response.data.lastName,
           title: response.data.title,
           type: response.data.userType,
+          userId : response.data.userId
           // Ajoutez d'autres données utilisateur si nécessaire
         });
 
         const token = response.data.token;
 
-        handleLogin(response.data.firstName, response.data.lastName, response.data.title, response.data.userType, userData, token);
+        const refreshToken = response.data.refreshToken;
+
+        handleLogin(response.data.firstName, response.data.lastName, response.data.title, response.data.userType, userData, token,refreshToken,);
         onCloseLoginForm();
         setHasError(false);
         emailRef.current.setCustomValidity('');
