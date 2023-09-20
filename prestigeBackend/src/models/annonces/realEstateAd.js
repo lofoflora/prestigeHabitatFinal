@@ -13,6 +13,14 @@ export const RealEstateAd = sequelize.define("RealEstateAd", {
   adressComplement: DataTypes.STRING,
   postalCode: DataTypes.STRING, // Ajoutez ce champ
   city: DataTypes.STRING,
+  latitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true
+  },
+  longitude: {
+    type: DataTypes.FLOAT,
+    allowNull: true
+  },
   propertyType: DataTypes.STRING,
   purchaseType: DataTypes.STRING,
   houseSurface: DataTypes.STRING,

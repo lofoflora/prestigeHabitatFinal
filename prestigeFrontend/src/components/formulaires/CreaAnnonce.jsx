@@ -559,6 +559,7 @@ function RealEstateForm() {
       {imagePreviews.length > 0 && (
   <div>
     <div className="image-previews">
+
       {imagePreviews.map((previewURL, index) => (
         <div key={index} className="image-preview-container">
           <img

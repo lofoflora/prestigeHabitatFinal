@@ -6,6 +6,7 @@ import {
   getRealEstateAdById,
   updateRealEstate,
   deleteRealEstate,
+  searchRealEstateAds,
 } from '../../controllers/annonces/realEstateAdController.js'; // Assurez-vous d'importer correctement vos contrôleurs
 
 const router = express.Router();
@@ -24,5 +25,8 @@ router.put('/', upload.fields([{name:'image'},{name:'threeDViews'}]),updateRealE
 
 // Supprimer une annonce immobilière avec ses images et vues 3D
 router.delete('/:id', deleteRealEstate);
+
+// obtenir les annonces en fonction des critéres 
+router.get('/search', searchRealEstateAds);
 
 export default router;

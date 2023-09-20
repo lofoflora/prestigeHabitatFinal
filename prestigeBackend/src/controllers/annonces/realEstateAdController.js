@@ -1,5 +1,5 @@
 import { RealEstateAd } from "../../models/annonces/RealEstateAd.js";
-
+import { Op } from 'sequelize';
 
 // Créer une annonce immobilière avec images et vues 3D
 
@@ -20,6 +20,10 @@ export const createRealEstateAd = async (req, res) => {
   if (req.files['threeDViews']) {
     annonce.threeDViews = req.files['threeDViews'].map(file => file.filename);
   }
+  // Ajouter les coordonnées géographiques ici
+  const coordinates = await getCoordinates(annonce.city); // Supposons que getCoordinates est une fonction qui retourne un tableau [longitude, latitude]
+  annonce.latitude = coordinates[1];
+  annonce.longitude = coordinates[0];
 
   try {
     console.log("Annonce à insérer:", annonce);
@@ -123,5 +127,51 @@ export const deleteRealEstate = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Une erreur est survenue lors de la suppression de l\'annonce immobilière.' });
+  }
+};
+//contrôleur pour gérer les recherches
+export const searchRealEstateAds = async (req, res) => {
+  const {
+    city,
+    propertyType,
+    purchaseType,
+    houseSurface,
+    landSurface,
+    numRooms,
+    numBedrooms,
+    numWC,
+    numBathrooms,
+    budgetMin,
+    budgetMax,
+    heating,
+    amenities,
+  } = req.query;
+
+  let whereClause = {};
+
+  if (city) whereClause.city = { [Op.like]: `%${city}%` };
+  if (propertyType) whereClause.propertyType = propertyType;
+  if (purchaseType) whereClause.purchaseType = purchaseType;
+  if (houseSurface) whereClause.houseSurface = houseSurface;
+  if (landSurface) whereClause.landSurface = landSurface;
+  if (numRooms) whereClause.numRooms = numRooms;
+  if (numBedrooms) whereClause.numBedrooms = numBedrooms;
+  if (numWC) whereClause.numWC = numWC;
+  if (numBathrooms) whereClause.numBathrooms = numBathrooms;
+  if (heating) whereClause.heating = { [Op.like]: `%${heating}%` };
+  if (amenities) whereClause.amenities = { [Op.like]: `%${amenities}%` };
+
+  if (budgetMin || budgetMax) whereClause.budget = {};
+  if (budgetMin) whereClause.budget[Op.gte] = budgetMin;
+  if (budgetMax) whereClause.budget[Op.lte] = budgetMax;
+
+  try {
+    const ads = await RealEstateAd.findAll({
+      where: whereClause,
+    });
+    res.status(200).json(ads);
+  } catch (error) {
+    console.error("Erreur lors de la recherche des annonces :", error);
+    res.status(500).json({ message: "Une erreur est survenue lors de la recherche." });
   }
 };

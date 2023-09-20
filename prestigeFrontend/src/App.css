@@ -763,23 +763,23 @@ textarea {
 .star-rating {
   cursor: default; /* Le pointeur reste une flèche */
 }
-.photo-previews {
+.image-previews {
   display: flex;
   flex-wrap: wrap; /* Permet de passer à la ligne si l'espace est insuffisant */
 }
 
-.photo-preview-container {
+.image-preview-container {
   position: relative;
   margin-right: 10px; /* Marge entre les miniatures (ajustez selon vos préférences) */
   margin-bottom: 10px; /* Marge entre les lignes de miniatures (ajustez selon vos préférences) */
 }
 
-.photo-preview {
+.image-preview {
   max-width: 200px; /* Largeur maximale des miniatures (ajustez selon vos préférences) */
   max-height: 200px; /* Hauteur maximale des miniatures (ajustez selon vos préférences) */
 }
 
-.remove-photo-button {
+.remove-image-button {
   position: absolute;
   top: 5px;
   right: 5px;
