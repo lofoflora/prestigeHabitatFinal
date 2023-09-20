@@ -1,101 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import SearchPageOption from './SearchPageOption';
-
-// Exemple de données pour les annonces coup de coeur
-const carouselData = [
-  {
-    id: 1,
-    title: 'Annonce 1',
-    image: 'https://img.leboncoin.fr/api/v1/lbcpb1/images/d6/33/fd/d633fd4a222bd379498f5e410b592a7117baffce.jpg?rule=classified-628x380-avif',
-    description: 'Description de l\'annonce 1',
-  },
-  {
-    id: 2,
-    title: 'Annonce 2',
-    image: 'src/assets/maisons/maison1.jpg',
-    description: 'Description de l\'annonce 2',
-  },
-  {
-    id: 3,
-    title: 'Annonce 3',
-    image: 'src/assets/maisons/maison2.jpg',
-    description: 'Description de l\'annonce 3',
-  },
-  {
-    id: 4,
-    title: 'Annonce 4',
-    image: 'src/assets/maisons/maison3.jpg',
-    description: 'Description de l\'annonce 4',
-  },
-  {
-    id: 5,
-    title: 'Annonce 5',
-    image: 'https://mmf.logic-immo.com/mmf/ads/photo-crop-368x250/fdf/2/2789a2a3-420b-40fe-827d-e87fe1f2f124.jpg',
-    description: 'Description de l\'annonce 5',
-  },
-  {
-    id: 6,
-    title: 'Annonce 6',
-    image: 'https://static.orpi.com/images/ego-realestate/estate-result-item/Zfeed/S5/C8385/P18642308/Tphoto/ID84751c01-0000-0500-0000-00000c2fa249--.jpg',
-    description: 'Description de l\'annonce 6',
-  },
-  // Ajoutez d'autres annonces coup de coeur ici...
-];
+import axios from 'axios'; // Importe Axios ici
 
 const SearchPage = () => {
-  const [selectedLocalites, setSelectedLocalites] = useState([]);
-  const [propertyType, setPropertyType] = useState('');
-  const [surfaceMin, setSurfaceMin] = useState('');
-  const [budgetMax, setBudgetMax] = useState('');
-  const [localisation, setLocalisation] = useState('');
-  const [radius, setRadius] = useState('5');
   const [showOptions, setShowOptions] = useState(false);
+  // État initial pour les données de recherche
+  const [searchData, setSearchData] = useState({
+    city: "",
+    propertyType: "",
+    purchaseType: "",
+    houseSurfaceMin: "", // Propriété pour la valeur minimale de houseSurface
+    numRooms: "",
+    numBedrooms: "",
+    numWC: "",
+    numBathrooms: "",
+    budgetMin: "",
+    budgetMax: "",
+    heating: "",
+    amenities: "",
+  });
+  
+  
 
-  // Composant CustomPrevArrow
-const CustomPrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: 'block', background: 'red' }}
-      onClick={onClick}
-    />
-  );
-};
+  // Extraire les valeurs de searchData
+  const {
+    city,
+    propertyType,
+    purchaseType,
+    houseSurface,
+    landSurface,
+    numRooms,
+    numBedrooms,
+    numWC,
+    numBathrooms,
+    budgetMin,
+    budgetMax,
+    heating,
+    amenities,
+  } = searchData;
 
-// Composant CustomNextArrow
-const CustomNextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: 'block', background: 'red' }}
-      onClick={onClick}
-    />
-  );
-};
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: true,
-    centerMode: true, // Pour centrer les images
-    centerPadding: '0', // Pas de padding pour éviter l'espace supplémentaire sur les côtés
-    cssEase: 'linear', // Effet circulaire linéaire
-    variableWidth: true, // Pour que les images prennent la largeur variable en fonction de leur contenu
-    prevArrow: <CustomPrevArrow />, // Utilisation de flèches personnalisées pour le carrousel
-    nextArrow: <CustomNextArrow />,
+  // Fonction pour mettre à jour les données de recherche
+  const updateSearchData = (newData) => {
+    setSearchData(newData);
   };
-
   const handleLocaliteChange = (selectedOptions) => {
     setSelectedLocalites(selectedOptions);
   };
@@ -108,30 +59,123 @@ const CustomNextArrow = (props) => {
     setRadius(e.target.value);
   };
 
-  const handleSearch = () => {
-    // Logique de recherche...
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Obtiens la valeur minimale de houseSurface
+    const houseSurfaceMin = parseFloat(searchData.houseSurfaceMin);
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+    
+      // Obtiens la valeur minimale de houseSurface
+      const houseSurfaceMin = parseFloat(searchData.houseSurfaceMin);
+    
+      const formData = {
+        selectedLocalites,
+        propertyType,
+        houseSurfaceMin, // Utilise la valeur minimale de houseSurface ici
+        budgetMax,
+        city,
+        //radius,
+      };
+    
+      try {
+        // Remplace cette partie par l'appel API ou ce que tu souhaites faire avec formData
+        console.log("Données du formulaire soumis:", formData);
+      } catch (error) {
+        console.error('Erreur pendant la recherche:', error);
+      }
+    };
+    
+    const formData = {
+      selectedLocalites,
+      propertyType,
+      houseSurfaceMin, // Utilise la valeur minimale de houseSurface ici
+      budgetMax,
+      city,
+      //radius,
+    };
+  
+    try {
+      // Remplace cette partie par l'appel API ou ce que tu souhaites faire avec formData
+      console.log("Données du formulaire soumis:", formData);
+    } catch (error) {
+      console.error('Erreur pendant la recherche:', error);
+    }
   };
+  
 
+
+
+const CustomPrevArrow = ({ className, style, onClick }) => (
+  <div
+    className={className}
+    style={{ ...style, display: 'block', background: 'red' }}
+    onClick={onClick}
+  />
+);
+
+const CustomNextArrow = ({ className, style, onClick }) => (
+  <div
+    className={className}
+    style={{ ...style, display: 'block', background: 'red' }}
+    onClick={onClick}
+  />
+);
+
+const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
+  arrows: true,
+  centerMode: true,
+  centerPadding: '0',
+  cssEase: 'linear',
+  variableWidth: true,
+  prevArrow: <CustomPrevArrow />,
+  nextArrow: <CustomNextArrow />,
+};
+
+
+  const [carouselItems, setCarouselItems] = useState([]);
+
+  // Charger les éléments du carrousel depuis l'API au montage du composant
+  useEffect(() => {
+    const fetchCarouselItems = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:3000/carousel');
+        setCarouselItems(response.data);
+      } catch (error) {
+        console.error('Erreur lors du chargement du carrousel:', error);
+      }
+    };
+
+    fetchCarouselItems();
+  }, []);
   return (
     <div>
       <div className='search-bar'>
-        {/* Input de localisation */}
+        {/* Input de city */}
         <input
           className="auth-form-input"
           type="text"
-          placeholder="Localisation"
-          value={localisation}
-          onChange={(e) => setLocalisation(e.target.value)}
+          placeholder="city"
+          value={city}
+          onChange={(e) => setcity(e.target.value)}
           style={{ width: '200px', marginRight: '10px', padding: '8px' }}
         />
-        {/* Liste déroulante pour le rayon */}
+        {/* Liste déroulante pour le rayon 
         <select value={radius} onChange={handleRadiusChange} style={{ width: '8%', marginRight: '10px' }}>
           <option value="0">0 km</option>
           <option value="5">5 km</option>
           <option value="10">10 km</option>
           <option value="20">20 km</option>
           <option value="50">50 km</option>
-        </select>
+        </select>*/}
         {/* Liste déroulante (Select) */}
         <select value={propertyType} onChange={(e) => setPropertyType(e.target.value)} style={{ marginRight: '10px' }}>
           <option value="">Type de bien</option>
@@ -141,13 +185,14 @@ const CustomNextArrow = (props) => {
         </select>
         {/* Champ de saisie pour Surface min */}
         <input
-          className="auth-form-input"
-          type="number"
-          placeholder="Surface min [m²]"
-          value={surfaceMin}
-          onChange={(e) => setSurfaceMin(e.target.value)}
-          style={{ width: '120px', marginRight: '10px', padding: '8px' }}
-        />
+  className="auth-form-input"
+  type="number"
+  placeholder="Surface min [m²]"
+  value={searchData.houseSurfaceMin}
+  onChange={(e) => setSearchData({ ...searchData, houseSurfaceMin: e.target.value })}
+  style={{ width: '120px', marginRight: '10px', padding: '8px' }}
+/>
+
         {/* Champ de saisie pour Budget max */}
         <input
           className="auth-form-input"
@@ -159,7 +204,7 @@ const CustomNextArrow = (props) => {
         />
         <div>
           {/* Bouton Rechercher */}
-          <button className="custom-btn primary-btn me-2" onClick={handleSearch}>
+          <button className="custom-btn primary-btn me-2" onClick={handleSubmit}>
             Rechercher
           </button>
 
@@ -172,9 +217,9 @@ const CustomNextArrow = (props) => {
 
      {/* Carrousel des annonces coup de coeur */}
      <div className="carousel-container">
-      <h3>Nos coups des coeurs</h3><br />
+        <h3>Nos coups de coeur</h3><br />
         <Slider {...sliderSettings}>
-          {carouselData.map((item) => (
+          {carouselItems.map((item) => (
             <div key={item.id} style={{ width: '300px', height: '200px', margin: '0 10px' }}>
               <a href={item.link} target="_blank" rel="noopener noreferrer">
                 <img

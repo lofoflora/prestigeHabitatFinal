@@ -1,31 +1,58 @@
 import React, { useState } from "react";
 import SearchPage from "./SearchPage";
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+
+
+
 
 const formatNumberWithSpaces = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
 
 
-const SearchPageOption = () => {
-  const [localite, setLocalite] = useState("");
-  const [adsWithPicture, setAdsWithPicture] = useState(false);
-  const [exclusivity, setExclusivity] = useState(false);
-  const [favorites, setFavorites] = useState(false);
-  const [propertyType, setPropertyType] = useState([]);
-  const [purchaseType, setPurchaseType] = useState([]);
-  const [surfaceMin, setSurfaceMin] = useState("");
-  const [surfaceMax, setSurfaceMax] = useState("");
-  const [surfaceTerrainMin, setSurfaceTerrainMin] = useState(""); // Assurez-vous que cette variable est définie
-  const [surfaceTerrainMax, setSurfaceTerrainMax] = useState("");
-  const [numRooms, setNumRooms] = useState([]);
-  const [numBedrooms, setNumBedrooms] = useState([]);
-  const [numWC, setNumWC] = useState([]);
-  const [numBathrooms, setNumBathrooms] = useState([]);
-  const [budgetMin, setBudgetMin] = useState("");
-  const [budgetMax, setBudgetMax] = useState("");
-  const [heating, setHeating] = useState([]);
-  const [amenities, setAmenities] = useState([]);
+
+const SearchPageOption = ({ onSearchDataChange }) => {
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    // Récupération des valeurs du formulaire
+    const city = e.target.city.value;
+    const propertyType = e.target.propertyType.value;
+    const purchaseType = e.target.purchaseType.value;
+    const houseSurface = e.target.houseSurface.value;
+    const landSurface = e.target.landSurface.value;
+    const numRooms = e.target.numRooms.value;
+    const numBedrooms = e.target.numBedrooms.value;
+    const numWC = e.target.numWC.value;
+    const numBathrooms = e.target.numBathrooms.value;
+    const budgetMin = e.target.budgetMin.value;
+    const budgetMax = e.target.budgetMax.value;
+    const heating = e.target.heating.value;
+    const amenities = e.target.amenities.value;
+
+    // Construction de l'objet de paramètres pour l'API
+    const searchData = {
+      city,
+      propertyType,
+      purchaseType,
+      houseSurface,
+      landSurface,
+      numRooms,
+      numBedrooms,
+      numWC,
+      numBathrooms,
+      budgetMin,
+      budgetMax,
+      heating,
+      amenities,
+    };
+
+    // Appel de la fonction de rappel pour envoyer les données au parent
+    onSearchDataChange(searchData);
+  };
+
    // Fonction pour n'accepter que les chiffres dans les champs d'entrée
    const handleKeyPress = (event) => {
     const charCode = event.which ? event.which : event.keyCode;
@@ -33,7 +60,9 @@ const SearchPageOption = () => {
       event.preventDefault();
     }
   };
-
+  const goToSomePage = () => {
+    navigate('/somePage');
+  };
   const handleSelect = (stateName, value) => {
     switch (stateName) {
       case "propertyType":
@@ -97,28 +126,21 @@ const SearchPageOption = () => {
     }
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Critères de recherche :", {
-      localite,
-      adsWithPicture,
-      exclusivity,
-      favorites,
-      propertyType,
-      purchaseType,
-      surfaceMin,
-      surfaceMax,
-      numRooms,
-      numBedrooms,
-      numWC,
-      numBathrooms,
-      budgetMin,
-      budgetMax,
-      heating,
-      amenities,
-    });
-  };
+  
 
+  
+  //   const { data } = await axios.get("http://localhost:3000/realEstateAd/search", { params });
+  
+  //     // Stocke `ads` quelque part (par exemple dans un état global comme Redux ou dans le LocalStorage)
+  //     localStorage.setItem("ads", JSON.stringify(ads));
+  
+  //     // Redirige vers la nouvelle page
+  //     history.push('/resultats');
+  //   } catch (error) {
+  //     console.error('Erreur pendant la recherche :', error);
+  //   }
+  // };
+  
 
   return (
     <div className="container">

@@ -23,7 +23,7 @@ import bcrypt from 'bcrypt';
 import { AdCom } from './src/models/users/adCom.js'; // Ajuste le chemin d'import selon l'emplacement du fichier adCom.js
 import { jwtMiddleware } from './src/middleware/tokenMiddleware.js';
 import validationRouter from './src/routes/validationRoutes.js';
-
+import carouselRoutes from './src/routes/annonces/carouselRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -53,7 +53,7 @@ app.use('/AchatRevente',achatReventeRouter)
 // routes users
 
 app.use('/realEstateAd',realEstateAdRouter);
-
+app.use('/carousel', carouselRoutes);
 
 app.use('/DossierClient',dossierClientRouter);
 app.use('/Avis',avisRouter);
