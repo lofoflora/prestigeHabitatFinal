@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import SearchPage from "./SearchPage";
+import React, { useState,useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+
 
 
 
@@ -13,44 +12,35 @@ const formatNumberWithSpaces = (num) => {
 
 
 
-const SearchPageOption = ({ onSearchDataChange }) => {
-  const handleSearch = async (e) => {
-    e.preventDefault();
+const SearchPageOption = ({ searchData, onSearchDataChange }) => {
+  const [localSearchData, setLocalSearchData] = useState(searchData);
 
-    // Récupération des valeurs du formulaire
-    const city = e.target.city.value;
-    const propertyType = e.target.propertyType.value;
-    const purchaseType = e.target.purchaseType.value;
-    const houseSurface = e.target.houseSurface.value;
-    const landSurface = e.target.landSurface.value;
-    const numRooms = e.target.numRooms.value;
-    const numBedrooms = e.target.numBedrooms.value;
-    const numWC = e.target.numWC.value;
-    const numBathrooms = e.target.numBathrooms.value;
-    const budgetMin = e.target.budgetMin.value;
-    const budgetMax = e.target.budgetMax.value;
-    const heating = e.target.heating.value;
-    const amenities = e.target.amenities.value;
+  useEffect(() => {
+    setLocalSearchData(searchData);
+  }, [searchData]);
+  console.log("Props searchData:", searchData);
 
-    // Construction de l'objet de paramètres pour l'API
-    const searchData = {
-      city,
-      propertyType,
-      purchaseType,
-      houseSurface,
-      landSurface,
-      numRooms,
-      numBedrooms,
-      numWC,
-      numBathrooms,
-      budgetMin,
-      budgetMax,
-      heating,
-      amenities,
-    };
-
-    // Appel de la fonction de rappel pour envoyer les données au parent
-    onSearchDataChange(searchData);
+  // const handleChange = (name, value) => {
+  //   const updatedSearchData = { ...localSearchData, [name]: value };
+  //   setLocalSearchData(updatedSearchData);
+  // };
+  const handleChange = (name, value) => {
+    if (["propertyType", "purchaseType", "numRooms", "numBedrooms", "numWC", "numBathrooms", "heating", "amenities"].includes(name)) {
+      // Gestion des états de tableau
+      setState((prevState) => {
+        return prevState.includes(value)
+          ? prevState.filter((item) => item !== value)
+          : [...prevState, value];
+      });
+    } else {
+      // Gestion des états simples
+      const updatedSearchData = { ...localSearchData, [name]: value };
+      setLocalSearchData(updatedSearchData);
+    }
+  };
+  
+  const handleSearch = () => {
+    onSearchDataChange(localSearchData);
   };
 
    // Fonction pour n'accepter que les chiffres dans les champs d'entrée
@@ -60,84 +50,77 @@ const SearchPageOption = ({ onSearchDataChange }) => {
       event.preventDefault();
     }
   };
+  const navigate = useNavigate();
+
   const goToSomePage = () => {
     navigate('/somePage');
   };
-  const handleSelect = (stateName, value) => {
-    switch (stateName) {
-      case "propertyType":
-        setPropertyType((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "purchaseType":
-        setPurchaseType((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "numRooms":
-        setNumRooms((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "numBedrooms":
-        setNumBedrooms((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "numWC":
-        setNumWC((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "numBathrooms":
-        setNumBathrooms((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "heating":
-        setHeating((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      case "amenities":
-        setAmenities((prevState) =>
-          prevState.includes(value)
-            ? prevState.filter((item) => item !== value)
-            : [...prevState, value]
-        );
-        break;
-      default:
-        break;
-    }
-  };
 
-  
+  const [city, setCity] = useState("");
+const [adsWithPicture, setAdsWithPicture] = useState(false);
+const [exclusivity, setExclusivity] = useState(false);
 
-  
-  //   const { data } = await axios.get("http://localhost:3000/realEstateAd/search", { params });
-  
-  //     // Stocke `ads` quelque part (par exemple dans un état global comme Redux ou dans le LocalStorage)
-  //     localStorage.setItem("ads", JSON.stringify(ads));
-  
-  //     // Redirige vers la nouvelle page
-  //     history.push('/resultats');
-  //   } catch (error) {
-  //     console.error('Erreur pendant la recherche :', error);
+
+  // const handleChange = (stateName, value) => {
+  //   switch (stateName) {
+  //     case "propertyType":
+  //       setPropertyType((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "purchaseType":
+  //       setPurchaseType((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "numRooms":
+  //       setNumRooms((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "numBedrooms":
+  //       setNumBedrooms((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "numWC":
+  //       setNumWC((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "numBathrooms":
+  //       setNumBathrooms((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "heating":
+  //       setHeating((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     case "amenities":
+  //       setAmenities((prevState) =>
+  //         prevState.includes(value)
+  //           ? prevState.filter((item) => item !== value)
+  //           : [...prevState, value]
+  //       );
+  //       break;
+  //     default:
+  //       break;
   //   }
   // };
   
@@ -148,12 +131,12 @@ const SearchPageOption = ({ onSearchDataChange }) => {
       
         <form className="auth-form" onSubmit={handleSearch} style={{ width: '80%' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-  <label htmlFor="localite" >Localité:</label>
+  <label htmlFor="city" >Localité:</label>
   <input
     type="text"
-    id="localite"
-    value={localite}
-    onChange={(e) => setLocalite(e.target.value)}
+    id="city"
+    value={city}
+    onChange={(e) => handleChange("city", e.target.value)}
     required
     style={{ padding: '5px', height: '25px', width: '40%' }} // Vous pouvez ajuster la valeur de "width" ici
   />
@@ -193,18 +176,7 @@ const SearchPageOption = ({ onSearchDataChange }) => {
               <span className="toggle-switch" />
             </label>
           </div>
-          {/* Nos coups de coeur */}
-          <div className="checkbox-group">
-            <label>
-              Nos coups de coeur:
-              <input
-                type="checkbox"
-                checked={favorites}
-                onChange={() => setFavorites(!favorites)}
-              />
-              <span className="toggle-switch" />
-            </label>
-          </div>
+          
 
           {/* Type de bien */}
             <label>Type de bien:</label>
@@ -212,61 +184,61 @@ const SearchPageOption = ({ onSearchDataChange }) => {
             
             <button
               className={propertyType.includes("appartement") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "appartement")}
+              onClick={() => handleChange("propertyType", "appartement")}
             >
               Appartement
             </button>
             <button
               className={propertyType.includes("maison") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "maison")}
+              onClick={() => handleChange("propertyType", "maison")}
             >
               Maison
             </button>
             <button
               className={propertyType.includes("villa") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "villa")}
+              onClick={() => handleChange("propertyType", "villa")}
             >
               Villa
             </button>
             <button
               className={propertyType.includes("terrain") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "terrain")}
+              onClick={() => handleChange("propertyType", "terrain")}
             >
               Terrain
             </button>
             <button
               className={propertyType.includes("loft") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "loft")}
+              onClick={() => handleChange("propertyType", "loft")}
             >
               Loft/Atelier
             </button>
             <button
               className={propertyType.includes("chateau") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "chateau")}
+              onClick={() => handleChange("propertyType", "chateau")}
             >
               Château
             </button>
             <button
               className={propertyType.includes("local") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "local")}
+              onClick={() => handleChange("propertyType", "local")}
             >
               Local professionnel
             </button>
             <button
               className={propertyType.includes("commerce") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "commerce")}
+              onClick={() => handleChange("propertyType", "commerce")}
             >
               Commerce
             </button>
             <button
               className={propertyType.includes("garage") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "garage")}
+              onClick={() => handleChange("propertyType", "garage")}
             >
               Garage/Hangar
             </button>
             <button
               className={propertyType.includes("autre") ? "selected" : ""}
-              onClick={() => handleSelect("propertyType", "autre")}
+              onClick={() => handleChange("propertyType", "autre")}
             >
               Autre
             </button>
@@ -276,25 +248,25 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={purchaseType.includes("ancien") ? "selected" : ""}
-              onClick={() => handleSelect("purchaseType", "ancien")}
+              onClick={() => handleChange("purchaseType", "ancien")}
             >
               Ancien
             </button>
             <button
               className={purchaseType.includes("neuf") ? "selected" : ""}
-              onClick={() => handleSelect("purchaseType", "neuf")}
+              onClick={() => handleChange("purchaseType", "neuf")}
             >
               Neuf
             </button>
             <button
               className={purchaseType.includes("viager") ? "selected" : ""}
-              onClick={() => handleSelect("purchaseType", "viager")}
+              onClick={() => handleChange("purchaseType", "viager")}
             >
               Viager
             </button>
             <button
               className={purchaseType.includes("renover") ? "selected" : ""}
-              onClick={() => handleSelect("purchaseType", "renover")}
+              onClick={() => handleChange("purchaseType", "renover")}
             >
               A rénover
             </button>
@@ -372,31 +344,31 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={numRooms.includes("1") ? "selected" : ""}
-              onClick={() => handleSelect("numRooms", "1")}
+              onClick={() => handleChange("numRooms", "1")}
             >
               1
             </button>
             <button
               className={numRooms.includes("2") ? "selected" : ""}
-              onClick={() => handleSelect("numRooms", "2")}
+              onClick={() => handleChange("numRooms", "2")}
             >
               2
             </button>
             <button
               className={numRooms.includes("3") ? "selected" : ""}
-              onClick={() => handleSelect("numRooms", "3")}
+              onClick={() => handleChange("numRooms", "3")}
             >
               3
             </button>
             <button
               className={numRooms.includes("4") ? "selected" : ""}
-              onClick={() => handleSelect("numRooms", "4")}
+              onClick={() => handleChange("numRooms", "4")}
             >
               4
             </button>
             <button
               className={numRooms.includes("5+") ? "selected" : ""}
-              onClick={() => handleSelect("numRooms", "5+")}
+              onClick={() => handleChange("numRooms", "5+")}
             >
               5+
             </button>
@@ -407,31 +379,31 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={numBedrooms.includes("1") ? "selected" : ""}
-              onClick={() => handleSelect("numBedrooms", "1")}
+              onClick={() => handleChange("numBedrooms", "1")}
             >
               1
             </button>
             <button
               className={numBedrooms.includes("2") ? "selected" : ""}
-              onClick={() => handleSelect("numBedrooms", "2")}
+              onClick={() => handleChange("numBedrooms", "2")}
             >
               2
             </button>
             <button
               className={numBedrooms.includes("3") ? "selected" : ""}
-              onClick={() => handleSelect("numBedrooms", "3")}
+              onClick={() => handleChange("numBedrooms", "3")}
             >
               3
             </button>
             <button
               className={numBedrooms.includes("4") ? "selected" : ""}
-              onClick={() => handleSelect("numBedrooms", "4")}
+              onClick={() => handleChange("numBedrooms", "4")}
             >
               4
             </button>
             <button
               className={numBedrooms.includes("5+") ? "selected" : ""}
-              onClick={() => handleSelect("numBedrooms", "5+")}
+              onClick={() => handleChange("numBedrooms", "5+")}
             >
               5+
             </button>
@@ -442,19 +414,19 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={numBathrooms.includes("1") ? "selected" : ""}
-              onClick={() => handleSelect("numBathrooms", "1")}
+              onClick={() => handleChange("numBathrooms", "1")}
             >
               1
             </button>
             <button
               className={numBathrooms.includes("2") ? "selected" : ""}
-              onClick={() => handleSelect("numBathrooms", "2")}
+              onClick={() => handleChange("numBathrooms", "2")}
             >
               2
             </button>
             <button
               className={numBathrooms.includes("3+") ? "selected" : ""}
-              onClick={() => handleSelect("numBathrooms", "3+")}
+              onClick={() => handleChange("numBathrooms", "3+")}
             >
               3+
             </button>
@@ -465,19 +437,19 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={numWC.includes("1") ? "selected" : ""}
-              onClick={() => handleSelect("numWC", "1")}
+              onClick={() => handleChange("numWC", "1")}
             >
               1
             </button>
             <button
               className={numWC.includes("2") ? "selected" : ""}
-              onClick={() => handleSelect("numWC", "2")}
+              onClick={() => handleChange("numWC", "2")}
             >
               2
             </button>
             <button
               className={numWC.includes("3+") ? "selected" : ""}
-              onClick={() => handleSelect("numWC", "3+")}
+              onClick={() => handleChange("numWC", "3+")}
             >
               3+
             </button>
@@ -488,31 +460,31 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={heating.includes("electrique") ? "selected" : ""}
-              onClick={() => handleSelect("heating", "electrique")}
+              onClick={() => handleChange("heating", "electrique")}
             >
               Electrique
             </button>
             <button
               className={heating.includes("gaz") ? "selected" : ""}
-              onClick={() => handleSelect("heating", "gaz")}
+              onClick={() => handleChange("heating", "gaz")}
             >
               Gaz
             </button>
             <button
               className={heating.includes("fioul") ? "selected" : ""}
-              onClick={() => handleSelect("heating", "fioul")}
+              onClick={() => handleChange("heating", "fioul")}
             >
               Fioul
             </button>
             <button
               className={heating.includes("bois") ? "selected" : ""}
-              onClick={() => handleSelect("heating", "bois")}
+              onClick={() => handleChange("heating", "bois")}
             >
               Bois
             </button>
             <button
               className={heating.includes("autre") ? "selected" : ""}
-              onClick={() => handleSelect("heating", "autre")}
+              onClick={() => handleChange("heating", "autre")}
             >
               Autre
             </button>
@@ -523,67 +495,67 @@ const SearchPageOption = ({ onSearchDataChange }) => {
           <div className="checkbox-group">
             <button
               className={amenities.includes("piscine") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "piscine")}
+              onClick={() => handleChange("amenities", "piscine")}
             >
             Jardin
           </button>
           <button
             className={amenities.includes("ascenseur") ? "selected" : ""}
-            onClick={() => handleSelect("amenities", "ascenseur")}
+            onClick={() => handleChange("amenities", "ascenseur")}
           >
             Garage
           </button>
           <button
             className={amenities.includes("jardin") ? "selected" : ""}
-            onClick={() => handleSelect("amenities", "jardin")}
+            onClick={() => handleChange("amenities", "jardin")}
           >
               Piscine
             </button>
             <button
               className={amenities.includes("garage") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "garage")}
+              onClick={() => handleChange("amenities", "garage")}
             >
               Ascenseur
             </button>
             <button
               className={amenities.includes("balcon") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "balcon")}
+              onClick={() => handleChange("amenities", "balcon")}
             >
               Balcon
             </button>
             <button
               className={amenities.includes("cave") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "cave")}
+              onClick={() => handleChange("amenities", "cave")}
             >
               Cave
             </button>
             <button
               className={amenities.includes("terrasse") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "terrasse")}
+              onClick={() => handleChange("amenities", "terrasse")}
             >
               Terrasse
             </button>
             <button
               className={amenities.includes("pompe a chaleur") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "pompe a chaleur")}
+              onClick={() => handleChange("amenities", "pompe a chaleur")}
             >
               Pompe à chaleur
             </button>
             <button
               className={amenities.includes("climatisation") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "climatisation")}
+              onClick={() => handleChange("amenities", "climatisation")}
             >
               Climatisation
             </button>
             <button
               className={amenities.includes("Panneaux solaires") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "Panneaux solaires")}
+              onClick={() => handleChange("amenities", "Panneaux solaires")}
             >
               Panneaux solaires
             </button>
             <button
               className={amenities.includes("autre") ? "selected" : ""}
-              onClick={() => handleSelect("amenities", "autre")}
+              onClick={() => handleChange("amenities", "autre")}
             >
               Autre
             </button>

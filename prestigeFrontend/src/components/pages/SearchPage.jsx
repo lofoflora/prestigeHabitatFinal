@@ -6,14 +6,14 @@ import 'slick-carousel/slick/slick-theme.css';
 import SearchPageOption from './SearchPageOption';
 import axios from 'axios'; // Importe Axios ici
 
-const SearchPage = () => {
-  const [showOptions, setShowOptions] = useState(false);
-  // État initial pour les données de recherche
+const SearchPage = ({ onSubmit }) => {
+ 
   const [searchData, setSearchData] = useState({
     city: "",
     propertyType: "",
     purchaseType: "",
-    houseSurfaceMin: "", // Propriété pour la valeur minimale de houseSurface
+    houseSurface: "",
+    landSurface: "",
     numRooms: "",
     numBedrooms: "",
     numWC: "",
@@ -23,89 +23,65 @@ const SearchPage = () => {
     heating: "",
     amenities: "",
   });
-  
-  
 
-  // Extraire les valeurs de searchData
-  const {
-    city,
-    propertyType,
-    purchaseType,
-    houseSurface,
-    landSurface,
-    numRooms,
-    numBedrooms,
-    numWC,
-    numBathrooms,
-    budgetMin,
-    budgetMax,
-    heating,
-    amenities,
-  } = searchData;
+  const [files, setFiles] = useState(undefined);
 
-  // Fonction pour mettre à jour les données de recherche
-  const updateSearchData = (newData) => {
-    setSearchData(newData);
+  // const [validate, isTouched, isValid, getMessages, markAsTouched] = useFormValidation({
+  //   city: [
+  //     c => c === "" ? "Required. " : "",
+  //     // Ajoute d'autres règles pour 'city' si nécessaire
+  //   ],
+  //   propertyType: [
+  //     // Règles pour 'propertyType'
+  //   ],
+  //   purchaseType: [
+  //     // Règles pour 'purchaseType'
+  //   ],
+  //   houseSurface: [
+  //     hs => hs < 0 ? "Must be greater or equal to 0. " : ""
+  //   ],
+  //   // ... autres champs
+  // });
+  const [localSearchData, setLocalSearchData] = useState(searchData || {});
+  console.log("Parent searchData:", searchData);
+
+
+  const [showOptions, setShowOptions] = useState(false);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    const newSearchData = { ...searchData, [name]: value };
+    setSearchData(newSearchData);
+    validate(newSearchData, name);
   };
-  const handleLocaliteChange = (selectedOptions) => {
-    setSelectedLocalites(selectedOptions);
-  };
-
-  const handleToggleOptions = () => {
-    setShowOptions(!showOptions);
-  };
-
-  const handleRadiusChange = (e) => {
-    setRadius(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    // Obtiens la valeur minimale de houseSurface
-    const houseSurfaceMin = parseFloat(searchData.houseSurfaceMin);
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    
-      // Obtiens la valeur minimale de houseSurface
-      const houseSurfaceMin = parseFloat(searchData.houseSurfaceMin);
-    
-      const formData = {
-        selectedLocalites,
-        propertyType,
-        houseSurfaceMin, // Utilise la valeur minimale de houseSurface ici
-        budgetMax,
-        city,
-        //radius,
-      };
-    
-      try {
-        // Remplace cette partie par l'appel API ou ce que tu souhaites faire avec formData
-        console.log("Données du formulaire soumis:", formData);
-      } catch (error) {
-        console.error('Erreur pendant la recherche:', error);
-      }
-    };
-    
-    const formData = {
-      selectedLocalites,
-      propertyType,
-      houseSurfaceMin, // Utilise la valeur minimale de houseSurface ici
-      budgetMax,
-      city,
-      //radius,
-    };
-  
+  const [announcements, setAnnouncements] = useState([]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      // Remplace cette partie par l'appel API ou ce que tu souhaites faire avec formData
-      console.log("Données du formulaire soumis:", formData);
+      const apiURL = 'http://127.0.0.1:3000/api/search';
+      const response = await axios.get(apiURL, { params: searchData });
+      setAnnouncements(response.data);
     } catch (error) {
-      console.error('Erreur pendant la recherche:', error);
+      console.error('Erreur pendant la récupération des annonces:', error);
     }
   };
-  
+  const handleSearchDataChange = async (newSearchData) => {
+    setSearchData(newSearchData);
+    try {
+      const apiURL = 'http://127.0.0.1:3000/api/search';
+      const response = await axios.get(apiURL, { params: newSearchData });
+      setAnnouncements(response.data);
+    } catch (error) {
+      console.error('Erreur pendant la récupération des annonces:', error);
+    }
+  };
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
+ 
 
-
+  useEffect(() => {
+    validate(searchData);
+  }, [searchData]);
 
 const CustomPrevArrow = ({ className, style, onClick }) => (
   <div
@@ -209,10 +185,11 @@ const sliderSettings = {
           </button>
 
           {/* Bouton Plus d'options */}
-          <Link to="/search-options" className="search-button">
-            Plus d'options
-          </Link>
-        </div>
+          {/* Bouton Plus d'options */}
+        <button onClick={toggleOptions} className="search-button">
+          Plus d'options
+        </button>
+      </div>
       </div><br />
 
      {/* Carrousel des annonces coup de coeur */}
@@ -238,12 +215,16 @@ const sliderSettings = {
 
       {/* Affichage du formulaire SearchPageOption conditionnellement */}
       {showOptions && <SearchPageOption />}
-
+  
       {/* Affichage des résultats de recherche */}
       <div className="search-results">
         {/* Ici, vous pouvez afficher les résultats de recherche */}
       </div>
-
+ {/* Affichage des résultats de recherche */}
+ <div>
+      <SearchPageOption searchData={searchData} onSearchDataChange={handleSearchDataChange} />
+      {/* Ici, tu peux afficher les annonces */}
+    </div>
       {/* Affichage de la carte à l'extérieur de la barre de recherche */}
       <div className="map-container" style={{ height: '400px', marginTop: '20px' }}>
         {/* Composant de la carte à venir */}
