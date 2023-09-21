@@ -140,12 +140,12 @@ function RealEstateForm() {
         // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
         // Si vous avez terminé de traiter tous les fichiers, mettez à jour les états
     if (newimagePreviews.length === files.length) {
-      console.log("Avant la mise à jour de setProduct, product.image :", JSON.stringify(product.image));
+      // console.log("Avant la mise à jour de setProduct, product.image :", JSON.stringify(product.image));
       setProduct((prevProduct) => ({
         ...prevProduct,
         image: Array.isArray(prevProduct.image) ? [...prevProduct.image, ...newSelectedimage] : [...newSelectedimage],
       }));
-      console.log("Après la mise à jour de setProduct, product.image :", JSON.stringify(product.image));
+      // console.log("Après la mise à jour de setProduct, product.image :", JSON.stringify(product.image));
       
       
       setImagePreviews((previmagePreviews) => [...previmagePreviews, ...newimagePreviews]); // Mettez à jour les miniatures
@@ -277,38 +277,39 @@ function RealEstateForm() {
 
   const handleSubmit = async (e) => {
   
-    console.log("Début de handleSubmit"); 
+    // console.log("Début de handleSubmit"); 
     e.preventDefault();
     
-    console.log(`Longueur de image: ${product.image.length}`);
-    console.log(`Longueur de threeDViews: ${product.threeDViews.length}`);
+     //console.log(`Longueur de image: ${product.image.length}`);
+    // console.log(`Longueur de threeDViews: ${product.threeDViews.length}`);
     
-    if (product.image.length === 0 && product.threeDViews.length === 0) {
-      console.log("Erreur: Aucune image ou vue 3D n'est présente");
-      return;
+     if (product.image.length === 0 || product.threeDViews.length === 0) {
+      //console.log("Attention: Aucune image ou vue 3D n'est présente");
+      // Tu peux choisir de retourner ici ou de continuer le traitement
     }
+    
     
     if (isValid()) {
       try {
         const formData = new FormData();
-        console.log("FormData a été créé");
+        //console.log("FormData a été créé");
         
         for (const key in product) {
           if (key === 'image' || key === 'threeDViews') {
-            console.log(`Ajout des fichiers pour ${key} à FormData`);
+             //console.log(`Ajout des fichiers pour ${key} à FormData`);
             
             product[key].forEach((file, index) => {
-              console.log(`Ajout du fichier ${file.name} à ${key}[${index}]`);
+              //console.log(`Ajout du fichier ${file.name} à ${key}[${index}]`);
               formData.append(key, file);
             });
           } else {
             formData.append(key, product[key]);
           }
         }
-        console.log("FormData a été rempli");
+       //console.log("FormData a été rempli");
         
         const authToken = localStorage.getItem('authToken');
-        console.log(`Token récupéré: ${authToken}`);
+        //console.log(`Token récupéré: ${authToken}`);
         
         const config = {
           headers: {
@@ -316,22 +317,28 @@ function RealEstateForm() {
             'Content-Type': 'multipart/form-data',
           },
         };
-        console.log("Configuration des headers prête");
+        //console.log("Configuration des headers prête");
         
         const response = await axios.post('http://127.0.0.1:3000/realEstateAd', formData, config);
-        
-        console.log(`Réponse du serveur: ${response.data}`);
+        //console.log("Statut de la réponse:", response.status);
+        ///console.log("Type de response.status:", typeof response.status);
+
+        if (response.status === 201) {
+          window.alert("Annonce créée avec succès");
+          window.location.reload();
+        }
+      // console.log(`Réponse du serveur: ${response.data}`);
       } catch (error) {
-        console.error(`Erreur lors de la création de l'annonce: ${error}`);
+        //console.error(`Erreur lors de la création de l'annonce: ${error}`);
       }
     } else {
-      console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
+      //console.log('Le formulaire contient des erreurs. Veuillez les corriger.');
     }
     
-    console.log(`Longueur de product['image']: ${product['image'].length}`);
-    console.log(`Longueur de product['threeDViews']: ${product['threeDViews'].length}`);
+    // console.log(`Longueur de product['image']: ${product['image'].length}`);
+    //  console.log(`Longueur de product['threeDViews']: ${product['threeDViews'].length}`);
     
-    console.log("Fin de handleSubmit");
+    // console.log("Fin de handleSubmit");
   };
   
   return (
