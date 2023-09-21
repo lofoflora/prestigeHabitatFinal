@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import SearchPageOption from './SearchPageOption';
-import axios from 'axios'; // Importe Axios ici
+import axios from 'axios'; // Assure-toi que Axios est correctement installé et importé.
+
+// Importe le hook useFormValidation ici (si tu l'as déjà créé).
 
 const SearchPage = ({ onSubmit }) => {
- 
   const [searchData, setSearchData] = useState({
+
     city: "",
+    latitude: "",
+    longitude: "",
     propertyType: "",
     purchaseType: "",
     houseSurface: "",
@@ -18,108 +21,51 @@ const SearchPage = ({ onSubmit }) => {
     numBedrooms: "",
     numWC: "",
     numBathrooms: "",
-    budgetMin: "",
-    budgetMax: "",
+    budget: "",
     heating: "",
     amenities: "",
+    actif: "true",
+    surfaceMin: "0",
+    surfaceMax: "",
+    surfaceTerrainMax: "",
+    surfaceTerrainMin: "0",
+    budgetMin: "0",
+    budgetMax: "",
+
   });
-
-  const [files, setFiles] = useState(undefined);
-
-  // const [validate, isTouched, isValid, getMessages, markAsTouched] = useFormValidation({
-  //   city: [
-  //     c => c === "" ? "Required. " : "",
-  //     // Ajoute d'autres règles pour 'city' si nécessaire
-  //   ],
-  //   propertyType: [
-  //     // Règles pour 'propertyType'
-  //   ],
-  //   purchaseType: [
-  //     // Règles pour 'purchaseType'
-  //   ],
-  //   houseSurface: [
-  //     hs => hs < 0 ? "Must be greater or equal to 0. " : ""
-  //   ],
-  //   // ... autres champs
-  // });
-  const [localSearchData, setLocalSearchData] = useState(searchData || {});
   console.log("Parent searchData:", searchData);
-
-
   const [showOptions, setShowOptions] = useState(false);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     const newSearchData = { ...searchData, [name]: value };
     setSearchData(newSearchData);
-    validate(newSearchData, name);
+    // Utilise le hook useFormValidation ici pour valider les champs.
   };
   const [announcements, setAnnouncements] = useState([]);
+
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
+
     try {
-      const apiURL = 'http://127.0.0.1:3000/api/search';
-      const response = await axios.get(apiURL, { params: searchData });
+      const apiURL = 'http://127.0.0.1:3000/realEstateAd/search';
+      const response = await axios.get(apiURL, { params: { ...searchData } });
       setAnnouncements(response.data);
     } catch (error) {
       console.error('Erreur pendant la récupération des annonces:', error);
     }
   };
-  const handleSearchDataChange = async (newSearchData) => {
-    setSearchData(newSearchData);
-    try {
-      const apiURL = 'http://127.0.0.1:3000/api/search';
-      const response = await axios.get(apiURL, { params: newSearchData });
-      setAnnouncements(response.data);
-    } catch (error) {
-      console.error('Erreur pendant la récupération des annonces:', error);
-    }
-  };
+
+
   const toggleOptions = () => {
     setShowOptions(!showOptions);
   };
- 
-
-  useEffect(() => {
-    validate(searchData);
-  }, [searchData]);
-
-const CustomPrevArrow = ({ className, style, onClick }) => (
-  <div
-    className={className}
-    style={{ ...style, display: 'block', background: 'red' }}
-    onClick={onClick}
-  />
-);
-
-const CustomNextArrow = ({ className, style, onClick }) => (
-  <div
-    className={className}
-    style={{ ...style, display: 'block', background: 'red' }}
-    onClick={onClick}
-  />
-);
-
-const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  autoplay: true,
-  autoplaySpeed: 3000,
-  arrows: true,
-  centerMode: true,
-  centerPadding: '0',
-  cssEase: 'linear',
-  variableWidth: true,
-  prevArrow: <CustomPrevArrow />,
-  nextArrow: <CustomNextArrow />,
-};
 
 
   const [carouselItems, setCarouselItems] = useState([]);
 
-  // Charger les éléments du carrousel depuis l'API au montage du composant
   useEffect(() => {
     const fetchCarouselItems = async () => {
       try {
@@ -132,18 +78,113 @@ const sliderSettings = {
 
     fetchCarouselItems();
   }, []);
+
+  const CustomPrevArrow = ({ className, style, onClick }) => (
+    <div
+      className={className}
+      style={{ ...style, display: 'block', background: 'red' }}
+      onClick={onClick}
+    />
+  );
+
+  const CustomNextArrow = ({ className, style, onClick }) => (
+    <div
+      className={className}
+      style={{ ...style, display: 'block', background: 'red' }}
+      onClick={onClick}
+    />
+  );
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: true,
+    centerMode: true,
+    centerPadding: '0',
+    cssEase: 'linear',
+    variableWidth: true,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
+  };
+
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      const inputValue = searchData.city.trim();
+      if (inputValue.length >= 3) {
+        try {
+          const response = await axios.get(`http://localhost:5000/adresse/search/?q=${inputValue}&type=municipality&additionalField=postalCode`);
+
+          const data = (await response).data;
+          console.log("Données brutes de l'API :", data);
+          console.log("Premier élément de 'features' :", data.features[0]);
+          console.log("Properties du premier élément de 'features':", data.features[0].properties);
+
+          setSuggestions(data.features.map((feature) => ({
+            city: feature.properties.city,
+            postalCode: feature.properties.postcode // Utilise "postcode" au lieu de "postalCode"
+          })));
+
+
+
+        } catch (error) {
+          console.error('Erreur lors de la récupération des suggestions de villes :', error);
+        }
+      } else {
+        setSuggestions([]);
+      }
+
+    };
+
+    fetchSuggestions();
+  }, [searchData.city]);
+  const handleSuggestionClick = (suggestion) => {
+    setSearchData({ ...searchData, city: suggestion.city }); // Met à jour l'input
+    setSuggestions([]); // Vide la liste des suggestions
+  };
   return (
-    <div>
-      <div className='search-bar'>
-        {/* Input de city */}
+    <div>{showOptions ? (
+      // Affiche SearchPageOption si showOptions est vrai
+      <SearchPageOption
+        searchData={searchData}
+        setSearchDataChange={setSearchData}
+        handleChange={handleChange}
+        handleSubmit={() => { handleSubmit(); toggleOptions(); }}
+        suggestions={suggestions}
+        handleSuggestionClick={handleSuggestionClick}
+        toggleOptions={toggleOptions}
+      />
+    ) : (<div>
+      <div className="search-bar">
+        {/* Input de city avec la liste déroulante de suggestions */}
         <input
           className="auth-form-input"
           type="text"
-          placeholder="city"
-          value={city}
-          onChange={(e) => setcity(e.target.value)}
+          name="city"
+          placeholder="City"
+          id="villeInput"
+          value={searchData.city}
+          onChange={handleChange}
+          list="cities" // Ici on relie l'input à la datalist
           style={{ width: '200px', marginRight: '10px', padding: '8px' }}
         />
+        <datalist id="cities">
+          {suggestions.map((suggestion, index) => (
+            <option key={index} value={suggestion.city}>
+              {`(${suggestion.postalCode})`}
+            </option>
+          ))}
+        </datalist>
+
+
+
+
         {/* Liste déroulante pour le rayon 
         <select value={radius} onChange={handleRadiusChange} style={{ width: '8%', marginRight: '10px' }}>
           <option value="0">0 km</option>
@@ -153,7 +194,12 @@ const sliderSettings = {
           <option value="50">50 km</option>
         </select>*/}
         {/* Liste déroulante (Select) */}
-        <select value={propertyType} onChange={(e) => setPropertyType(e.target.value)} style={{ marginRight: '10px' }}>
+        <select
+          name="propertyType"
+          value={searchData.propertyType}
+          onChange={handleChange}
+          style={{ marginRight: '10px' }}
+        >
           <option value="">Type de bien</option>
           <option value="appartement">Appartement</option>
           <option value="maison">Maison / Villa</option>
@@ -161,21 +207,23 @@ const sliderSettings = {
         </select>
         {/* Champ de saisie pour Surface min */}
         <input
-  className="auth-form-input"
-  type="number"
-  placeholder="Surface min [m²]"
-  value={searchData.houseSurfaceMin}
-  onChange={(e) => setSearchData({ ...searchData, houseSurfaceMin: e.target.value })}
-  style={{ width: '120px', marginRight: '10px', padding: '8px' }}
-/>
+          className="auth-form-input"
+          type="number"
+          name="houseSurface"
+          placeholder="Surface min [m²]"
+          value={searchData.houseSurface}
+          onChange={handleChange}
+          style={{ width: '120px', marginRight: '10px', padding: '8px' }}
+        />
 
         {/* Champ de saisie pour Budget max */}
         <input
           className="auth-form-input"
           type="number"
+          name="budgetMax"
           placeholder="Budget max [€]"
-          value={budgetMax}
-          onChange={(e) => setBudgetMax(e.target.value)}
+          value={searchData.budgetMax}
+          onChange={handleChange}
           style={{ width: '120px', marginRight: '10px', padding: '8px' }}
         />
         <div>
@@ -185,15 +233,14 @@ const sliderSettings = {
           </button>
 
           {/* Bouton Plus d'options */}
-          {/* Bouton Plus d'options */}
-        <button onClick={toggleOptions} className="search-button">
-          Plus d'options
-        </button>
-      </div>
+          <button onClick={toggleOptions} className="search-button">
+            Plus d'options
+          </button>
+        </div>
       </div><br />
 
-     {/* Carrousel des annonces coup de coeur */}
-     <div className="carousel-container">
+      {/* Carrousel des annonces coup de coeur */}
+      <div className="carousel-container">
         <h3>Nos coups de coeur</h3><br />
         <Slider {...sliderSettings}>
           {carouselItems.map((item) => (
@@ -213,24 +260,49 @@ const sliderSettings = {
       </div>
 
 
-      {/* Affichage du formulaire SearchPageOption conditionnellement */}
-      {showOptions && <SearchPageOption />}
-  
+
+      <div className="search-results-count">
+        Nombre d'annonces correspondantes à votre recherche : {announcements.length}
+      </div>
+
       {/* Affichage des résultats de recherche */}
       <div className="search-results">
-        {/* Ici, vous pouvez afficher les résultats de recherche */}
+        {announcements.map((announcement, index) => (
+          <a
+            key={index}
+            href={`/detailPage/${announcement.id}`} // Remplacer par le chemin vers la page détaillée
+            className="search-result-item" // Tu peux styliser cette classe dans ton CSS
+            title={announcement.title || 'Titre non disponible'} // Attribut title ajouté ici
+          >
+          <img
+  src={announcement.images ? announcement.images[0] : null}
+  alt={announcement.title || 'Titre non disponible'}
+/>
+
+
+            <div className="search-result-details">
+              <h3>{announcement.title || 'Titre non disponible'}</h3>
+              <p>Type de bien: {announcement.propertyType || 'Non spécifié'}</p>
+              <p>Prix: {announcement.price ? `${announcement.price} €` : 'Prix non disponible'}</p>
+              <p>Surface: {announcement.surface ? `${announcement.surface} m²` : 'Surface non disponible'}</p>
+              <p>Ville: {announcement.city || 'Ville non disponible'}</p>
+              <p>
+                {(announcement.description ? announcement.description.slice(0, 100) : 'Description non disponible') + (announcement.description?.length > 100 ? "..." : "")}
+              </p>
+            </div>
+          </a>
+        ))}
+
       </div>
- {/* Affichage des résultats de recherche */}
- <div>
-      <SearchPageOption searchData={searchData} onSearchDataChange={handleSearchDataChange} />
-      {/* Ici, tu peux afficher les annonces */}
     </div>
-      {/* Affichage de la carte à l'extérieur de la barre de recherche */}
-      <div className="map-container" style={{ height: '400px', marginTop: '20px' }}>
-        {/* Composant de la carte à venir */}
-      </div>
+
+)
+        }
     </div>
+
+  
   );
+
 };
 
 export default SearchPage;

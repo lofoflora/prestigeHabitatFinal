@@ -17,6 +17,9 @@ router.post('/', upload.fields([{name:'image'},{name:'threeDViews'}]),createReal
 // Obtenir toutes les annonces immobilières avec leurs images et vues 3D
 router.get('/', getAllRealEstateAd);
 
+// obtenir les annonces en fonction des critéres 
+router.get('/search', searchRealEstateAds);
+
 // Obtenir une annonce immobilière par son ID avec ses images et vues 3D
 router.get('/:id', getRealEstateAdById);
 
@@ -26,7 +29,5 @@ router.put('/', upload.fields([{name:'image'},{name:'threeDViews'}]),updateRealE
 // Supprimer une annonce immobilière avec ses images et vues 3D
 router.delete('/:id', deleteRealEstate);
 
-// obtenir les annonces en fonction des critéres 
-router.get('/search', searchRealEstateAds);
 
 export default router;

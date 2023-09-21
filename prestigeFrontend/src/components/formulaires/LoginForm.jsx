@@ -61,7 +61,7 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
 
         const refreshToken = response.data.refreshToken;
 
-        handleLogin(response.data.firstName, response.data.lastName, response.data.title, response.data.userType, userData, token,refreshToken,);
+        handleLogin(response.data.firstName, response.data.lastName, response.data.title, response.data.userType, userData, token,refreshToken);
         onCloseLoginForm();
         setHasError(false);
         emailRef.current.setCustomValidity('');

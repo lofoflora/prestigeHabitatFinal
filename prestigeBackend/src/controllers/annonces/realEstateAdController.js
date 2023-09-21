@@ -137,25 +137,27 @@ export const searchRealEstateAds = async (req, res) => {
     city,
     propertyType,
     purchaseType,
-    houseSurface,
-    landSurface,
     numRooms,
     numBedrooms,
     numWC,
     numBathrooms,
     budgetMin,
     budgetMax,
+    surfaceMin,
+    surfaceMax,
+    surfaceTerrainMax,
+    surfaceTerrainMin,
     heating,
     amenities,
   } = req.query;
 
-  let whereClause = {};
+  let whereClause = {
+    actif: true, 
+  };
 
   if (city) whereClause.city = { [Op.like]: `%${city}%` };
   if (propertyType) whereClause.propertyType = propertyType;
   if (purchaseType) whereClause.purchaseType = purchaseType;
-  if (houseSurface) whereClause.houseSurface = houseSurface;
-  if (landSurface) whereClause.landSurface = landSurface;
   if (numRooms) whereClause.numRooms = numRooms;
   if (numBedrooms) whereClause.numBedrooms = numBedrooms;
   if (numWC) whereClause.numWC = numWC;
@@ -167,10 +169,19 @@ export const searchRealEstateAds = async (req, res) => {
   if (budgetMin) whereClause.budget[Op.gte] = budgetMin;
   if (budgetMax) whereClause.budget[Op.lte] = budgetMax;
 
+  if (surfaceTerrainMin || surfaceTerrainMax) whereClause.landSurface = {};
+  if (surfaceTerrainMin) whereClause.landSurface[Op.gte] = surfaceTerrainMin;
+  if (surfaceTerrainMax) whereClause.landSurface[Op.lte] = surfaceTerrainMax;
+
+  if (surfaceMin || surfaceMax) whereClause.houseSurface = {};
+  if (surfaceMin) whereClause.houseSurface[Op.gte] = surfaceMin;
+  if (surfaceMax) whereClause.houseSurface[Op.lte] = surfaceMax;
+
   try {
     const ads = await RealEstateAd.findAll({
       attributes: ['id', 'title', 'city', 'propertyType', 'purchaseType', 'houseSurface', 'landSurface', 'numRooms',
-       'numBedrooms', 'numWC', 'numBathrooms', 'budget', 'heating', 'amenities'],
+       'numBedrooms', 'numWC', 'numBathrooms', 'budget', 'heating', 'amenities', 'streetNumber','streetName','adressComplement',
+      'postalCode','latitude','longitude','images','threedviews'],
       where: whereClause,
     });
     res.status(200).json(ads);
@@ -179,3 +190,5 @@ export const searchRealEstateAds = async (req, res) => {
     res.status(500).json({ message: "Une erreur est survenue lors de la recherche." });
   }
 };
+
+  

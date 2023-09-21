@@ -1,129 +1,73 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
-
-
-
 
 const formatNumberWithSpaces = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 };
 
-
-
-const SearchPageOption = ({ searchData, onSearchDataChange }) => {
-  const [localSearchData, setLocalSearchData] = useState(searchData);
-
+const SearchPageOption = ({ searchData, setSearchDataChange, handleSubmit, suggestions,handleChange, handleSuggestionClick,toggleOptions }) => {
   useEffect(() => {
-    setLocalSearchData(searchData);
+    setSearchDataChange(searchData);
   }, [searchData]);
-  console.log("Props searchData:", searchData);
 
-  // const handleChange = (name, value) => {
-  //   const updatedSearchData = { ...localSearchData, [name]: value };
-  //   setLocalSearchData(updatedSearchData);
-  // };
-  const handleChange = (name, value) => {
-    if (["propertyType", "purchaseType", "numRooms", "numBedrooms", "numWC", "numBathrooms", "heating", "amenities"].includes(name)) {
+  const {
+    city, propertyType, purchaseType, houseSurface, landSurface, numRooms, numBedrooms, numWC,
+    numBathrooms, budget, heating, amenities, actif, surfaceMin, surfaceMax, surfaceTerrainMax, surfaceTerrainMin, budgetMin,
+    budgetMax,
+  } = searchData;
+
+  const handleselect = (name, value) => {
+    if (name === "city") {
+      setSearchDataChange((prevData) => ({
+        ...prevData,
+        [name]: value, // Mettre à jour la valeur de "city" directement
+      }));
+    } else if (["propertyType", "purchaseType", "numRooms", "numBedrooms", "numWC", "numBathrooms", "heating", "amenities"].includes(name)) {
       // Gestion des états de tableau
-      setState((prevState) => {
-        return prevState.includes(value)
-          ? prevState.filter((item) => item !== value)
-          : [...prevState, value];
-      });
-    } else {
-      // Gestion des états simples
-      const updatedSearchData = { ...localSearchData, [name]: value };
-      setLocalSearchData(updatedSearchData);
+      const updatedValues = searchData[name].includes(value)
+        ? searchData[name].filter((item) => item !== value)
+        : [...searchData[name], value];
+  
+      setSearchDataChange((prevData) => ({
+        ...prevData,
+        [name]: updatedValues,
+      }));
     }
   };
-  
-  const handleSearch = () => {
-    onSearchDataChange(localSearchData);
+  const handleInputChange = (name, value) => {
+    setSearchDataChange((prevData) => ({
+      ...prevData,
+      [name]: value, // Supprimer les espaces
+    }));
   };
 
-   // Fonction pour n'accepter que les chiffres dans les champs d'entrée
-   const handleKeyPress = (event) => {
+  const handleSearch = () => {
+    onSearchDataChange(searchData);
+  };
+
+  // Fonction pour n'accepter que les chiffres dans les champs d'entrée
+  const handleKeyPress = (event, name) => {
     const charCode = event.which ? event.which : event.keyCode;
     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
       event.preventDefault();
+    } else {
+      // Mettre à jour la valeur du champ spécifié avec le bon format (par exemple, en supprimant les espaces pour les chiffres)
+      const inputValue = event.target.value;
+      handleselect(name, inputValue);
     }
   };
+  
+
   const navigate = useNavigate();
 
   const goToSomePage = () => {
     navigate('/somePage');
   };
 
-  const [city, setCity] = useState("");
-const [adsWithPicture, setAdsWithPicture] = useState(false);
-const [exclusivity, setExclusivity] = useState(false);
+ 
+  //const [exclusivity, setExclusivity] = useState(false);
 
-
-  // const handleChange = (stateName, value) => {
-  //   switch (stateName) {
-  //     case "propertyType":
-  //       setPropertyType((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "purchaseType":
-  //       setPurchaseType((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "numRooms":
-  //       setNumRooms((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "numBedrooms":
-  //       setNumBedrooms((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "numWC":
-  //       setNumWC((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "numBathrooms":
-  //       setNumBathrooms((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "heating":
-  //       setHeating((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     case "amenities":
-  //       setAmenities((prevState) =>
-  //         prevState.includes(value)
-  //           ? prevState.filter((item) => item !== value)
-  //           : [...prevState, value]
-  //       );
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
-  
 
   return (
     <div className="container">
@@ -131,17 +75,28 @@ const [exclusivity, setExclusivity] = useState(false);
       
         <form className="auth-form" onSubmit={handleSearch} style={{ width: '80%' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-  <label htmlFor="city" >Localité:</label>
-  <input
-    type="text"
-    id="city"
-    value={city}
-    onChange={(e) => handleChange("city", e.target.value)}
-    required
-    style={{ padding: '5px', height: '25px', width: '40%' }} // Vous pouvez ajuster la valeur de "width" ici
-  />
+        <label htmlFor="city">Localité:</label>
+        <input 
+        className="auth-form-input"
+        type="text"
+        name="city"
+        placeholder="City"
+        id="villeInput"
+        value={searchData.city}
+        onChange={handleChange}
+        list="cities"
+        style={{ width: '200px', marginRight: '10px', padding: '8px' }}
+      />
+      <datalist id="cities">
+        {suggestions.map((suggestion, index) => (
+          <option key={index} value={suggestion.city} onClick={() => handleSuggestionClick(suggestion)}>
+            {`(${suggestion.postalCode})`}
+          </option>
+        ))}
+      </datalist>
+
   <div style={{ marginLeft: 'auto' }}>
-    <Link to="/search" className="search-button">
+    <Link to="/search" className="search-button"onClick={toggleOptions}>
       Moins d'options
     </Link>
   </div>
@@ -152,19 +107,8 @@ const [exclusivity, setExclusivity] = useState(false);
     Veuillez sélectionner au moins une localité
   </span>
           </div>
-          {/* Annonces avec photos */}
-          <div className="checkbox-group">
-            <label>
-              Annonces avec photos:
-              <input
-                type="checkbox"
-                checked={adsWithPicture}
-                onChange={() => setAdsWithPicture(!adsWithPicture)}
-              />
-              <span className="toggle-switch" />
-            </label>
-          </div>
-          {/* Exclusivité */}
+          
+          {/* Exclusivité
           <div className="checkbox-group">
             <label>
               Exclusivité:
@@ -176,69 +120,69 @@ const [exclusivity, setExclusivity] = useState(false);
               <span className="toggle-switch" />
             </label>
           </div>
-          
+           */}
 
           {/* Type de bien */}
             <label>Type de bien:</label>
           <div className="checkbox-group">
             
-            <button
+            <button type="button"
               className={propertyType.includes("appartement") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "appartement")}
+              onClick={() => handleselect("propertyType", "appartement")}
             >
               Appartement
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("maison") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "maison")}
+              onClick={() => handleselect("propertyType", "maison")}
             >
               Maison
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("villa") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "villa")}
+              onClick={() => handleselect("propertyType", "villa")}
             >
               Villa
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("terrain") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "terrain")}
+              onClick={() => handleselect("propertyType", "terrain")}
             >
               Terrain
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("loft") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "loft")}
+              onClick={() => handleselect("propertyType", "loft")}
             >
               Loft/Atelier
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("chateau") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "chateau")}
+              onClick={() => handleselect("propertyType", "chateau")}
             >
               Château
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("local") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "local")}
+              onClick={() => handleselect("propertyType", "local")}
             >
               Local professionnel
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("commerce") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "commerce")}
+              onClick={() => handleselect("propertyType", "commerce")}
             >
               Commerce
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("garage") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "garage")}
+              onClick={() => handleselect("propertyType", "garage")}
             >
               Garage/Hangar
             </button>
-            <button
+            <button type="button"
               className={propertyType.includes("autre") ? "selected" : ""}
-              onClick={() => handleChange("propertyType", "autre")}
+              onClick={() => handleselect("propertyType", "autre")}
             >
               Autre
             </button>
@@ -246,129 +190,130 @@ const [exclusivity, setExclusivity] = useState(false);
           {/* Type d'achat */}
             <label>Type d'achat:</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={purchaseType.includes("ancien") ? "selected" : ""}
-              onClick={() => handleChange("purchaseType", "ancien")}
+              onClick={() => handleselect("purchaseType", "ancien")}
             >
               Ancien
             </button>
-            <button
+            <button type="button"
               className={purchaseType.includes("neuf") ? "selected" : ""}
-              onClick={() => handleChange("purchaseType", "neuf")}
+              onClick={() => handleselect("purchaseType", "neuf")}
             >
               Neuf
             </button>
-            <button
+            <button type="button"
               className={purchaseType.includes("viager") ? "selected" : ""}
-              onClick={() => handleChange("purchaseType", "viager")}
+              onClick={() => handleselect("purchaseType", "viager")}
             >
               Viager
             </button>
-            <button
+            <button type="button"
               className={purchaseType.includes("renover") ? "selected" : ""}
-              onClick={() => handleChange("purchaseType", "renover")}
+              onClick={() => handleselect("purchaseType", "renover")}
             >
               A rénover
             </button>
           </div>
-           {/* Surface */}
-      <label style={{ marginRight: '10px' }}>Surface:</label>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <label style={{ marginRight: '5px' }}>Min:</label>
-        <input
-          type="text"
-          value={formatNumberWithSpaces(surfaceMin)}
-          onChange={(e) => setSurfaceMin(e.target.value.replace(/\s/g, ''))}
-          onKeyPress={handleKeyPress} // N'accepte que les chiffres
-          style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
-        />
-        <span style={{ margin: '0 5px' }}>m²</span>
-        <label style={{ marginLeft: '20px', marginRight: '5px' }}>Max:</label>
-        <input
-          type="text"
-          value={formatNumberWithSpaces(surfaceMax)}
-          onChange={(e) => setSurfaceMax(e.target.value.replace(/\s/g, ''))}
-          onKeyPress={handleKeyPress} // N'accepte que les chiffres
-          style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
-        />
-        <span style={{ margin: '0 5px' }}>m²</span>
-      </div>
+          {/* Surface */}
+<label style={{ marginRight: '10px' }}>Surface:</label>
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  <label style={{ marginRight: '5px' }}>Min:</label>
+  <input
+  type="text"
+  value={formatNumberWithSpaces(surfaceMin)}
+  onChange={(e) => handleInputChange('surfaceMin', e.target.value)}
+  onKeyPress={(e) => handleKeyPress(e, "surfaceMin")} // N'accepte que les chiffres
+  style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
+/>
+  <span style={{ margin: '0 5px' }}>m²</span>
+  <label style={{ marginLeft: '20px', marginRight: '5px' }}>Max:</label>
+  <input
+    type="text"
+    value={formatNumberWithSpaces(surfaceMax)}
+    onChange={(e) => handleInputChange("surfaceMax", e.target.value)}
+    onKeyPress={handleKeyPress} // N'accepte que les chiffres
+    style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
+  />
+  <span style={{ margin: '0 5px' }}>m²</span>
+</div>
 
-      {/* Surface du terrain */}
-      <label style={{ marginRight: '10px', marginTop: '10px' }}>Surface du terrain:</label>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <label style={{ marginRight: '5px' }}>Min:</label>
-        <input
-          type="text"
-          value={formatNumberWithSpaces(surfaceTerrainMin)}
-          onChange={(e) => setSurfaceTerrainMin(e.target.value.replace(/\s/g, ''))}
-          onKeyPress={handleKeyPress} // N'accepte que les chiffres
-          style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
-        />
-        <span style={{ margin: '0 5px' }}>m²</span>
-        <label style={{ marginLeft: '20px', marginRight: '5px' }}>Max:</label>
-        <input
-          type="text"
-          value={formatNumberWithSpaces(surfaceTerrainMax)}
-          onChange={(e) => setSurfaceTerrainMax(e.target.value.replace(/\s/g, ''))}
-          onKeyPress={handleKeyPress} // N'accepte que les chiffres
-          style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
-        />
-        <span style={{ margin: '0 5px' }}>m²</span>
-      </div>
+{/* Surface du terrain */}
+<label style={{ marginRight: '10px', marginTop: '10px' }}>Surface du terrain:</label>
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  <label style={{ marginRight: '5px' }}>Min:</label>
+  <input
+    type="text"
+    value={formatNumberWithSpaces(surfaceTerrainMin)}
+    onChange={(e) => handleInputChange("surfaceTerrainMin", e.target.value)}
+    onKeyPress={handleKeyPress} // N'accepte que les chiffres
+    style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
+  />
+  <span style={{ margin: '0 5px' }}>m²</span>
+  <label style={{ marginLeft: '20px', marginRight: '5px' }}>Max:</label>
+  <input
+    type="text"
+    value={formatNumberWithSpaces(surfaceTerrainMax)}
+    onChange={(e) => handleInputChange("surfaceTerrainMax", e.target.value)}
+    onKeyPress={handleKeyPress} // N'accepte que les chiffres
+    style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
+  />
+  <span style={{ margin: '0 5px' }}>m²</span>
+</div>
 
-      {/* Budget */}
-      <label style={{ marginRight: '10px', marginTop: '10px' }}>Budget:</label>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <label style={{ marginRight: '5px' }}>Min:</label>
-        <input
-          type="text"
-          value={formatNumberWithSpaces(budgetMin)}
-          onChange={(e) => setBudgetMin(e.target.value.replace(/\s/g, ''))}
-          onKeyPress={handleKeyPress} // N'accepte que les chiffres
-          style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
-        />
-        <span style={{ margin: '0 5px' }}>€</span>
-        <label style={{ marginLeft: '20px', marginRight: '5px' }}>Max:</label>
-        <input
-          type="text"
-          value={formatNumberWithSpaces(budgetMax)}
-          onChange={(e) => setBudgetMax(e.target.value.replace(/\s/g, ''))}
-          onKeyPress={handleKeyPress} // N'accepte que les chiffres
-          style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
-        />
-        <span style={{ margin: '0 5px' }}>€</span>
-      </div>
+{/* Budget */}
+<label style={{ marginRight: '10px', marginTop: '10px' }}>Budget:</label>
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  <label style={{ marginRight: '5px' }}>Min:</label>
+  <input
+    type="text"
+    value={formatNumberWithSpaces(budgetMin)}
+    onChange={(e) => handleInputChange("budgetMin", e.target.value)}
+    onKeyPress={handleKeyPress} // N'accepte que les chiffres
+    style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
+  />
+  <span style={{ margin: '0 5px' }}>€</span>
+  <label style={{ marginLeft: '20px', marginRight: '5px' }}>Max:</label>
+  <input
+    type="text"
+    value={formatNumberWithSpaces(budgetMax)}
+    onChange={(e) => handleInputChange("budgetMax", e.target.value)}
+    onKeyPress={handleKeyPress} // N'accepte que les chiffres
+    style={{ padding: '5px', width: '120px', height: '25px', marginRight: '5px', textAlign: 'right' }}
+  />
+  <span style={{ margin: '0 5px' }}>€</span>
+</div>
+
           {/* Nombre de pièces */}
             <label>Nombre de pièce(s):</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={numRooms.includes("1") ? "selected" : ""}
-              onClick={() => handleChange("numRooms", "1")}
+              onClick={() => handleselect("numRooms", "1")}
             >
               1
             </button>
-            <button
+            <button type="button"
               className={numRooms.includes("2") ? "selected" : ""}
-              onClick={() => handleChange("numRooms", "2")}
+              onClick={() => handleselect("numRooms", "2")}
             >
               2
             </button>
-            <button
+            <button type="button"
               className={numRooms.includes("3") ? "selected" : ""}
-              onClick={() => handleChange("numRooms", "3")}
+              onClick={() => handleselect("numRooms", "3")}
             >
               3
             </button>
-            <button
+            <button type="button"
               className={numRooms.includes("4") ? "selected" : ""}
-              onClick={() => handleChange("numRooms", "4")}
+              onClick={() => handleselect("numRooms", "4")}
             >
               4
             </button>
-            <button
+            <button type="button"
               className={numRooms.includes("5+") ? "selected" : ""}
-              onClick={() => handleChange("numRooms", "5+")}
+              onClick={() => handleselect("numRooms", "5+")}
             >
               5+
             </button>
@@ -377,33 +322,33 @@ const [exclusivity, setExclusivity] = useState(false);
           {/* Nombre de chambres */}
             <label>Nombre de chambre(s):</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={numBedrooms.includes("1") ? "selected" : ""}
-              onClick={() => handleChange("numBedrooms", "1")}
+              onClick={() => handleselect("numBedrooms", "1")}
             >
               1
             </button>
-            <button
+            <button type="button"
               className={numBedrooms.includes("2") ? "selected" : ""}
-              onClick={() => handleChange("numBedrooms", "2")}
+              onClick={() => handleselect("numBedrooms", "2")}
             >
               2
             </button>
-            <button
+            <button type="button"
               className={numBedrooms.includes("3") ? "selected" : ""}
-              onClick={() => handleChange("numBedrooms", "3")}
+              onClick={() => handleselect("numBedrooms", "3")}
             >
               3
             </button>
-            <button
+            <button type="button"
               className={numBedrooms.includes("4") ? "selected" : ""}
-              onClick={() => handleChange("numBedrooms", "4")}
+              onClick={() => handleselect("numBedrooms", "4")}
             >
               4
             </button>
-            <button
+            <button type="button"
               className={numBedrooms.includes("5+") ? "selected" : ""}
-              onClick={() => handleChange("numBedrooms", "5+")}
+              onClick={() => handleselect("numBedrooms", "5+")}
             >
               5+
             </button>
@@ -412,21 +357,21 @@ const [exclusivity, setExclusivity] = useState(false);
           {/* Nombre de salles de bain */}
             <label>Nombre de salles de bain :</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={numBathrooms.includes("1") ? "selected" : ""}
-              onClick={() => handleChange("numBathrooms", "1")}
+              onClick={() => handleselect("numBathrooms", "1")}
             >
               1
             </button>
-            <button
+            <button type="button"
               className={numBathrooms.includes("2") ? "selected" : ""}
-              onClick={() => handleChange("numBathrooms", "2")}
+              onClick={() => handleselect("numBathrooms", "2")}
             >
               2
             </button>
-            <button
+            <button type="button"
               className={numBathrooms.includes("3+") ? "selected" : ""}
-              onClick={() => handleChange("numBathrooms", "3+")}
+              onClick={() => handleselect("numBathrooms", "3+")}
             >
               3+
             </button>
@@ -435,21 +380,21 @@ const [exclusivity, setExclusivity] = useState(false);
           {/* Nombre de WC */}
             <label>Nombre de WC :</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={numWC.includes("1") ? "selected" : ""}
-              onClick={() => handleChange("numWC", "1")}
+              onClick={() => handleselect("numWC", "1")}
             >
               1
             </button>
-            <button
+            <button type="button"
               className={numWC.includes("2") ? "selected" : ""}
-              onClick={() => handleChange("numWC", "2")}
+              onClick={() => handleselect("numWC", "2")}
             >
               2
             </button>
-            <button
+            <button type="button"
               className={numWC.includes("3+") ? "selected" : ""}
-              onClick={() => handleChange("numWC", "3+")}
+              onClick={() => handleselect("numWC", "3+")}
             >
               3+
             </button>
@@ -458,33 +403,33 @@ const [exclusivity, setExclusivity] = useState(false);
           {/* Chauffage */}
             <label>Chauffage:</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={heating.includes("electrique") ? "selected" : ""}
-              onClick={() => handleChange("heating", "electrique")}
+              onClick={() => handleselect("heating", "electrique")}
             >
               Electrique
             </button>
-            <button
+            <button type="button"
               className={heating.includes("gaz") ? "selected" : ""}
-              onClick={() => handleChange("heating", "gaz")}
+              onClick={() => handleselect("heating", "gaz")}
             >
               Gaz
             </button>
-            <button
+            <button type="button"
               className={heating.includes("fioul") ? "selected" : ""}
-              onClick={() => handleChange("heating", "fioul")}
+              onClick={() => handleselect("heating", "fioul")}
             >
               Fioul
             </button>
-            <button
+            <button type="button"
               className={heating.includes("bois") ? "selected" : ""}
-              onClick={() => handleChange("heating", "bois")}
+              onClick={() => handleselect("heating", "bois")}
             >
               Bois
             </button>
-            <button
+            <button type="button"
               className={heating.includes("autre") ? "selected" : ""}
-              onClick={() => handleChange("heating", "autre")}
+              onClick={() => handleselect("heating", "autre")}
             >
               Autre
             </button>
@@ -493,83 +438,81 @@ const [exclusivity, setExclusivity] = useState(false);
           {/* Commodités */}
             <label>Commodités/Confort:</label>
           <div className="checkbox-group">
-            <button
+            <button type="button"
               className={amenities.includes("piscine") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "piscine")}
+              onClick={() => handleselect("amenities", "piscine")}
             >
             Jardin
           </button>
-          <button
+          <button type="button"
             className={amenities.includes("ascenseur") ? "selected" : ""}
-            onClick={() => handleChange("amenities", "ascenseur")}
+            onClick={() => handleselect("amenities", "ascenseur")}
           >
             Garage
           </button>
-          <button
+          <button type="button"
             className={amenities.includes("jardin") ? "selected" : ""}
-            onClick={() => handleChange("amenities", "jardin")}
+            onClick={() => handleselect("amenities", "jardin")}
           >
               Piscine
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("garage") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "garage")}
+              onClick={() => handleselect("amenities", "garage")}
             >
               Ascenseur
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("balcon") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "balcon")}
+              onClick={() => handleselect("amenities", "balcon")}
             >
               Balcon
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("cave") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "cave")}
+              onClick={() => handleselect("amenities", "cave")}
             >
               Cave
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("terrasse") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "terrasse")}
+              onClick={() => handleselect("amenities", "terrasse")}
             >
               Terrasse
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("pompe a chaleur") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "pompe a chaleur")}
+              onClick={() => handleselect("amenities", "pompe a chaleur")}
             >
               Pompe à chaleur
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("climatisation") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "climatisation")}
+              onClick={() => handleselect("amenities", "climatisation")}
             >
               Climatisation
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("Panneaux solaires") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "Panneaux solaires")}
+              onClick={() => handleselect("amenities", "Panneaux solaires")}
             >
               Panneaux solaires
             </button>
-            <button
+            <button type="button"
               className={amenities.includes("autre") ? "selected" : ""}
-              onClick={() => handleChange("amenities", "autre")}
+              onClick={() => handleselect("amenities", "autre")}
             >
               Autre
             </button>
           </div> <br />
           <div style={{ textAlign: 'center' }}>
-  <button className="search-button" onClick={handleSearch} style={{ margin: 'auto' }}>
-    Rechercher
-  </button>
+          <button type="button" onClick={handleSubmit}>Rechercher</button>
+
 </div>
 
         </form>
       </div>
-   
-  );
-};
+  
+  )};
 
 export default SearchPageOption;
