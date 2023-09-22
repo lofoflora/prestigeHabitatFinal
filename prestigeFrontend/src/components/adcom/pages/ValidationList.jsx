@@ -74,7 +74,7 @@ const TableauxDeValidation = () => {
                 <td>{annonce.title}  {/* Ici c'est title au lieu de titre */}</td>
                 <td>
                   <button>
-                  <Link to={`/detail-annonce/${annonce.id}`}>Détails</Link>
+                  <Link to={`/fiche-annonce/${annonce.id}`}>Détails</Link>
 
                   </button>
                   <button onClick={() => validateRealEstateAd(annonce.id)}>Valider</button>

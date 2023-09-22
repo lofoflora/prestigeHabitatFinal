@@ -59,6 +59,8 @@ app.use('/DossierClient',dossierClientRouter);
 app.use('/Avis',avisRouter);
 app.use('/validation',validationRouter);
 
+app.use('/files', express.static(process.env["file-path"]));
+
 
 
 

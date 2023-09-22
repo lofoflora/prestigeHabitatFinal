@@ -43,64 +43,57 @@ export const createRealEstateAd = async (req, res) => {
 };
 
 
-// Obtenir toutes les annonces immobilières avec leurs images et vues 3D
 export const getAllRealEstateAd = async (req, res) => {
   try {
     const ads = await RealEstateAd.findAll();
 
     const adsWithFilepaths = ads.map((ad) => {
       const adData = ad.toJSON();
-      if (adData.images) {
-        adData.images = adData.images.map((image) => {
-          // Ajoute le chemin complet vers l'image
-          return `/chemin/vers/ton/dossier/images/${image}`;
-        });
+      
+      // Supprime les champs sensibles pour les utilisateurs non-admin et non-commerciaux
+      if (req.role !== 'admin' && req.role !== 'commercial') {
+        delete adData.streetNumber;
+        delete adData.streetName;
+        delete adData.adressComplement;
       }
-      if (adData.threeDViews) {
-        adData.threeDViews = adData.threeDViews.map((view) => {
-          // Ajoute le chemin complet vers la vue 3D
-          return `/chemin/vers/ton/dossier/3D/${view}`;
-        });
-      }
+      
+   
+
       return adData;
     });
 
     res.status(200).json(adsWithFilepaths);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération des annonces immobilières.' });
+    res.status(500).json({ message: 'Une erreur est survenue.' });
   }
 };
 
-// Obtenir une annonce immobilière par son ID avec ses images et vues 3D
 export const getRealEstateAdById = async (req, res) => {
   const id = req.params.id;
   try {
     const ad = await RealEstateAd.findByPk(id);
     if (ad) {
       const adData = ad.toJSON();
-      if (adData.images) {
-        adData.images = adData.images.map((image) => {
-          // Ajoute le chemin complet vers l'image
-          return `/chemin/vers/ton/dossier/images/${image}`;
-        });
+      
+      // Supprime les champs sensibles pour les utilisateurs non-admin et non-commerciaux
+      if (req.role !== 'admin' && req.role !== 'commercial') {
+        delete adData.streetNumber;
+        delete adData.streetName;
+        delete adData.adressComplement;
       }
-      if (adData.threeDViews) {
-        adData.threeDViews = adData.threeDViews.map((view) => {
-          // Ajoute le chemin complet vers la vue 3D
-          return `/chemin/vers/ton/dossier/3D/${view}`;
-        });
-      }
+
+     
+
       res.status(200).json(adData);
     } else {
-      res.status(404).json({ message: 'Annonce immobilière non trouvée.' });
+      res.status(404).json({ message: 'Annonce non trouvée.' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Une erreur est survenue lors de la récupération de l\'annonce immobilière.' });
+    res.status(500).json({ message: 'Une erreur est survenue.' });
   }
 };
-
 // Mettre à jour une annonce immobilière avec ses images et vues 3D
 export const updateRealEstate = async (req, res) => {
   const id = req.params.id;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-function RealEstateAdDetails({ adId: propAdId }) {
+function RealEstateAdFiche({ adId: propAdId }) {
     const [adDetails, setAdDetails] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [editedAd, setEditedAd] = useState({ ...adDetails, heating: [] });
@@ -406,4 +406,4 @@ function RealEstateAdDetails({ adId: propAdId }) {
     );
 };
 
-export default RealEstateAdDetails;
+export default RealEstateAdFiche;
