@@ -86,7 +86,9 @@ const createAdminIfNotExist = async () => {
       console.log('Admin créé avec succès.');
     }
   } catch (error) {
-    console.log(error.response.data)
+    if (error.response && error.response.data) {
+      console.log(error.response.data);
+    }
     console.error('Erreur lors de la création de l\'admin:', error);
   }
 };

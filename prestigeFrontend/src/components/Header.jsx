@@ -43,9 +43,9 @@ function CustomNavbar() {
 function Header({ onLogin }) {
   const { isLoggedIn, userFirstName, userType, setUserType } = useUser();
   // Ajoute userType
-  console.log("Header isLoggedIn:", isLoggedIn);  // Ajoute cette ligne
-  console.log("Header userFirstName:", userFirstName);  // Ajoute cette ligne
-  console.log("userType:", userType);
+  // console.log("Header isLoggedIn:", isLoggedIn);  // Ajoute cette ligne
+  // console.log("Header userFirstName:", userFirstName);  // Ajoute cette ligne
+  // console.log("userType:", userType);
 // Ajoute ce useEffect pour mettre à jour userType depuis le localStorage
 useEffect(() => {
   const storedUserType = localStorage.getItem('userType');

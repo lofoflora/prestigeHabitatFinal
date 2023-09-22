@@ -16,11 +16,16 @@ function LoginForm({ onLogin, onCloseLoginForm }) {
     lastName: '',
     title: '',
     type: '',
+    email: '', // assure-toi d'ajouter ceci
   });
+  
 
   const { setIsLoggedIn, handleLogin } = useUser();
 
   useEffect(() => {
+    if (userData.email) {
+      setEmail(userData.email);
+    }
     // Mettez à jour les champs du formulaire lorsque les données utilisateur sont disponibles
     setEmail(userData.email);
     // Remplissez d'autres champs selon les besoins

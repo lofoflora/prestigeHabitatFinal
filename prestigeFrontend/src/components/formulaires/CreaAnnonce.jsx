@@ -65,32 +65,65 @@ function RealEstateForm() {
   
   
 
-  const fetchCityByPostalCode = async () => {
-    try {
-      const response = await axios.get(`http://localhost:5000/adresse/search/?q=${encodeURIComponent(product.postalCode)}`);
-      if (response.data.features.length > 0) {
-        const listeVilles = response.data.features.map(feature => feature.properties.city);
-        const uniqueCity = [...new Set(listeVilles)];
-
-        setProduct({
-          ...product,
-          city: (uniqueCity.length > 0 ? uniqueCity[0] : '')
-         });
-      } else {
-        setProduct({
-      ...product,
-      city: ''
-     });
-      }
-    } catch (error) {
-      console.error('Erreur lors de la recherche de la ville :', error.message);
+  // Pour afficher la liste déroulante
+  
+  const [suggestions, setSuggestions] = useState([]);
+ 
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+  
+    // Traitement pour une suggestion trouvée
+    const matchedSuggestion = suggestions.find(sugg => 
+      `${sugg.city} (${sugg.postalCode})` === value || sugg.postalCode === value
+    );
+    if (matchedSuggestion) {
       setProduct({
-      ...product,
-      city: ''
-     });
+        ...product,
+        city: matchedSuggestion.city,
+        postalCode: matchedSuggestion.postalCode
+      });
+      setSuggestions([]);
+      return;
+    }
+  
+    // Pas de match, continue normalement
+    setProduct({ ...product, [name]: value });
+  
+    if (value.length >= 3) {
+      try {
+        const response = await axios.get(`http://localhost:5000/adresse/search/?q=${value}&type=municipality&additionalField=postalCode`);
+        if (response.data.features.length > 0) {
+          const listeVilles = response.data.features.map((feature) => ({
+            city: feature.properties.city,
+            postalCode: feature.properties.postcode
+          }));
+          setSuggestions(listeVilles);
+        } else {
+          setSuggestions([]);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la recherche :', error.message);
+        setSuggestions([]);
+      }
+    } else {
+      setSuggestions([]);
     }
   };
-
+  
+  
+  
+  
+  // useEffect(() => {
+  //   if (product.postalCode.length === 5) {
+  //     fetchCityByPostalCode();
+  //   } else {
+  //     setProduct({
+  //     ...product,
+  //     city: ''
+  //    });
+  //     // Réinitialiser la liste des villes
+  //   }
+  // }, [product.postalCode]);
 
   
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -261,18 +294,7 @@ function RealEstateForm() {
 
   
 
-  useEffect(() => {
-    if (product.postalCode.length === 5) {
-      fetchCityByPostalCode();
-    } else {
-      setProduct({
-      ...product,
-      city: ''
-     });
-      // Réinitialiser la liste des villes
-    }
-  }, [product.postalCode]);
-
+ 
 
 
   const handleSubmit = async (e) => {
@@ -379,18 +401,32 @@ function RealEstateForm() {
         />
       </label>
       <label>
-        Code Postal :
-        <input
-          type="text"
-          value={product.postalCode}
-          onChange={(e) => setProduct({ ...product, postalCode: e.target.value })}
-          required
-        />
-      </label>
-      <label>
-        Ville :
-        <input type="text" value={product.city} readOnly />
-      </label>
+  Code Postal :
+  <input
+    type="text"
+    name="postalCode"
+    value={product.postalCode}
+    onChange={handleInputChange}
+    required
+  />
+</label>
+<label>
+  Ville :
+  <input
+    type="text"
+    name="city"
+    value={product.city}
+    onChange={handleInputChange}
+    placeholder="Ville"
+    list="cities"
+    required
+  />
+</label>
+<datalist id="cities">
+  {suggestions.map((suggestion, index) => (
+    <option key={index} value={`${suggestion.city} (${suggestion.postalCode})`} />
+  ))}
+</datalist>
 
       {/* Bien à vendre */}
       <h5>Bien à vendre</h5>

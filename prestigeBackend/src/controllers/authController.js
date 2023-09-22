@@ -26,7 +26,9 @@ export const loginUser = async (req, res) => {
           message: "L'email ou le mot de passe est incorrect.",
         });
     }
-
+    // console.log(user)
+    // console.log('Mot de passe fourni:', password);
+    // console.log('Mot de passe haché depuis la base de données:', user.password);
     // Vérifiez le mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
