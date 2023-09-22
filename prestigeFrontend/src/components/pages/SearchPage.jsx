@@ -48,17 +48,26 @@ const SearchPage = ({ onSubmit }) => {
   useEffect(() => {
     const storedAnnouncements = localStorage.getItem('lastSearchResults');
     const storedTimestamp = localStorage.getItem('lastSearchTimestamp');
-
+    const storedHasSearched = localStorage.getItem('hasSearched');
+  
+    if (storedHasSearched) {
+      setHasSearched(JSON.parse(storedHasSearched));
+    }
+  
     if (storedAnnouncements && storedTimestamp) {
       const currentTime = Date.now();
       const timeDifference = currentTime - storedTimestamp;
-
+  
       // 86400000 ms = 24 heures
       if (timeDifference < 86400000) {
         setAnnouncements(JSON.parse(storedAnnouncements));
       }
     }
   }, []);
+  
+  const [hasSearched, setHasSearched] = useState(false);
+
+
 
   const handleSubmit = async (event) => {
     if (event) {
@@ -68,11 +77,11 @@ const SearchPage = ({ onSubmit }) => {
       const apiURL = 'http://127.0.0.1:3000/realEstateAd/search';
       const response = await axios.get(apiURL, { params: { ...searchData } });
       setAnnouncements(response.data);
-      
+      setHasSearched(true);
       // Stocker les résultats de la recherche et le timestamp
       localStorage.setItem('lastSearchResults', JSON.stringify(response.data));
       localStorage.setItem('lastSearchTimestamp', Date.now());
-      
+      localStorage.setItem('hasSearched', JSON.stringify(true));
     } catch (error) {
       console.error('Erreur pendant la récupération des annonces:', error);
     }
@@ -279,9 +288,11 @@ const SearchPage = ({ onSubmit }) => {
 
 
 
-      <div className="search-results-count">
-        Nombre d'annonces correspondantes à votre recherche : {announcements.length}
-      </div>
+      {hasSearched && (
+  <div className="search-results-count">
+    Nombre d'annonces correspondantes à votre recherche : {announcements.length}
+  </div>
+)}
 
       {/* Affichage des résultats de recherche */}
       <div className="search-results">
@@ -293,9 +304,10 @@ const SearchPage = ({ onSubmit }) => {
       title={announcement.title || 'Titre non disponible'} // Attribut title ajouté ici
     >
       <img
-        src={announcement.images ? announcement.images[0] : null}
-        alt={announcement.title || 'Titre non disponible'}
-      />
+  src={announcement.images && announcement.images.length > 0 ? `http://127.0.0.1:3000/files/${announcement.images[0]}` : ''}
+  alt={announcement.title || 'Titre non disponible'}
+/>
+
       <div className="search-result-details">
         <h3>{announcement.title || 'Titre non disponible'}</h3>
         <p>Type de bien: {announcement.propertyType || 'Non spécifié'}</p>
