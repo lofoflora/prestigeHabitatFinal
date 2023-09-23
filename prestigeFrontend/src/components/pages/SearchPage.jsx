@@ -32,6 +32,7 @@ const SearchPage = ({ onSubmit }) => {
     surfaceTerrainMin: "0",
     budgetMin: "0",
     budgetMax: "",
+    description:"",
 
   });
   console.log("Parent searchData:", searchData);
@@ -297,28 +298,37 @@ const SearchPage = ({ onSubmit }) => {
       {/* Affichage des résultats de recherche */}
       <div className="search-results">
   {announcements.map((announcement, index) => (
-    <Link
-      key={index}
-      to={`/detail-annonce/${announcement.id}`} // Nouveau chemin vers la page détaillée
-      className="search-result-item" // Tu peux styliser cette classe dans ton CSS
-      title={announcement.title || 'Titre non disponible'} // Attribut title ajouté ici
-    >
-      <img
-  src={announcement.images && announcement.images.length > 0 ? `http://127.0.0.1:3000/files/${announcement.images[0]}` : ''}
-  alt={announcement.title || 'Titre non disponible'}
-/>
-
-      <div className="search-result-details">
-        <h3>{announcement.title || 'Titre non disponible'}</h3>
-        <p>Type de bien: {announcement.propertyType || 'Non spécifié'}</p>
-        <p>Prix: {announcement.price ? `${announcement.price} €` : 'Prix non disponible'}</p>
-        <p>Surface: {announcement.surface ? `${announcement.surface} m²` : 'Surface non disponible'}</p>
-        <p>Ville: {announcement.city || 'Ville non disponible'}</p>
-        <p>
-          {(announcement.description ? announcement.description.slice(0, 100) : 'Description non disponible') + (announcement.description?.length > 100 ? "..." : "")}
-        </p>
-      </div>
-    </Link>
+   <Link
+   key={index}
+   to={`/detail-annonce/${announcement.id}`}
+   className="search-result-item"
+   title={announcement.title || 'Titre non disponible'}
+ >
+   <h3 className="search-result-title">{announcement.title || 'Titre non disponible'}</h3>
+   <div className="search-result-content">
+     <img
+       className="search-result-image"
+       src={announcement.images && announcement.images.length > 0 ? `http://127.0.0.1:3000/files/${announcement.images[0]}` : ''}
+       alt={announcement.title || 'Titre non disponible'}
+     />
+     <div className="search-result-details">
+       {/* Tes détails ici */}
+       <p>Type de bien: {announcement.propertyType || 'Non spécifié'}</p>
+       <p>Prix: {announcement.budget ? `${announcement.budget} €` : 'Prix non disponible'}</p>
+       <p>Surface: {announcement.houseSurface ? `${announcement.houseSurface} m²` : 'Surface non disponible'}</p>
+       <p>Ville: {announcement.city || 'Ville non disponible'}</p>
+     </div>
+     <div className="search-result-description">
+       {/* Ta description ici */}
+       <p>
+         {(announcement.description ? announcement.description.slice(0, 100) : 'Description non disponible') + (announcement.description?.length > 100 ? "..." : "")}
+       </p>
+     </div>
+   </div>
+ </Link>
+ 
+ 
+  
   ))}
 </div>
 

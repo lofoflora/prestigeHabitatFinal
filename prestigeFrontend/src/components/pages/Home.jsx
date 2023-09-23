@@ -10,7 +10,8 @@ function Home() {
       {/* Contenu de la page d'accueil */}
       <section className="home-section">
       <hr style={{ borderColor: '#ffd700', borderWidth: '3px', margin: '10px auto', width: '85%' }} />
-<br /><br />
+
+
 <div className='textelarge'>
         <p>
           Chez <strong className='textPrestige'>Prestige Habitat</strong>, 
@@ -18,6 +19,32 @@ function Home() {
           Nous sommes votre partenaire de confiance pour réaliser vos projets immobiliers, des plus simples aux plus fous
         </p>
         <br />
+      {/* Carrousel Bootstrap */}
+      <div id="homeCarousel" className="carousel slide m-0 p-0" data-bs-ride="carousel">
+
+
+        <div className="carousel-inner">
+          <div className="carousel-item">
+            <img src="public/photo_acceuil/abbaye-senanque-rangees-fleuries-fleurs-lavande-vue-panoramique_268835-861.jpg" className="d-block w-100" alt="Image 2"style={{ height: '400px', width: '100%' }}  />
+          </div>
+          <div className="carousel-item">
+        <img 
+  src="public/photo_acceuil/vue-aerienne-ville-avignon-france_78361-11812.jpg" 
+  className="d-block w-100" 
+  style={{ height: '400px', width: '100%' }} 
+/>
+</div>
+          <div className="carousel-item active">
+            <img src="public/photo_acceuil/construction-europeenne-repere-vue-etroit_1203-4984.jpg" className="d-block w-100" alt="Image 1"style={{ height: '400px', width: '100%' }}  />
+          </div>
+          <div className="carousel-item">
+            <img src="public/photo_acceuil/paysage-village_1182-840.jpg" className="d-block w-100" alt="Image 2"style={{ height: '400px', width: '100%' }}  />
+          </div>
+          {/* Ajoute d'autres images de la même manière */}
+        </div>
+      </div>
+
+      <br />
         <p>
           En tant qu'experts de l'<span className='text-bold-italic-underline'>Assistance à Maîtrise d'Ouvrage (AMO)</span>,
            nous avons l'habitude de dépasser les attentes de nos clients. Nous ne sommes pas des constructeurs, 

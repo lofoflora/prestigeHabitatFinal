@@ -174,7 +174,7 @@ export const searchRealEstateAds = async (req, res) => {
     const ads = await RealEstateAd.findAll({
       attributes: ['id', 'title', 'city', 'propertyType', 'purchaseType', 'houseSurface', 'landSurface', 'numRooms',
        'numBedrooms', 'numWC', 'numBathrooms', 'budget', 'heating', 'amenities', 'streetNumber','streetName','adressComplement',
-      'postalCode','latitude','longitude','images','threedviews'],
+      'postalCode','latitude','longitude','images','threedviews','description'],
       where: whereClause,
     });
     res.status(200).json(ads);

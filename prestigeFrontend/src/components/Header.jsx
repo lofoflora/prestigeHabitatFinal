@@ -161,7 +161,7 @@ useEffect(() => {
       ) : (
       <Navbar
         className="custom-navbar"
-        bg="dark"
+   
         variant="dark"
         expand="lg"
         expanded={navExpanded}
