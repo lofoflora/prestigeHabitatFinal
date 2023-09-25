@@ -21,7 +21,7 @@
   color: var(--text-color); /* Couleur de texte blanc */
   font-weight: bold; /* Texte en gras */
   border: 2px solid var(--title-color); /* Contour doré de 2px d'épaisseur */
-  border-radius: 20px; /* Angles arrondis de 20px */
+  border-radius: 7px; /* Angles arrondis de 20px */
   background-color: grey; /* Fond de la barre de navigation noir anthracite */
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); /* Contour doré de 10px d'épaisseur */
   min-height: 60px; /* Ajustement de la hauteur de la barre de navigation */
@@ -32,22 +32,24 @@
 .custom-navbar .dropdown-item {
   color: var(--title-color); /* Couleur de texte dorée */
   border: 2px solid var(--title-color); /* Contour doré pour les boutons */
-  border-radius: 20px; /* Coins arrondis de 20px pour les boutons */
+  border-radius: 10px; /* Coins arrondis de 20px pour les boutons */
+  background-color: grey;
 }
 
 .custom-navbar .nav-link:hover,
 .custom-navbar .dropdown-item:hover {
   background-color: var(--title-color); /* Couleur de fond dorée au survol */
   color: var(--background-color); /* Couleur de texte noir anthracite au survol */
+  background-color: grey;
 }
 
 .custom-navbar .dropdown-menu {
-  background-color: var(--background-color); /* Fond noir anthracite pour la liste déroulante */
+  background-color:   grey;
 }
 
 /* Définir les styles pour le contenu principal */
 #root {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -168,8 +170,8 @@ body {
   margin: 0 auto; /* Centrer le formulaire horizontalement */
 }
 
-.auth-form h2 {
-  color: #ffd700; /* Couleur dorée pour le titre */
+.auth-form h1,h2,h3,h4,h5 {
+  color: blue; /* Couleur dorée pour le titre */
 }
 
 .auth-form label {
@@ -183,9 +185,9 @@ body {
 .auth-form input[type="password"],
 .auth-form input[type="number"] {
   /* Styles pour les champs de saisie (Surface min, Budget max et Localisation) */
-  width: 100%;
+  max-width: 100%;
   padding: 10px;
-  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border: 2px solid blue; /* Contour doré pour les champs de saisie */
   border-radius: 5px; /* Coins arrondis de 5px */
   background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
   color: white; /* Couleur de texte blanche */
@@ -196,7 +198,7 @@ body {
 .auth-form select {
   width: 100%;
   padding: 10px;
-  border: 2px solid #ffd700; /* Contour doré pour le menu déroulant */
+  border: 2px solid blue; /* Contour doré pour le menu déroulant */
   border-radius: 5px; /* Coins arrondis de 5px */
   background-color: #222222; /* Fond noir anthracite pour le menu déroulant */
   color: white; /* Couleur de texte blanche */
@@ -214,6 +216,23 @@ body {
 .auth-form input[type="checkbox"] {
   margin-right: 5px;
 }
+.special-break label:nth-child(8) {
+  flex-basis: 100%; /* prend tout l'espace restant */
+  height: 0; /* pour éviter tout espace supplémentaire */
+}
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+.selected {
+  color: blue !important;
+
+ 
+}
+
+
+
+
 
 /* Styles pour les boutons */
 .custom-button {
@@ -441,7 +460,7 @@ input[type="checkbox"]:checked + .toggle-switch:before {
 .input-group input[type="text"]{
   width: 100%;
   padding: 10px;
-  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border: 2px solid blue; /* Contour doré pour les champs de saisie */
   border-radius: 5px; /* Coins arrondis de 5px */
   background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
   color: white; /* Couleur de texte blanche */
@@ -452,7 +471,7 @@ input[type="checkbox"]:checked + .toggle-switch:before {
 .auth-form input{
   width: 100%;
   padding: 10px;
-  border: 2px solid #ffd700; /* Contour doré pour les champs de saisie */
+  border: 2px solid blue; /* Contour doré pour les champs de saisie */
   border-radius: 5px; /* Coins arrondis de 5px */
   background-color: #222222; /* Fond noir anthracite pour les champs de saisie */
   color: white; /* Couleur de texte blanche */
@@ -498,7 +517,7 @@ input[type="checkbox"]:checked + .toggle-switch:before {
 
 .auth-form .checkbox-group button {
   background-color: #343a40;
-  border: 2px solid #ffd700;
+  border: 2px solid blue;
   border-radius: 5px;
   color: white;
   padding: 5px 10px;
@@ -696,7 +715,7 @@ input:hover + .error-tooltip {
   color: var(--text-color);
   font-weight: bold;
   border: 2px solid blue;  /* Contour bleu */
-  border-radius: 20px;
+  border-radius: 6px;
   background-color: var(--background-color);
   box-shadow: 0 0 10px blue;  /* Ombre bleue */
   min-height: 60px;
@@ -708,7 +727,7 @@ input:hover + .error-tooltip {
 .admin-navbar .admin-dropdown-item {
   color: blue;  /* Texte bleu */
   border: 2px solid blue;  /* Contour bleu */
-  border-radius: 20px;
+  border-radius: 6px;
 }
 
 /* Pour les liens et les éléments de la liste déroulante au survol */
@@ -830,7 +849,16 @@ textarea {
 .carousel-inner {
   margin: 0;
   padding: 0;
+}.carousel-item {
+  margin: 0;
+  padding: 0;
 }
+
+.carousel-item img {
+  margin: 0;
+  padding: 0;
+}
+
 .search-result-item {
   border: 1px solid #ccc;
   margin: 10px;
@@ -909,4 +937,13 @@ textarea {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+footer {
+  width: 100%;
+  background-color: grey;
 }

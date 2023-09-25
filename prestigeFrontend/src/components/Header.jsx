@@ -193,12 +193,8 @@ useEffect(() => {
                 <NavDropdown.Item as={Link} to="/purchaseresalpage">
                   Achat / Revente
                 </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/services/qui-sommes-nous">
-                  Qui sommes-nous
-                </NavDropdown.Item>
-                <NavDropdown.Item as={Link} to="/services/nos-valeurs">
-                  Nos valeurs
-                </NavDropdown.Item>
+                
+           
               </NavDropdown>
               {isLoggedIn ? (  <>  
                 <Nav.Link as={Link} to="/news/News">
@@ -207,7 +203,7 @@ useEffect(() => {
       <Nav.Link as={Link} to="/creation-temoignage">
         Ecrire un témoignage
       </Nav.Link>  </>) :(
-              
+               <>
               <NavDropdown title="Actualités" id="basic-nav-dropdown">
 
                 <NavDropdown.Item as={Link} to="/news/News">
@@ -217,7 +213,10 @@ useEffect(() => {
                   Témoignages
                 </NavDropdown.Item>
               </NavDropdown>
-              
+              <Nav.Link as={Link} to="/contact">
+        Contact
+      </Nav.Link>
+              </>
               )}
              
             </Nav>

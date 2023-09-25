@@ -20,7 +20,7 @@ function Home() {
         </p>
         <br />
       {/* Carrousel Bootstrap */}
-      <div id="homeCarousel" className="carousel slide m-0 p-0" data-bs-ride="carousel">
+      <div id="homeCarousel" className="carousel slide m-0 p-0" data-bs-ride="carousel" data-bs-interval="5000">
 
 
         <div className="carousel-inner">

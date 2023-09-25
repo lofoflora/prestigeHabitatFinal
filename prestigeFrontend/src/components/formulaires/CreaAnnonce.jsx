@@ -364,7 +364,8 @@ function RealEstateForm() {
   };
   
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="auth-form" style={{ backgroundColor: '#343a40', padding: '50px', borderRadius: '5px', position: 'relative',width: '50%' }}>
+    <form onSubmit={handleSubmit} >
       <h1>Création d'annonce immobilière</h1>
       <br />
       <br />
@@ -400,33 +401,40 @@ function RealEstateForm() {
           onChange={(e) => setProduct({ ...product, adressComplement: e.target.value })}
         />
       </label>
-      <label>
-  Code Postal :
-  <input
-    type="text"
-    name="postalCode"
-    value={product.postalCode}
-    onChange={handleInputChange}
-    required
-  />
-</label>
-<label>
-  Ville :
-  <input
-    type="text"
-    name="city"
-    value={product.city}
-    onChange={handleInputChange}
-    placeholder="Ville"
-    list="cities"
-    required
-  />
-</label>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+  <label style={{ flex: 1, marginRight: '10px' }}>
+    Code Postal :
+    <input
+      type="text"
+      name="postalCode"
+      value={product.postalCode}
+      onChange={handleInputChange}
+      required
+      style={{ width: '80%' }}
+    />
+  </label>
+  
+  <label style={{ flex: 2 }}>
+    Ville :
+    <input
+      type="text"
+      name="city"
+      value={product.city}
+      onChange={handleInputChange}
+      placeholder="Ville"
+      list="cities"
+      required
+      style={{ width: '100%' }}
+    />
+  </label>
+</div>
+
 <datalist id="cities">
   {suggestions.map((suggestion, index) => (
     <option key={index} value={`${suggestion.city} (${suggestion.postalCode})`} />
   ))}
 </datalist>
+
 
       {/* Bien à vendre */}
       <h5>Bien à vendre</h5>
@@ -439,27 +447,32 @@ function RealEstateForm() {
         required
       />
 
-     {/* Type de propriété */}
+  
+{/* Type de propriété */}
 <label>Type de propriété :</label>
 <div className="radio-group">
   {["Appartement", "Maison", "Studio", "Terrain", "Loft/atelier", "Chateau", "Local professionnel", "Commerce", "Garage/Hangar", "Autre"].map(type => (
-    <label key={type}>
-      <input
-        type="radio"
-        name="propertyType" // Assurez-vous que le nom est correct
-        value={type} // Utilisez la valeur du type ici
-        checked={product.propertyType === type}
-        onChange={handleSelect}
-      />
-      {type}
-    </label>
+    <div key={type} >
+      <label className={product.propertyType === type ? 'selected' : ''}>
+        {type}
+        <input
+          type="radio"
+          name="propertyType" // Assurez-vous que le nom est correct
+          value={type} // Utilisez la valeur du type ici
+          checked={product.propertyType === type}
+          onChange={handleSelect}
+        />
+      </label>
+    </div>
   ))}
 </div>
+
 
 <label>Type de vente :</label>
 <div className="radio-group">
   {["Ancien", "Neuf", "Viager", "A rénover"].map(type => (
     <label key={type}>
+      {type}
       <input
         type="radio"
         name="purchaseType" // Assurez-vous que le nom est correct
@@ -467,67 +480,102 @@ function RealEstateForm() {
         checked={product.purchaseType === type}
         onChange={handleSelect}
       />
-      {type}
+      
     </label>
   ))}
 </div>
 
+<div style={{ display: 'flex', justifyContent: 'space-start' }}>
 
-      {/* Surface de la maison */}
-      <label>Surface de la maison:</label>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label>Surface de la maison:</label>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <input
         type="text"
         value={product.houseSurface}
         onChange={(e) => setProduct({ ...product, houseSurface: e.target.value })}
+        style={{ marginRight: '5px', width: '70px' }}
       />
+      <span>m²</span>
+    </div>
+  </div>
 
-      {/* Surface du terrain */}
-      <label>Surface du terrain:</label>
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label>Surface du terrain:</label>
+    <div style={{ display: 'flex', alignItems: 'center' }}>
       <input
         type="text"
         value={product.landSurface}
         onChange={(e) => setProduct({ ...product, landSurface: e.target.value })}
+        style={{ marginRight: '5px', width: '70px' }}
       />
+      <span>m²</span>
+    </div>
+  </div>
 
-      {/* Nombre de pièces */}
-      <label>Nombre de pièces:</label>
-      <input
-        type="number"
-        value={product.numRooms}
-        onChange={(e) => setProduct({ ...product, numRooms: e.target.value })}
-      />
+</div>
 
-      {/* Nombre de chambres */}
-      <label>Nombre de chambres:</label>
-      <input
-        type="number"
-        value={product.numBedrooms}
-        onChange={(e) => setProduct({ ...product, numBedrooms: e.target.value })}
-      />
+<div style={{ display: 'flex', justifyContent: 'space-start' }}>
 
-      {/* Nombre de WC */}
-      <label>Nombre de WC:</label>
-      <input
-        type="number"
-        value={product.numWC}
-        onChange={(e) => setProduct({ ...product, numWC: e.target.value })}
-      />
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label>Nombre de pièces:</label>
+    <input
+      type="number"
+      value={product.numRooms}
+      onChange={(e) => setProduct({ ...product, numRooms: e.target.value })}
+      style={{ width: '70px' }}
+    />
+  </div>
 
-      {/* Nombre de salles de bain */}
-      <label>Nombre de salles de bain:</label>
-      <input
-        type="number"
-        value={product.numBathrooms}
-        onChange={(e) => setProduct({ ...product, numBathrooms: e.target.value })}
-      />
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label>Nombre de chambres:</label>
+    <input
+      type="number"
+      value={product.numBedrooms}
+      onChange={(e) => setProduct({ ...product, numBedrooms: e.target.value })}
+      style={{ width: '70px' }}
+    />
+  </div>
 
-      {/* Budget */}
-      <label>Budget:</label>
-      <input
-        type="text"
-        value={product.budget}
-        onChange={(e) => setProduct({ ...product, budget: e.target.value })}
-      />
+</div>
+
+
+
+<div style={{ display: 'flex', alignItems: 'flex-start' }}>
+
+  <div style={{ display: 'flex', flexDirection: 'column', marginRight: '20px', alignItems: 'flex-start' }}>
+    <label>Nombre de WC:</label>
+    <input
+      type="number"
+      value={product.numWC}
+      onChange={(e) => setProduct({ ...product, numWC: e.target.value })}
+      style={{ width: '70px' }}
+    />
+  </div>
+
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+    <label>Nombre de salles de bain:</label>
+    <input
+      type="number"
+      value={product.numBathrooms}
+      onChange={(e) => setProduct({ ...product, numBathrooms: e.target.value })}
+      style={{ width: '70px' }}
+    />
+  </div>
+
+</div>
+
+{/* Budget */}
+<label>Budget:</label>
+<div style={{ display: 'flex', alignItems: 'center' }}>
+  <input
+    type="text"
+    value={product.budget}
+    onChange={(e) => setProduct({ ...product, budget: e.target.value })}
+    style={{ width: '70px' }}
+  />
+  <span>€</span>
+</div>
 
 {/* Chauffage*/} 
 <label>Chauffage:</label>
@@ -636,6 +684,7 @@ function RealEstateForm() {
 
       <button type="submit">Créer l'annonce</button>
     </form>
+    </div>
   );
 }
 

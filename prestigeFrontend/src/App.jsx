@@ -37,7 +37,7 @@ import TableauxDeValidation from "./components/adcom/pages/ValidationList";
 import RealEstateAdFiche from "./components/adcom/pagedetails/FicheAnnonce";
 import CreatePassword from "./components/formulaires/CreatePassword";
 import RealEstateAdDetails from "./components/pages/DetailVisiteur";
-
+import Footer from "./components/footer";
 
 
 
@@ -153,7 +153,7 @@ function App() {
 
           
         </Routes>
-
+<Footer/>
       </div>
    
   );
