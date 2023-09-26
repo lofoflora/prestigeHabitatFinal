@@ -3,11 +3,23 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 
+
 const RealEstateAdDetails = () => {
   const [ad, setAd] = useState(null);
   const [showCarousel, setShowCarousel] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const { id } = useParams();
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [formData, setFormData] = useState({
+   
+    nom: '',
+    prenom: '',
+    email: '',
+    telephone: '',
+    commentaire: '',
+    contactPreference: ''
+  });
+  
 
   useEffect(() => {
     axios.get(`http://127.0.0.1:3000/realEstateAd/${id}`)
@@ -27,6 +39,53 @@ const RealEstateAdDetails = () => {
   if (!ad) {
     return <p>Chargement...</p>;
   }
+
+  const toggleContactForm = () => {
+    setShowContactForm(!showContactForm);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    // Utilise l'ID de l'annonce depuis `id` si c'est ce que tu cherches
+    const annonceId = id;  // ou utilise `annonces.find(annonce => annonce.id === idRecherché).id` si tu définis `annonces`
+  
+    // Vérifie si l'ID est bien récupéré
+    if (!annonceId) {
+      console.log('ID de l\'annonce non trouvé dans le localStorage');
+      return;
+    }
+  
+    // Ajoute l'ID de l'annonce à formData
+    const completeFormData = { ...formData, annonceId };
+    console.log("Données complètes du formulaire:", completeFormData);
+
+    try {
+      const response = await axios.post('http://localhost:3000/contact/annonce', completeFormData);
+      if (response.status === 200) {
+        console.log('Mail envoyé avec succès');
+        // Ici, tu peux ajouter du code pour réinitialiser le formulaire ou naviguer vers une autre page, etc.
+      }
+    } catch (error) {
+      console.log('Erreur lors de l\'envoi du mail', error);
+      if (error.response) {
+        // La requête a été effectuée et le serveur a répondu avec un code d'état
+        // qui tombe en dehors de la plage de 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      }
+    }
+  };
+  
 
   return (
     <div className="real-estate-ad">
@@ -75,6 +134,36 @@ const RealEstateAdDetails = () => {
 
        
       </div>
+      <button onClick={toggleContactForm}>
+  Intéressé par ce bien? Cliquez ici
+</button>
+{showContactForm && (
+  <form onSubmit={handleSubmit}> 
+    <label>Nom:</label>
+    <input type="text" name="nom" onChange={handleChange} />
+    
+    <label>Prénom:</label>
+    <input type="text" name="prenom" onChange={handleChange} />
+    
+    <label>Adresse Email:</label>
+    <input type="email" name="email" onChange={handleChange} />
+    
+    <label>Téléphone:</label>
+    <input type="tel" name="telephone" onChange={handleChange} />
+    
+    <label>Commentaire:</label>
+    <textarea name="commentaire" onChange={handleChange}></textarea>
+    
+    <label>Préférence de contact:</label>
+    <input type="radio" id="email" name="contactPreference" value="Email" onChange={handleChange} />
+    <label htmlFor="email">Email</label>
+    
+    <input type="radio" id="telephone" name="contactPreference" value="Téléphone" onChange={handleChange} />
+    <label htmlFor="telephone">Téléphone</label>
+    
+    <button type="submit">Envoyer</button>
+  </form>
+)}
 
      
     </div>

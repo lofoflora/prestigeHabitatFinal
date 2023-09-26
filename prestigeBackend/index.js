@@ -24,6 +24,8 @@ import { AdCom } from './src/models/users/adCom.js'; // Ajuste le chemin d'impor
 import { jwtMiddleware } from './src/middleware/tokenMiddleware.js';
 import validationRouter from './src/routes/validationRoutes.js';
 import carouselRoutes from './src/routes/annonces/carouselRoutes.js';
+import contactRouter from './src/routes/contactRoute.js';
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -60,6 +62,7 @@ app.use('/Avis',avisRouter);
 app.use('/validation',validationRouter);
 
 app.use('/files', express.static(process.env["file-path"]));
+app.use('/contact',contactRouter)
 
 
 

@@ -38,6 +38,7 @@ import RealEstateAdFiche from "./components/adcom/pagedetails/FicheAnnonce";
 import CreatePassword from "./components/formulaires/CreatePassword";
 import RealEstateAdDetails from "./components/pages/DetailVisiteur";
 import Footer from "./components/footer";
+import ContactForm from "./components/formulaires/FormContact";
 
 
 
@@ -150,6 +151,7 @@ function App() {
           <Route path="/fiche-annonce/:id" element={<RealEstateAdFiche />} />
           <Route path="/creation-password" element={<CreatePassword />} />
           <Route path="/detail-annonce/:id" element={<RealEstateAdDetails />} />
+          <Route path="/contact" element={<ContactForm/>} />
 
           
         </Routes>
