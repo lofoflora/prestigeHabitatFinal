@@ -39,11 +39,30 @@ const SearchPage = ({ onSubmit }) => {
   const [showOptions, setShowOptions] = useState(false);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    const newSearchData = { ...searchData, [name]: value };
-    setSearchData(newSearchData);
-    // Utilise le hook useFormValidation ici pour valider les champs.
+    const { name, options } = event.target;
+    
+    if (name === "propertyType" && options) {
+      const value = [];
+      for (let i = 0, l = options.length; i < l; i += 1) {
+        if (options[i].selected) {
+          value.push(options[i].value);
+        }
+      }
+      setSearchData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+      const { value } = event.target;
+      setSearchData((prevData) => ({
+        ...prevData,
+        [name]: Array.isArray(prevData[name]) ? [value] : value,
+      }));
+    }
   };
+  
+  
+  
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
@@ -222,17 +241,20 @@ const SearchPage = ({ onSubmit }) => {
           <option value="50">50 km</option>
         </select>*/}
         {/* Liste déroulante (Select) */}
-        <select
-          name="propertyType"
-          value={searchData.propertyType}
-          onChange={handleChange}
-          style={{ marginRight: '10px' }}
-        >
-          <option value="">Type de bien</option>
-          <option value="appartement">Appartement</option>
-          <option value="maison">Maison / Villa</option>
-          <option value="terrain">Terrain</option>
-        </select>
+        // Dans le formulaire parent
+<select
+  name="propertyType"
+  value={Array.isArray(searchData.propertyType) ? searchData.propertyType.join(", ") : searchData.propertyType}
+  onChange={handleChange}
+  style={{ marginRight: '10px' }}
+>
+  <option value="">Type de bien</option>
+  <option value="appartement">Appartement</option>
+  <option value="maison,villa">Maison / Villa</option>
+  <option value="terrain">Terrain</option>
+</select>
+
+
         {/* Champ de saisie pour Surface min */}
         <input
           className="auth-form-input"
