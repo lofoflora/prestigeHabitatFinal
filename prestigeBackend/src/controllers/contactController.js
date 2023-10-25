@@ -2,12 +2,15 @@ import transporter from "../configs/configEmail.js";// Remplace par le chemin ve
 import { RealEstateAd } from "../models/annonces/RealEstateAd.js";
 import { AdCom } from "../models/users/adCom.js";
 
-// Fonction pour envoyer un mail de contact
+
 export const sendContactEmail = async (req, res) => {
-  const { name, email, subject, message } = req.body;
+  const { nom, prenom, email, telephone, commentaire, contactPreference } = req.body;
+
+  // Log pour vérifier les données reçues
+  console.log(`Données reçues: ${JSON.stringify(req.body)}`);
 
   // Vérifie si toutes les informations sont présentes
-  if (!name || !email || !subject || !message) {
+  if (!nom || !prenom || !email || !telephone || !commentaire || !contactPreference) {
     return res.status(400).json({ error: 'Tous les champs sont requis.' });
   }
 
@@ -15,19 +18,24 @@ export const sendContactEmail = async (req, res) => {
   const mailOptions = {
     from: process.env.MAIL_APPLI, // Expéditeur
     to: 'lofoflora@gmail.com', // Destinataire
-    subject: `Contact : ${subject}`, // Sujet
-    text: `Nom : ${name}\nEmail : ${email}\nMessage : ${message}` // Corps du mail
+    subject: `Contact`, // Sujet
+    text: `Nom : ${nom}\nPrénom : ${prenom}\nEmail : ${email}\nTéléphone : ${telephone}\nCommentaire : ${commentaire}\nPréférence de contact : ${contactPreference}` // Corps du mail
   };
+
+  // Log pour vérifier la configuration du mail
+  console.log(`Options du mail: ${JSON.stringify(mailOptions)}`);
 
   // Envoie le mail
   try {
     await transporter.sendMail(mailOptions);
+    console.log('Mail envoyé avec succès'); // Log de succès
     res.status(200).json({ message: 'Mail envoyé avec succès.' });
   } catch (error) {
+    console.log(`Erreur lors de l'envoi du mail: ${JSON.stringify(error)}`); // Log d'erreur
     res.status(500).json({ error: 'Erreur lors de l\'envoi du mail.' });
   }
-};
 
+};
 
 export const handleContactForm = async (req, res) => {
   const { annonceId, nom, prenom, email, telephone, commentaire, contactPreference } = req.body;

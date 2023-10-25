@@ -3,25 +3,24 @@
 import express from 'express';
 import 'dotenv/config.js';
 import { sequelize } from './src/configs/db.config.js';
-import adComRouter from './src/routes/users/routeAdCom.js'; // Importez les autres fichiers de routes ici
+import cors from 'cors';
+import bcrypt from 'bcrypt';
+import { jwtMiddleware } from './src/middleware/tokenMiddleware.js';
+
+import { AdCom } from './src/models/users/adCom.js'; 
+
+import adComRouter from './src/routes/users/routeAdCom.js'; 
 import clientRouter from './src/routes/users/routeClient.js';
 import partnerRouter from './src/routes/users/routePartner.js';
 import venteRouter from './src/routes/services/routeVente.js';
 import constructionRouter from './src/routes/services/routeConstruction.js';
 import amoRouter from './src/routes/services/routeAmo.js';
 import achatReventeRouter from './src/routes/services/routeAchatRevente.js';
-
 import realEstateAdRouter from './src/routes/annonces/routeRealEstateAd.js';
-
 import achatRouter from './src/routes/services/routeAchat.js';
 import dossierClientRouter from './src/routes/routeDossierClient.js';
 import avisRouter from './src/routes/routeAvis.js';
-
 import authrouter from './src/routes/authRoutes.js';
-import cors from 'cors';
-import bcrypt from 'bcrypt';
-import { AdCom } from './src/models/users/adCom.js'; // Ajuste le chemin d'import selon l'emplacement du fichier adCom.js
-import { jwtMiddleware } from './src/middleware/tokenMiddleware.js';
 import validationRouter from './src/routes/validationRoutes.js';
 import carouselRoutes from './src/routes/annonces/carouselRoutes.js';
 import contactRouter from './src/routes/contactRoute.js';
@@ -88,7 +87,7 @@ const createAdminIfNotExist = async () => {
         phoneNumber: (process.env.USER_PHONE_NUMBER),
         password: hashedPassword,
       });
-      console.log('Admin créé avec succès.');
+      console.log('Admin créé avec succès.');0
     }
   } catch (error) {
     if (error.response && error.response.data) {

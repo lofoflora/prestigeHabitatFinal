@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../../configs/db.config.js';
 import { Client } from './client.js';
 import { Partner } from './partner.js';
-import { Carousel } from '../annonces/carouselModel.js';
+
 
 export const AdCom = sequelize.define('AdCom', {
   userType: {
